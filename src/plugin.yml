@@ -1,0 +1,16 @@
+name: PublicBuilds
+version: 1.0
+main: me.elgamer.publicbuilds.Main
+description: Claiming System
+depend: [WorldEdit, WorldGuard]
+
+commands:
+    plot:
+        usage: /<command>
+        description: Open the plot gui.
+    createPlot:
+        usage: /<command>
+        description: Claim a plot from Worldedit selection.
+    removePlot:
+        usage: /<command>
+        description: Removes a plot.
