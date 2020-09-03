@@ -47,7 +47,11 @@ public class MySQLReadWrite {
 				statement = instance.getConnection().prepareStatement
 						("UPDATE " + instance.table + " SET REGION_NAMES=? WHERE UUID=?");
 				String regionNames = results.getString("REGION_NAMES");
+				if (regionNames == null) {
+					regionNames = name;
+				} else {
 				regionNames = regionNames + "," + name;
+				}
 				statement.setString(1, regionNames);
 				statement.setString(2, uuid.toString());
 				statement.executeUpdate();
@@ -69,11 +73,15 @@ public class MySQLReadWrite {
 				return false;
 			} else {
 				String regionNames = results.getString("REGION_NAMES");
+				if (regionNames == null) {
+					return false;
+				} else {
 				String[] names = regionNames.split(",");
 				
 				for (int i = 0; i < names.length; i++) {
 					if (names[i].equals(name)) {
 						return true;
+						}
 					}
 				}
 				return false;
@@ -100,7 +108,11 @@ public class MySQLReadWrite {
 				for (int i = 0; i < names.length; i++) {
 					if (names[i].equals(name)) {
 					} else {
+						if (regionNames == null) {
+							regionNames = names[i];
+						} else {
 						regionNames = regionNames + "," + names[i];
+						}
 					}
 				}
 				
@@ -111,6 +123,20 @@ public class MySQLReadWrite {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public String returnClaims(UUID uuid) {
+		try {
+			PreparedStatement statement = instance.getConnection().prepareStatement
+					("SELECT * FROM " + instance.table + " WHERE UUID=?");
+			statement.setString(1, uuid.toString());
+			ResultSet results = statement.executeQuery();
+			results.next();
+			return results.getString("REGION_NAMES");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 }

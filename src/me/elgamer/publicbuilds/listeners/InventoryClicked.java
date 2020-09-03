@@ -32,6 +32,9 @@ public class InventoryClicked implements Listener {
 				PlotGui.clicked((Player) e.getWhoClicked(), e.getSlot(), e.getCurrentItem(), e.getInventory());
 			}
 		}
+		else {
+			
+		}
 	}
 
 }

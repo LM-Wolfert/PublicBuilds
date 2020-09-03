@@ -33,6 +33,7 @@ import com.sk89q.worldedit.session.ClipboardHolder;
 import com.sk89q.worldguard.bukkit.RegionContainer;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.managers.RegionManager;
+import com.sk89q.worldguard.protection.managers.storage.StorageException;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 //import me.elgamer.publicbuilds.Main;
@@ -63,6 +64,15 @@ public class RemoveClaim implements CommandExecutor {
 			return true;
 		}
 		Player p = (Player) sender;
+		MySQLReadWrite mysql = new MySQLReadWrite();
+		
+		
+		if (mysql.playerExists(p.getUniqueId()) == false || mysql.returnClaims(p.getUniqueId()) == null) {
+			p.sendMessage(ChatColor.RED + "You do not own a plot!");
+			return true;
+		}
+		
+		p.closeInventory();
 		
 		AnvilGui gui = new AnvilGui(p, new AnvilGui.AnvilClickEventHandler(){
 			
@@ -74,11 +84,9 @@ public class RemoveClaim implements CommandExecutor {
 					String name = e.getName();
 					wordMatcher = wordPattern.matcher(name);
 					if (wordMatcher.matches()) {
-						MySQLReadWrite mysql = new MySQLReadWrite();
 						if (mysql.checkDuplicateName(p.getUniqueId(), name)) {
 							
-							String regionName = p.getUniqueId() + "," + name;
-							Bukkit.broadcastMessage(regionName);		
+							String regionName = p.getUniqueId() + "," + name;		
 							WorldEditPlugin wep = getWorldEdit();
 							
 							World claimWorld = Bukkit.getServer().getWorld("claimWorld");
@@ -86,13 +94,12 @@ public class RemoveClaim implements CommandExecutor {
 							
 							RegionContainer container = getWorldGuard().getRegionContainer();
 							RegionManager claimRegions = container.get(claimWorld);
-							//RegionManager buildRegions = container.get(buildWorld);
+							RegionManager buildRegions = container.get(buildWorld);
 							
 							ProtectedRegion region = claimRegions.getRegion(regionName);
 							
 							BlockVector pos1 = region.getMinimumPoint();
 							BlockVector pos2 = region.getMaximumPoint();
-							Bukkit.broadcastMessage(pos1.toString() + pos2.toString());
 							
 							LocalSession session = wep.getSession(p);
 							com.sk89q.worldedit.world.World c = new BukkitWorld(claimWorld);
@@ -111,10 +118,22 @@ public class RemoveClaim implements CommandExecutor {
 								Operation operation = holder.createPaste(editSession, b.getWorldData()).to(pos1)
 										.ignoreAirBlocks(false).build();
 								Operations.completeLegacy(operation);
-								Bukkit.broadcastMessage(b.getName());
 							} catch (MaxChangedBlocksException ex) {
 								ex.printStackTrace();
 							}
+							
+							mysql.removeClaim(p.getUniqueId(), name);
+							claimRegions.removeRegion(regionName);
+							buildRegions.removeRegion(regionName);
+							try {
+								claimRegions.save();
+								buildRegions.save();
+							} catch (StorageException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+							
+							p.sendMessage(ChatColor.RED + "Plot " + name + " has been removed!");
 								
 							} else {
 								p.sendMessage(ChatColor.RED + "There is no plot with the name: " + name);

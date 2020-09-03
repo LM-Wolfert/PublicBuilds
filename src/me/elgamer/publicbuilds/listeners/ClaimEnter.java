@@ -73,7 +73,7 @@ public class ClaimEnter implements Listener{
 						Player regionPlayer = Bukkit.getServer().getPlayer(UUID.fromString(owners));
 						player.playSound(player.getLocation(), Sound.ENTITY_CHICKEN_EGG, 1, 1);
 						player.sendMessage(ChatColor.GREEN + "Now Entering: ");
-						player.sendMessage(ChatColor.BLUE + regionPlayer.getName() + "'s property");
+						player.sendMessage(ChatColor.BLUE + regionPlayer.getName() + "'s plot");
 					} catch (Exception e) {
 						e.printStackTrace();
 					}

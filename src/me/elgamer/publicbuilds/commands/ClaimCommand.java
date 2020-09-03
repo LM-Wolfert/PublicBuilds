@@ -27,6 +27,7 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.domains.DefaultDomain;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.managers.RegionManager;
+import com.sk89q.worldguard.protection.managers.storage.StorageException;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
@@ -73,13 +74,13 @@ public class ClaimCommand implements CommandExecutor {
 		/*switch (Main.getPermissions().getPrimaryGroup("claimWorld",p)) {
 		
 		case "builder":
-			if (createRegion(builderArea, p)) {return true;}
+			return createRegion(builderArea, p)
 			
 		case "apprentice":
-			if (createRegion(apprenticeArea,p)) {return true;}
+			return createRegion(apprenticeArea, p)
 			
 		case "guest":
-			if (createRegion(guestArea,p)) {return true;}
+			return createRegion(guestArea, p)
 				
 		}*/
 		return true;
@@ -176,6 +177,13 @@ public class ClaimCommand implements CommandExecutor {
 
 							claimRegions.addRegion(region);
 							buildRegions.addRegion(region);
+							try {
+								claimRegions.save();
+								buildRegions.save();
+							} catch (StorageException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
 							
 							mysql.addClaim(p.getUniqueId(), name);
 
