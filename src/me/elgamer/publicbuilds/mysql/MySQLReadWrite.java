@@ -138,5 +138,86 @@ public class MySQLReadWrite {
 		}
 		return null;
 	}
+	
+	public boolean playerReviewExists(UUID uuid) {
+		try {
+			PreparedStatement statement = instance.getConnection().prepareStatement
+					("SELECT * FROM " + instance.review + " WHERE UUID=?");
+			statement.setString(1, uuid.toString());
+			
+			ResultSet results = statement.executeQuery();
+			if (results.next()) {
+				return true;
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	public void submitClaim(UUID uuid, String name) {
+		try {
+			PreparedStatement statement = instance.getConnection().prepareStatement
+					("SELECT * FROM " + instance.review + " WHERE UUID=?");
+			statement.setString(1, uuid.toString());
+			ResultSet results = statement.executeQuery();
+			results.next();
+			if (playerReviewExists(uuid) != true) {
+				PreparedStatement insert = instance.getConnection().prepareStatement
+						("INSERT INTO " + instance.review + " (UUID,PLOT_NAMES) VALUE (?,?)");
+				insert.setString(1, uuid.toString());
+				insert.setString(2, name);
+				insert.executeUpdate();	
+				
+				PreparedStatement statement2 = instance.getConnection().prepareStatement
+						("SELECT * FROM " + instance.table + " WHERE UUID=?");
+				statement2.setString(1, uuid.toString());
+				ResultSet results2 = statement2.executeQuery();
+				results2.next();
+				
+				statement2 = instance.getConnection().prepareStatement
+						("UPDATE " + instance.table + " SET REVIEW_COUNT=? WHERE UUID=?");
+				int reviewCount = results2.getInt("REVIEW_COUNT");
+				
+				reviewCount++;
+				
+				statement2.setInt(1, reviewCount);
+				statement2.setString(2, uuid.toString());
+				statement2.executeUpdate();
+				
+			} else {
+				statement = instance.getConnection().prepareStatement
+						("UPDATE " + instance.review + " SET PLOT_NAMES=? WHERE UUID=?");
+				String plotNames = results.getString("PLOT_NAMES");
+				if (plotNames == null) {
+					plotNames = name;
+				} else {
+				plotNames = plotNames + "," + name;
+				}
+				statement.setString(1, plotNames);
+				statement.setString(2, uuid.toString());
+				statement.executeUpdate();
+				
+				PreparedStatement statement2 = instance.getConnection().prepareStatement
+						("SELECT * FROM " + instance.table + " WHERE UUID=?");
+				statement2.setString(1, uuid.toString());
+				ResultSet results2 = statement2.executeQuery();
+				results2.next();
+				
+				statement2 = instance.getConnection().prepareStatement
+						("UPDATE " + instance.table + " SET REVIEW_COUNT=? WHERE UUID=?");
+				int reviewCount = results2.getInt("REVIEW_COUNT");
+				
+				reviewCount++;
+				
+				statement2.setInt(1, reviewCount);
+				statement2.setString(2, uuid.toString());
+				statement2.executeUpdate();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
 }

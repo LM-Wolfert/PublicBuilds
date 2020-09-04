@@ -26,5 +26,6 @@ MySQL_port: 3306
 MySQL_database: test
 MySQL_username: root
 MySQL_password: password
-MySQL_table: player_data
+MySQL_plotTable: player_data
+MySQL_reviewTable: review
 

@@ -35,6 +35,7 @@ import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.gui.AnvilGui;
 import me.elgamer.publicbuilds.gui.AnvilGui.AnvilClickEvent;
 import me.elgamer.publicbuilds.mysql.MySQLReadWrite;
+import me.elgamer.publicbuilds.utils.PlotTeleport;
 
 @SuppressWarnings("unused")
 public class ClaimCommand implements CommandExecutor {
@@ -57,6 +58,7 @@ public class ClaimCommand implements CommandExecutor {
 	private int i = 0;
 	
 	private String plotName;
+	private int claimCount;
 
 	Pattern wordPattern = Pattern.compile("\\w+");
 	Matcher wordMatcher;
@@ -69,20 +71,50 @@ public class ClaimCommand implements CommandExecutor {
 		}
 		
 		Player p = (Player) sender;
+		MySQLReadWrite mysql = new MySQLReadWrite();
 		
-		createRegion(builderArea, p);
-		/*switch (Main.getPermissions().getPrimaryGroup("claimWorld",p)) {
+		if (mysql.playerExists(p.getUniqueId())) {
+			String claims = mysql.returnClaims(p.getUniqueId());
+			String[] names = claims.split(",");
+			claimCount = names.length;
+		} else {
+			claimCount = 0;
+		}
+
+		switch (Main.getPermissions().getPrimaryGroup("claimWorld",p)) {
+		
+		case "veteran":
+			if (claimCount >= builderLimit) {
+				p.sendMessage(ChatColor.RED + "You have reached the maximum number of plots, submit or remove an existing plot to be able to create a new one.");
+				return true;
+			} else {
+				return createRegion(builderArea, p);
+			}
 		
 		case "builder":
-			return createRegion(builderArea, p)
+			if (claimCount >= builderLimit) {
+				p.sendMessage(ChatColor.RED + "You have reached the maximum number of plots, submit or remove an existing plot to be able to create a new one.");
+				return true;
+			} else {
+				return createRegion(builderArea, p);
+			}
 			
 		case "apprentice":
-			return createRegion(apprenticeArea, p)
+			if (claimCount >= apprenticeLimit) {
+				p.sendMessage(ChatColor.RED + "You have reached the maximum number of plots, submit or remove an existing plot to be able to create a new one.");
+				return true;
+			} else {
+				return createRegion(apprenticeArea, p);
+			}
 			
-		case "guest":
-			return createRegion(guestArea, p)
+		case "default":
+			if (claimCount >= guestLimit) {
+				p.sendMessage(ChatColor.RED + "You have reached the maximum number of plots, submit or remove an existing plot to be able to create a new one.");
+			} else {
+				return createRegion(guestArea, p);
+			}
 				
-		}*/
+		}
 		return true;
 	}
 
@@ -188,6 +220,9 @@ public class ClaimCommand implements CommandExecutor {
 							mysql.addClaim(p.getUniqueId(), name);
 
 							p.sendMessage(ChatColor.GREEN + "Created plot with ID: " + name);
+							
+							PlotTeleport tp = new PlotTeleport();
+							tp.toPlot(p, name);
 						}
 					} else {
 						p.sendMessage(ChatColor.RED + "Please use a name that consists of 1 word and run the command again!");

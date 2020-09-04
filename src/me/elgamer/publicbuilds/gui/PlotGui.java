@@ -9,6 +9,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import me.elgamer.publicbuilds.mysql.MySQLReadWrite;
+import me.elgamer.publicbuilds.utils.PlotTeleport;
 import me.elgamer.publicbuilds.utils.Utils;
 
 public class PlotGui {
@@ -70,6 +71,9 @@ public class PlotGui {
 			p.performCommand("submitPlot");
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&cRemove plot"))) {
 			p.performCommand("removePlot");
-		}
+		} else if (slot>=21 && slot<=25 && clicked != null) {
+			PlotTeleport tp = new PlotTeleport();
+			tp.toPlot(p, clicked.getItemMeta().getDisplayName());
+		} else {}
 	}
 }

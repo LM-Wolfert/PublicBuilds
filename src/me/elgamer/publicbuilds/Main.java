@@ -13,6 +13,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import me.elgamer.publicbuilds.commands.ClaimCommand;
 import me.elgamer.publicbuilds.commands.OpenGui;
 import me.elgamer.publicbuilds.commands.RemoveClaim;
+import me.elgamer.publicbuilds.commands.SubmitClaim;
 import me.elgamer.publicbuilds.gui.PlotGui;
 import me.elgamer.publicbuilds.listeners.ClaimEnter;
 import me.elgamer.publicbuilds.listeners.InventoryClicked;
@@ -22,7 +23,7 @@ public class Main extends JavaPlugin {
 	
 	//MySQL
 	private Connection connection;
-	public String host, database, username, password, table;
+	public String host, database, username, password, table, review;
 	public int port;
 	
 	//Other
@@ -51,6 +52,7 @@ public class Main extends JavaPlugin {
 		getCommand("createPlot").setExecutor(new ClaimCommand());
 		getCommand("plot").setExecutor(new OpenGui());
 		getCommand("removePlot").setExecutor(new RemoveClaim());
+		getCommand("submitPlot").setExecutor(new SubmitClaim());
 		
 		//GUI
 		PlotGui.initialize();
@@ -78,7 +80,8 @@ public class Main extends JavaPlugin {
 		database = config.getString("MySQL_database");
 		username = config.getString("MySQL_username");
 		password = config.getString("MySQL_password");
-		table = config.getString("MySQL_table");
+		table = config.getString("MySQL_plotTable");
+		review = config.getString("MySQL_reviewTable");
 		
 		try {
 			

@@ -12,7 +12,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 //import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
@@ -42,14 +41,6 @@ import me.elgamer.publicbuilds.gui.AnvilGui.AnvilClickEvent;
 import me.elgamer.publicbuilds.mysql.MySQLReadWrite;
 
 public class RemoveClaim implements CommandExecutor {
-	
-	//Prompt User with name
-	
-	//Check if name exists in database
-	
-	//Reset claim
-	
-	//Remove claim
 	
 	//private Main instance = Main.getInstance();
 	//private FileConfiguration config = instance.getConfig();
@@ -137,13 +128,8 @@ public class RemoveClaim implements CommandExecutor {
 								
 							} else {
 								p.sendMessage(ChatColor.RED + "There is no plot with the name: " + name);
-							
-							
-							
-							
+						
 						}
-							//Reset claim
-							//Remove claim
 					} else {
 						p.sendMessage(ChatColor.RED + "Please use a name that consists of 1 word and run the command again!");
 					}
@@ -151,11 +137,6 @@ public class RemoveClaim implements CommandExecutor {
 					e.setWillClose(false);
 					e.setWillDestroy(false);
 				}
-			}
-			
-			@SuppressWarnings("unused")
-			public void onInventoryClose(InventoryCloseEvent e) {
-				p.sendMessage("Plot deletion cancelled!");
 			}
 			
 		},"Please input Plot Name!");
