@@ -50,17 +50,30 @@ public class SubmitClaim implements CommandExecutor {
 					wordMatcher = wordPattern.matcher(name);
 					if (wordMatcher.matches()) {
 						if (mysql.checkDuplicateName(p.getUniqueId(), name)) {
-							
-							mysql.removeClaim(p.getUniqueId(), name);
-							mysql.submitClaim(p.getUniqueId(), name);
-							
-							p.sendMessage(ChatColor.RED + "Plot " + name + " has been submitted for review!");
-							
-							Bukkit.broadcast(ChatColor.GREEN + "A plot has been submitted!", "group.veteran");
-								
-							} else {
+
+							String plots = mysql.returnClaims(p.getUniqueId());
+							if (plots == null) {
 								p.sendMessage(ChatColor.RED + "There is no plot with the name: " + name);
-						
+							} else {
+								String[] names = plots.split(",");
+								for (int i = 0; i < names.length; i++) {
+									if (names[i].equals(name)) {
+
+										mysql.submitClaim(p.getUniqueId(), name);
+
+										p.sendMessage(ChatColor.RED + "Plot " + name + " has been submitted for review!");
+
+										Bukkit.broadcast(ChatColor.GREEN + "A plot has been submitted!", "group.veteran");
+										
+										break;
+									}
+								}
+
+							}
+
+						} else {
+							p.sendMessage(ChatColor.RED + "There is no plot with the name: " + name);
+
 						}
 					} else {
 						p.sendMessage(ChatColor.RED + "Please use a name that consists of 1 word and run the command again!");

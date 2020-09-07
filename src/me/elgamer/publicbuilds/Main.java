@@ -23,7 +23,7 @@ public class Main extends JavaPlugin {
 	
 	//MySQL
 	private Connection connection;
-	public String host, database, username, password, table, review;
+	public String host, database, username, password, plotTable, reviewTable, completeTable;
 	public int port;
 	
 	//Other
@@ -80,8 +80,9 @@ public class Main extends JavaPlugin {
 		database = config.getString("MySQL_database");
 		username = config.getString("MySQL_username");
 		password = config.getString("MySQL_password");
-		table = config.getString("MySQL_plotTable");
-		review = config.getString("MySQL_reviewTable");
+		plotTable = config.getString("MySQL_plotTable");
+		reviewTable = config.getString("MySQL_reviewTable");
+		completeTable = config.getString("MySQL_completeTable");
 		
 		try {
 			

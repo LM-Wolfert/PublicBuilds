@@ -8,49 +8,55 @@ import java.util.UUID;
 import me.elgamer.publicbuilds.Main;
 
 public class MySQLReadWrite {
-	
+
 	Main instance = Main.getInstance(); 
-	
+
+
+	//In player_data
 	public boolean playerExists(UUID uuid) {
 		try {
 			PreparedStatement statement = instance.getConnection().prepareStatement
-					("SELECT * FROM " + instance.table + " WHERE UUID=?");
+					("SELECT * FROM " + instance.plotTable + " WHERE UUID=?");
 			statement.setString(1, uuid.toString());
-			
+
 			ResultSet results = statement.executeQuery();
 			if (results.next()) {
 				return true;
 			}
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return false;
 	}
-	
+
+
+	//In player_data - update Column 2: REGION_NAMES
 	public void addClaim(UUID uuid, String name) {
 		try {
 			PreparedStatement statement = instance.getConnection().prepareStatement
-					("SELECT * FROM " + instance.table + " WHERE UUID=?");
+					("SELECT * FROM " + instance.plotTable + " WHERE UUID=?");
 			statement.setString(1, uuid.toString());
 			ResultSet results = statement.executeQuery();
 			results.next();
+
+			//If player doesn't exist - set default values
 			if (playerExists(uuid) != true) {
 				PreparedStatement insert = instance.getConnection().prepareStatement
-						("INSERT INTO " + instance.table + " (UUID,REGION_NAMES,REVIEW_COUNT) VALUE (?,?,?)");
+						("INSERT INTO " + instance.plotTable + " (UUID,REGION_NAMES) VALUE (?,?)");
 				insert.setString(1, uuid.toString());
 				insert.setString(2, name);
-				insert.setInt(3, 0);
-				insert.executeUpdate();		
-				
+				insert.executeUpdate();
+
+				//If player does exist - update values	
 			} else {
 				statement = instance.getConnection().prepareStatement
-						("UPDATE " + instance.table + " SET REGION_NAMES=? WHERE UUID=?");
+						("UPDATE " + instance.plotTable + " SET REGION_NAMES=? WHERE UUID=?");
 				String regionNames = results.getString("REGION_NAMES");
 				if (regionNames == null) {
 					regionNames = name;
 				} else {
-				regionNames = regionNames + "," + name;
+					regionNames = regionNames + "," + name;
 				}
 				statement.setString(1, regionNames);
 				statement.setString(2, uuid.toString());
@@ -60,75 +66,101 @@ public class MySQLReadWrite {
 			e.printStackTrace();
 		}
 	}
-	
+
+	//Checks for duplicate plot names in player_data
 	public boolean checkDuplicateName(UUID uuid, String name) {
-		
+
 		try {
 			PreparedStatement statement = instance.getConnection().prepareStatement
-					("SELECT * FROM " + instance.table + " WHERE UUID=?");
+					("SELECT * FROM " + instance.plotTable + " WHERE UUID=?");
 			statement.setString(1, uuid.toString());
 			ResultSet results = statement.executeQuery();
 			results.next();
+
+			//If player doesn't exist they have no plots
 			if (playerExists(uuid) != true) {
 				return false;
+
+				//If player does exist check both REGION_NAMES and REVIEW_NAMES
 			} else {
 				String regionNames = results.getString("REGION_NAMES");
-				if (regionNames == null) {
+				String reviewNames = results.getString("REVIEW_NAMES");
+
+				//If both are empty, there are no duplicates
+				if (regionNames == null && reviewNames == null) {
 					return false;
+
+					//Else check both regionNames and reviewNames for duplicate
 				} else {
-				String[] names = regionNames.split(",");
-				
-				for (int i = 0; i < names.length; i++) {
-					if (names[i].equals(name)) {
+					if (checkDuplicateNames(regionNames, name) || (checkDuplicateNames(reviewNames, name))) {
 						return true;
-						}
-					}
+					} else { return false; }
 				}
-				return false;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}
-		return false;
+		} return false;
 	}
-	
+
+	//Check for duplicate name in String
+	private boolean checkDuplicateNames(String names, String name) {
+
+		if (names == null) {
+			return false;
+		} else {
+
+			String[] nameString = names.split(",");
+
+			for (int i = 0; i < nameString.length; i++) {
+				if (nameString[i].equals(name)) {
+					return true;
+				}
+			}
+			return false;
+		}
+	}
+
+	//Remove plot
 	public void removeClaim(UUID uuid, String name) {
 		try {
 			PreparedStatement statement = instance.getConnection().prepareStatement
-					("SELECT * FROM " + instance.table + " WHERE UUID=?");
+					("SELECT * FROM " + instance.plotTable + " WHERE UUID=?");
 			statement.setString(1, uuid.toString());
 			ResultSet results = statement.executeQuery();
 			results.next();
-			statement = instance.getConnection().prepareStatement
-						("UPDATE " + instance.table + " SET REGION_NAMES=? WHERE UUID=?");
-				String regionNames = results.getString("REGION_NAMES");
-				String[] names = regionNames.split(",");
-				regionNames = null;
-				
-				for (int i = 0; i < names.length; i++) {
-					if (names[i].equals(name)) {
+
+			String regionNames = results.getString("REGION_NAMES");
+			String[] names = regionNames.split(",");
+			regionNames = null;
+
+			//Rebuilding REGION_NAMES String without removed claim
+			for (int i = 0; i < names.length; i++) {
+				if (names[i].equals(name)) {
+				} else {
+					if (regionNames == null) {
+						regionNames = names[i];
 					} else {
-						if (regionNames == null) {
-							regionNames = names[i];
-						} else {
 						regionNames = regionNames + "," + names[i];
-						}
 					}
 				}
-				
-				statement.setString(1, regionNames);
-				statement.setString(2, uuid.toString());
-				statement.executeUpdate();
-				
+			}
+
+			statement = instance.getConnection().prepareStatement
+					("UPDATE " + instance.plotTable + " SET REGION_NAMES=? WHERE UUID=?");
+			statement.setString(1, regionNames);
+			statement.setString(2, uuid.toString());
+			statement.executeUpdate();
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
+	//Returns String of plotNames
 	public String returnClaims(UUID uuid) {
 		try {
 			PreparedStatement statement = instance.getConnection().prepareStatement
-					("SELECT * FROM " + instance.table + " WHERE UUID=?");
+					("SELECT * FROM " + instance.plotTable + " WHERE UUID=?");
 			statement.setString(1, uuid.toString());
 			ResultSet results = statement.executeQuery();
 			results.next();
@@ -138,86 +170,77 @@ public class MySQLReadWrite {
 		}
 		return null;
 	}
-	
-	public boolean playerReviewExists(UUID uuid) {
-		try {
-			PreparedStatement statement = instance.getConnection().prepareStatement
-					("SELECT * FROM " + instance.review + " WHERE UUID=?");
-			statement.setString(1, uuid.toString());
-			
-			ResultSet results = statement.executeQuery();
-			if (results.next()) {
-				return true;
-			}
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return false;
-	}
-	
+
+	//Submit plot - Update REVIEW_NAMES in player_data - Add entry to review
 	public void submitClaim(UUID uuid, String name) {
 		try {
-			PreparedStatement statement = instance.getConnection().prepareStatement
-					("SELECT * FROM " + instance.review + " WHERE UUID=?");
-			statement.setString(1, uuid.toString());
-			ResultSet results = statement.executeQuery();
-			results.next();
-			if (playerReviewExists(uuid) != true) {
-				PreparedStatement insert = instance.getConnection().prepareStatement
-						("INSERT INTO " + instance.review + " (UUID,PLOT_NAMES) VALUE (?,?)");
-				insert.setString(1, uuid.toString());
-				insert.setString(2, name);
-				insert.executeUpdate();	
-				
-				PreparedStatement statement2 = instance.getConnection().prepareStatement
-						("SELECT * FROM " + instance.table + " WHERE UUID=?");
-				statement2.setString(1, uuid.toString());
-				ResultSet results2 = statement2.executeQuery();
-				results2.next();
-				
-				statement2 = instance.getConnection().prepareStatement
-						("UPDATE " + instance.table + " SET REVIEW_COUNT=? WHERE UUID=?");
-				int reviewCount = results2.getInt("REVIEW_COUNT");
-				
-				reviewCount++;
-				
-				statement2.setInt(1, reviewCount);
-				statement2.setString(2, uuid.toString());
-				statement2.executeUpdate();
-				
-			} else {
-				statement = instance.getConnection().prepareStatement
-						("UPDATE " + instance.review + " SET PLOT_NAMES=? WHERE UUID=?");
-				String plotNames = results.getString("PLOT_NAMES");
-				if (plotNames == null) {
-					plotNames = name;
+
+			//If player is in player_data, continue
+			if (playerExists(uuid)) {
+				removeClaim(uuid, name);
+
+				// Update player_data
+				PreparedStatement statement = instance.getConnection().prepareStatement
+						("SELECT * FROM " + instance.plotTable + " WHERE UUID=?");
+				statement.setString(1, uuid.toString());
+				ResultSet results = statement.executeQuery();
+				results.next();
+
+				String reviewNames = results.getString("REVIEW_NAMES");
+
+				if (reviewNames == null) {
+					reviewNames = name;
 				} else {
-				plotNames = plotNames + "," + name;
+					reviewNames = reviewNames + "," + name;
 				}
-				statement.setString(1, plotNames);
+				
+				statement = instance.getConnection().prepareStatement
+						("UPDATE " + instance.plotTable + " SET REVIEW_NAMES=? WHERE UUID=?");
 				statement.setString(2, uuid.toString());
+				statement.setString(1, reviewNames);
 				statement.executeUpdate();
-				
-				PreparedStatement statement2 = instance.getConnection().prepareStatement
-						("SELECT * FROM " + instance.table + " WHERE UUID=?");
-				statement2.setString(1, uuid.toString());
-				ResultSet results2 = statement2.executeQuery();
-				results2.next();
-				
-				statement2 = instance.getConnection().prepareStatement
-						("UPDATE " + instance.table + " SET REVIEW_COUNT=? WHERE UUID=?");
-				int reviewCount = results2.getInt("REVIEW_COUNT");
-				
-				reviewCount++;
-				
-				statement2.setInt(1, reviewCount);
-				statement2.setString(2, uuid.toString());
-				statement2.executeUpdate();
+
+				// Add entry to review
+				PreparedStatement insert = instance.getConnection().prepareStatement
+						("INSERT INTO " + instance.reviewTable + " (PLOT_ID,UUID,PLOT_NAME) VALUE (?,?,?)");
+				insert.setString(1, uuid.toString() + "," + name);
+				insert.setString(2, uuid.toString());
+				insert.setString(3, name);
+				insert.executeUpdate();
+
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+
+	//Find plot for player to review
+	public String getReview(UUID uuid) {
+		try {
+
+			//Get plots without reviewer
+			PreparedStatement statement = instance.getConnection().prepareStatement
+					("SELECT * FROM " + instance.reviewTable + " WHERE REVIEWER_UUID=?");
+			statement.setString(1, null);
+			ResultSet results = statement.executeQuery();
+
+			//If there is an available plot for review
+			if (results.next()) {
+				statement = instance.getConnection().prepareStatement
+						("UPDATE " + instance.reviewTable + " SET REVIEW_UUID WHERE PLOT_ID=?");
+				String name = results.getString("PLOT_ID");
+				statement.setString(2, name);
+				statement.setString(1, uuid.toString());
+				statement.executeUpdate();
+				return name;
+			} else {
+				return null;
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 }

@@ -18,7 +18,7 @@ public class OpenGui implements CommandExecutor {
 
 		Player p = (Player) sender;
 
-		if (p.hasPermission("PublicBuids.plot")) {
+		if (p.hasPermission("publicbuilds.plot")) {
 			p.openInventory(PlotGui.GUI(p));
 		}
 		return true;

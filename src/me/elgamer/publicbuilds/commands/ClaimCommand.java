@@ -75,8 +75,12 @@ public class ClaimCommand implements CommandExecutor {
 		
 		if (mysql.playerExists(p.getUniqueId())) {
 			String claims = mysql.returnClaims(p.getUniqueId());
-			String[] names = claims.split(",");
-			claimCount = names.length;
+			if (claims == null) {
+				claimCount = 0;
+			} else {
+				String[] names = claims.split(",");
+				claimCount = names.length;
+			}
 		} else {
 			claimCount = 0;
 		}
