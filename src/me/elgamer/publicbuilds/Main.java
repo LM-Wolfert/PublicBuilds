@@ -13,8 +13,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 import me.elgamer.publicbuilds.commands.ClaimCommand;
 import me.elgamer.publicbuilds.commands.OpenGui;
 import me.elgamer.publicbuilds.commands.RemoveClaim;
+import me.elgamer.publicbuilds.commands.Review;
 import me.elgamer.publicbuilds.commands.SubmitClaim;
 import me.elgamer.publicbuilds.gui.PlotGui;
+import me.elgamer.publicbuilds.gui.ReviewGui;
 import me.elgamer.publicbuilds.listeners.ClaimEnter;
 import me.elgamer.publicbuilds.listeners.InventoryClicked;
 import net.milkbowl.vault.permission.Permission;
@@ -53,9 +55,11 @@ public class Main extends JavaPlugin {
 		getCommand("plot").setExecutor(new OpenGui());
 		getCommand("removePlot").setExecutor(new RemoveClaim());
 		getCommand("submitPlot").setExecutor(new SubmitClaim());
-		
+		getCommand("review").setExecutor(new Review());
+
 		//GUI
 		PlotGui.initialize();
+		ReviewGui.initialize();
 		
 		//Vault
 		setupPermissions();

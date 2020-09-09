@@ -17,3 +17,6 @@ commands:
     submitPlot:
         usage: /<command>
         description: Submits a plot.
+    review:
+        usage: /<command>
+        description: Open the review gui.

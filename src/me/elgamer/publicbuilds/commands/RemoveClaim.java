@@ -113,7 +113,7 @@ public class RemoveClaim implements CommandExecutor {
 								ex.printStackTrace();
 							}
 							
-							mysql.removeClaim(p.getUniqueId(), name);
+							mysql.removeClaim(p.getUniqueId().toString(), name);
 							claimRegions.removeRegion(regionName);
 							buildRegions.removeRegion(regionName);
 							try {

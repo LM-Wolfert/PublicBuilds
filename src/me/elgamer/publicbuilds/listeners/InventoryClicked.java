@@ -8,6 +8,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 
 import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.gui.PlotGui;
+import me.elgamer.publicbuilds.gui.ReviewGui;
 
 public class InventoryClicked implements Listener {
 	
@@ -30,6 +31,15 @@ public class InventoryClicked implements Listener {
 			}
 			if (title.equals(PlotGui.inventory_name)) {
 				PlotGui.clicked((Player) e.getWhoClicked(), e.getSlot(), e.getCurrentItem(), e.getInventory());
+			}
+		}
+		else if (title.equals(ReviewGui.inventory_name)) {
+			e.setCancelled(true);
+			if (e.getCurrentItem() == null){
+				return;
+			}
+			if (title.equals(ReviewGui.inventory_name)) {
+				ReviewGui.clicked((Player) e.getWhoClicked(), e.getSlot(), e.getCurrentItem(), e.getInventory());
 			}
 		}
 		else {
