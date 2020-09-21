@@ -11,19 +11,21 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
+import me.elgamer.publicbuilds.mysql.MySQLReadWrite;
+
 public class PlotTeleport {
 
+	//Teleports the player to the MinimumPoint of the plot at the highest available y level
+	public void toPlot(Player p, String plotID) {
 
-	public void toPlot(Player p, String name) {
-
-		name = ChatColor.stripColor(name);
+		plotID = ChatColor.stripColor(plotID);
 
 		World world = Bukkit.getServer().getWorld("buildWorld");
-		RegionManager regions = getWorldGuard().getRegionContainer().get(world);
-		ProtectedRegion region = regions.getRegion(p.getUniqueId().toString() + "," + name);
 
-		int x = region.getMinimumPoint().getBlockX();
-		int z = region.getMinimumPoint().getBlockZ();
+		MySQLReadWrite mysql = new MySQLReadWrite();
+		
+		int x = mysql.getX(plotID);
+		int z = mysql.getZ(plotID);
 
 		int y = world.getHighestBlockYAt(x, z);
 

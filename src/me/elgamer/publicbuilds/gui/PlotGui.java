@@ -1,7 +1,5 @@
 package me.elgamer.publicbuilds.gui;
 
-import java.util.UUID;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -27,7 +25,7 @@ public class PlotGui {
 	
 	public static Inventory GUI (Player p) {
 		
-		UUID uuid = p.getUniqueId();
+		String uuid = p.getUniqueId().toString();
 		String claims;
 		String[] names;
 		int size;
@@ -73,7 +71,7 @@ public class PlotGui {
 			p.performCommand("removePlot");
 		} else if (slot>=21 && slot<=25 && clicked != null) {
 			PlotTeleport tp = new PlotTeleport();
-			tp.toPlot(p, clicked.getItemMeta().getDisplayName());
+			tp.toPlot(p, p.getUniqueId().toString() + "," + clicked.getItemMeta().getDisplayName());
 		} else {}
 	}
 }

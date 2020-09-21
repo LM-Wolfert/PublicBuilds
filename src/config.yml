@@ -26,7 +26,11 @@ MySQL_port: 3306
 MySQL_database: test
 MySQL_username: root
 MySQL_password: password
-MySQL_plotTable: player_data
-MySQL_reviewTable: review
+MySQL_playerData: player_data
+MySQL_plotData: plot_data
 MySQL_completeTable: completed
+
+#Worlds
+defaultWorld: claimWorld
+editWorld: buildWorld
 

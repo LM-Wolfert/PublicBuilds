@@ -34,7 +34,7 @@ public class ReviewGui {
 
 		inv.clear();
 
-		if (mysql.inReview(uuid)) {
+		if (mysql.inReview(uuid.toString())) {
 			Utils.createItem(inv, 166, 1, 14, "&cCurrently reviewing", "&7To start a new review please finish this one!");
 			Utils.createItemByte(inv, 251, 3, 1, 4, "&cBefore view", "&7Teleport to plot in original state!");
 			Utils.createItemByte(inv, 251, 11, 1, 6, "&cCurrent view", "&7Teleport to plot on submit!");

@@ -37,7 +37,7 @@ public class Review implements CommandExecutor {
 
 		MySQLReadWrite mysql = new MySQLReadWrite();
 
-		if (mysql.getReview(p.getUniqueId()) == null) {
+		if (mysql.getReview(p.getUniqueId().toString()) == null) {
 			p.closeInventory();
 			p.sendMessage(ChatColor.RED + "There are currently no plots for review!");
 		} else {
@@ -50,7 +50,7 @@ public class Review implements CommandExecutor {
 	
 	public void toPlot(Player p, String world) {
 	
-		String name = mysql.currentReview(p.getUniqueId());
+		String name = mysql.currentReview(p.getUniqueId().toString());
 		tp.toReview(p, name, world);
 
 	}
@@ -63,7 +63,7 @@ public class Review implements CommandExecutor {
 		
 		MySQLReadWrite mysql = new MySQLReadWrite();
 		
-		String plot = mysql.currentReview(p.getUniqueId());
+		String plot = mysql.currentReview(p.getUniqueId().toString());
 		mysql.denyReview(p, plot);
 		
 		p.sendMessage(ChatColor.RED + "");
