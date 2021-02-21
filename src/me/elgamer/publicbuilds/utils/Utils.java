@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -15,15 +16,13 @@ public class Utils {
 		return ChatColor.translateAlternateColorCodes('&', s);
 	}
 	
-	@SuppressWarnings("deprecation")
-	public static ItemStack createItem(Inventory inv, int materialId, int amount, int invSlot, String displayName, String... loreString) {
+	public static ItemStack createItem(Inventory inv, String materialName, int amount, int invSlot, String displayName, String... loreString) {
 		
 		ItemStack item;
 		
-		@SuppressWarnings({ "unchecked", "rawtypes" })
-		List<String> lore = new ArrayList();
+		List<String> lore = new ArrayList<String>();
 		
-		item = new ItemStack(Material.getMaterial(materialId), amount);
+		item = new ItemStack(Material.getMaterial(materialName));
 		
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName(Utils.chat(displayName));
@@ -39,27 +38,7 @@ public class Utils {
 		
 	}
 	
-	@SuppressWarnings({ "rawtypes", "deprecation" })
-	public static ItemStack createItemByte(Inventory inv, int materialId, int byteId, int amount, int invSlot, String displayName, String... loreString) {
-			
-			ItemStack item;
-			
-			@SuppressWarnings("unchecked")
-			List<String> lore = new ArrayList();
-			
-			item = new ItemStack(Material.getMaterial(materialId), amount, (short) byteId);
-			
-			ItemMeta meta = item.getItemMeta();
-			meta.setDisplayName(Utils.chat(displayName));
-			for (String s : loreString) {
-				lore.add(Utils.chat(s));
-			}
-			meta.setLore(lore);
-			item.setItemMeta(meta);
-			
-			inv.setItem(invSlot - 1,  item);
-			
-			return item;
-			
-		}
+	public static boolean isPlayerInGroup(Player player, String group) {
+	    return player.hasPermission("group." + group);
+	}
 }

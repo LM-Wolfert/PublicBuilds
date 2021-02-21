@@ -1,13 +1,15 @@
 package me.elgamer.publicbuilds.gui;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import me.elgamer.publicbuilds.mysql.MySQLReadWrite;
-import me.elgamer.publicbuilds.utils.PlotTeleport;
+import me.elgamer.publicbuilds.Main;
+import me.elgamer.publicbuilds.mysql.PlotData;
 import me.elgamer.publicbuilds.utils.Utils;
 
 public class PlotGui {
@@ -17,7 +19,7 @@ public class PlotGui {
 	public static int inv_rows = 5 * 9;
 	
 	public static void initialize() {
-		inventory_name = Utils.chat("Plots");
+		inventory_name = Utils.chat("&9Menu");
 		
 		inv = Bukkit.createInventory(null, inv_rows);
 		
@@ -25,53 +27,39 @@ public class PlotGui {
 	
 	public static Inventory GUI (Player p) {
 		
-		String uuid = p.getUniqueId().toString();
-		String claims;
-		String[] names;
-		int size;
-		MySQLReadWrite mysql = new MySQLReadWrite();
-		
 		Inventory toReturn = Bukkit.createInventory(null, inv_rows, inventory_name);
 		
 		inv.clear();
 		
-		Utils.createItemByte(inv, 251, 5, 1, 3, "&cCreate plot", "&7A plot will be created in your selection!");
-		Utils.createItemByte(inv, 251, 4, 1, 5, "&cSubmit plot", "&7Your plot will be up for review!");
-		Utils.createItemByte(inv, 251, 14, 1, 7, "&cRemove plot", "&7All current progress in the plot will be reset!");
-		if (mysql.playerExists(uuid) && mysql.returnClaims(uuid) != null) {
-			claims = mysql.returnClaims(uuid);
-			names = claims.split(",");
-			size = names.length;
-			if (size == 1) {
-					Utils.createItemByte(inv, 251, 1, 1, 23, ChatColor.RED + names[0], "&7Click to teleport to your plot!");
-				} else if (size == 2) {
-					Utils.createItemByte(inv, 251, 1, 1, 22, ChatColor.RED + names[0], "&7Click to teleport to your plot!");
-					Utils.createItemByte(inv, 251, 1, 1, 24, ChatColor.RED + names[1], "&7Click to teleport to your plot!");
-				} else if (size == 3) {
-					Utils.createItemByte(inv, 251, 1, 1, 21, ChatColor.RED + names[0], "&7Click to teleport to your plot!");
-					Utils.createItemByte(inv, 251, 1, 1, 23, ChatColor.RED + names[1], "&7Click to teleport to your plot!");
-					Utils.createItemByte(inv, 251, 1, 1, 25, ChatColor.RED + names[2], "&7Click to teleport to your plot!");
-				}
-		} else {
-			Utils.createItem(inv, 166, 1, 23, "&cYou do not own a plot!", "&7Create a selection with WorldEdit and click on the Create Plot button in the GUI!");
-			
-		}
+		HashMap<Integer, String> plots = PlotData.getPlots(p.getUniqueId().toString());
 		
+		int i = 2;
+		int j = 2;
+		
+		for (Map.Entry<Integer, String> entry : plots.entrySet()) {
+			
+			if (entry.getValue().equalsIgnoreCase("claimed")) {			
+				
+				Utils.createItem(inv, "LIME_TERRACOTTA", 1, ((j-1)*7)+i, Utils.chat("&9" + String.valueOf(entry.getKey())), Utils.chat("&1Click to open plot functions!"));
+				
+				i += 1;
+				
+				if (i>6) {
+					i -= 5;
+					j += 1;
+				}				
+			}			
+		}
+			
 		toReturn.setContents(inv.getContents());
 		return toReturn;
 	}
 	
 	public static void clicked(Player p, int slot, ItemStack clicked, Inventory inv) {
 		
-		if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&cCreate plot"))) {
-			p.performCommand("createPlot");
-		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&cSubmit plot"))) {
-			p.performCommand("submitPlot");
-		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&cRemove plot"))) {
-			p.performCommand("removePlot");
-		} else if (slot>=21 && slot<=25 && clicked != null) {
-			PlotTeleport tp = new PlotTeleport();
-			tp.toPlot(p, p.getUniqueId().toString() + "," + clicked.getItemMeta().getDisplayName());
-		} else {}
-	}
+		int id = Integer.parseInt(clicked.getItemMeta().getDisplayName());
+		Main.getInstance().getCurrentPlot().addPlayer(p, id);
+		p.closeInventory();
+		p.openInventory(PlotInfo.GUI(p));
+	}		
 }

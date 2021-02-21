@@ -5,7 +5,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.elgamer.publicbuilds.gui.PlotGui;
+import me.elgamer.publicbuilds.gui.MainGui;
 
 public class OpenGui implements CommandExecutor {
 
@@ -18,9 +18,8 @@ public class OpenGui implements CommandExecutor {
 
 		Player p = (Player) sender;
 
-		if (p.hasPermission("publicbuilds.plot")) {
-			p.openInventory(PlotGui.GUI(p));
-		}
+		p.openInventory(MainGui.GUI(p));
+		
 		return true;
 
 	}

@@ -1,36 +1,56 @@
-#Rank limits
-
-#Guest
-#Maximum claimable area
-guestArea: 400
-#Maximum number of claims
-guestLimit: 1
-
-#Apprentice
-#Maximum claimable area
-apprenticeArea: 900
-#Maximum number of claims
-apprenticeLimit: 2
-
-#Builder
-#Maximum claimable area
-builderArea: 1600
-#Maximum number of claims
-builderLimit: 3
-
-
-#MySQL Info
-
+#MySQL is manditory for this plugin
+#Login information
 MySQL_host: localhost
 MySQL_port: 3306
-MySQL_database: test
 MySQL_username: root
 MySQL_password: password
+
+#Database name (doesn't require adjusting)
+MySQL_database: minecraft_publicbuilds
+
+#Tables in database (doesn't require adjusting)
 MySQL_playerData: player_data
 MySQL_plotData: plot_data
-MySQL_completeTable: completed
 
-#Worlds
-defaultWorld: claimWorld
-editWorld: buildWorld
+#Plot Limits
+#Limit on maximum distance between 2 corners of a plot
+plot_distance:
+    guest: 25
+    apprentice: 50
+    jrbuilder: 75
+    builder: 100
+#Limit on active claimed plots
 
+#If user is at the limit they will no longer be able to create a new plot
+plot_limit:
+    guest: 1
+    apprentice: 2
+    jrbuilder: 3
+    builder: 5
+
+#Maximum number of total plots, this includes submitted plots
+plot_maximum: 15
+
+#Server must be using multiverse to allow for multiple worlds
+worlds:
+    save: saveWorld
+    build: buildWorld
+    tutorial:
+        before: tutorialBefore
+        after: tutorialAfter
+
+#Tutorial
+#The user has to create a plot that includes these points
+plot_corners:
+    1:
+        x: 2808086
+        z: -5408457
+    2:
+        x: 2808111
+        z: -5408432
+    3:
+        x: 2808093
+        z: -5408415
+    4:
+        x: 2808068
+        z: -5408440

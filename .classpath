@@ -4,9 +4,10 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="C:/Users/Laurens/Downloads/worldedit-bukkit-6.1.9.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Laurens/Downloads/worldguard-bukkit-6.2.2.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Laurens/Downloads/spigot-1.12.2.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Laurens/Downloads/LuckPerms-Bukkit-5.1.93 (1).jar"/>
 	<classpathentry kind="lib" path="C:/Users/Laurens/Downloads/Vault.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Laurens/Downloads/mysql-connector-java-5.1.49/mysql-connector-java-5.1.49/mysql-connector-java-5.1.49-bin.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Laurens/Downloads/spigot-1.16.4.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Laurens/Desktop/VanillaTpll.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
