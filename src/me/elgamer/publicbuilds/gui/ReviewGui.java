@@ -1,11 +1,14 @@
 package me.elgamer.publicbuilds.gui;
 
+import java.util.Map;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import me.elgamer.publicbuilds.Main;
+import me.elgamer.publicbuilds.utils.Accept;
 import me.elgamer.publicbuilds.utils.Review;
 import me.elgamer.publicbuilds.utils.Utils;
 import me.elgamer.publicbuilds.utils.WorldGuard;
@@ -49,6 +52,14 @@ public class ReviewGui {
 			int plot = review.getReview(p);
 			p.teleport(WorldGuard.getBeforeLocation(plot));
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&cAccept"))) {
+			p.closeInventory();
+			Map<Player, Accept> accept = Main.getInstance().getAccept();
+			if (accept.containsKey(p)) {
+				accept.replace(p, new Accept());
+			} else {
+				accept.put(p, new Accept());
+			}
+			p.openInventory(AcceptGui.GUI(p));
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&cDeny"))) {
 			p.closeInventory();
 			p.openInventory(DenyGui.GUI(p));

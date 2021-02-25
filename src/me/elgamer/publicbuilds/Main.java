@@ -2,7 +2,10 @@ package me.elgamer.publicbuilds;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -26,6 +29,7 @@ import me.elgamer.publicbuilds.listeners.InventoryClicked;
 import me.elgamer.publicbuilds.listeners.JoinServer;
 import me.elgamer.publicbuilds.listeners.QuitServer;
 import me.elgamer.publicbuilds.mysql.PlotData;
+import me.elgamer.publicbuilds.utils.Accept;
 import me.elgamer.publicbuilds.utils.CurrentPlot;
 import me.elgamer.publicbuilds.utils.Plots;
 import me.elgamer.publicbuilds.utils.Reason;
@@ -51,6 +55,7 @@ public class Main extends JavaPlugin {
 	Plots plots;
 	Reason reason;
 	CurrentPlot currentPlot;
+	Map<Player, Accept> accept;
 
 	@Override
 	public void onEnable() {
@@ -63,6 +68,7 @@ public class Main extends JavaPlugin {
 
 		//MySQL		
 		mysqlSetup();
+		createPlayerData();
 		PlotData.clearReview();
 
 		//Create Tutorial
@@ -80,6 +86,9 @@ public class Main extends JavaPlugin {
 		//Create CurrentPlot
 		currentPlot = new CurrentPlot();
 
+		//Create Accept
+		accept = new HashMap<Player, Accept>();
+				
 		//Listeners
 		new JoinServer(this);
 		new QuitServer(this);
@@ -222,7 +231,23 @@ public class Main extends JavaPlugin {
 		return reason;
 	}
 	
+	public Map<Player, Accept> getAccept(){
+		return accept;
+	}
+	
 	public CurrentPlot getCurrentPlot() {
 		return currentPlot;
+	}
+	
+	public void createPlayerData() {
+		try {
+			PreparedStatement statement = instance.getConnection().prepareStatement
+					("CREATE TABLE IF NOT EXISTS " + playerData
+							+ " ( ID VARCHAR(36) NOT NULL , NAME VARCHAR(20) NOT NULL , TUTORIAL_STAGE INT NOT NULL , BUILDING_POINTS INT NOT NULL , LAST_ONLINE BIGINT NOT NULL , UNIQUE (ID))");
+			statement.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }
