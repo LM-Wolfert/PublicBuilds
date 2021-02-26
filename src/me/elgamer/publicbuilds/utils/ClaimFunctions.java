@@ -24,19 +24,23 @@ public class ClaimFunctions {
 
 	public static String createClaim(String uuid, List<BlockVector2D> vector) {
 
+		//Get plugin instance and config.
 		Main instance = Main.getInstance();
 		FileConfiguration config = instance.getConfig();
 
+		//Get worlds.
 		World saveWorld = Bukkit.getServer().getWorld(config.getString("saveWorld"));
 		World buildWorld = Bukkit.getServer().getWorld(config.getString("buildWorld"));
 
+		//Get instance of WorldGuard.
 		WorldGuardPlugin wg = Main.getWorldGuard();
 
+		//Get regions.
 		RegionContainer container = wg.getRegionContainer();
 		RegionManager saveRegions = container.get(saveWorld);
 		RegionManager buildRegions = container.get(buildWorld);
 
-		//Get new id
+		//Create new id
 		int plotID = PlotData.getNewID();
 
 		//Create region
@@ -48,6 +52,7 @@ public class ClaimFunctions {
 			return (ChatColor.RED + "This region overlaps with an existing plot, please create a different plot.");
 		}
 
+		//Create an entry in the database for the plot.
 		if (!(PlotData.createPlot(plotID, uuid))) {
 			return (ChatColor.RED + "An error occured, please try again!");
 		}
@@ -80,8 +85,8 @@ public class ClaimFunctions {
 		FileConfiguration config = instance.getConfig();
 
 		//Get worlds from config
-		World saveWorld = Bukkit.getServer().getWorld(config.getString("saveWorld"));
-		World buildWorld = Bukkit.getServer().getWorld(config.getString("buildWorld"));
+		World saveWorld = Bukkit.getServer().getWorld(config.getString("worlds.save"));
+		World buildWorld = Bukkit.getServer().getWorld(config.getString("worlds.build"));
 
 		//Get worldguard instance from Main
 		WorldGuardPlugin wg = Main.getWorldGuard();

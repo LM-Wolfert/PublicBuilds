@@ -21,7 +21,11 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import me.elgamer.publicbuilds.commands.Corner;
 import me.elgamer.publicbuilds.commands.CreateArea;
 import me.elgamer.publicbuilds.commands.OpenGui;
+import me.elgamer.publicbuilds.gui.AcceptGui;
+import me.elgamer.publicbuilds.gui.DenyGui;
 import me.elgamer.publicbuilds.gui.MainGui;
+import me.elgamer.publicbuilds.gui.PlotGui;
+import me.elgamer.publicbuilds.gui.PlotInfo;
 import me.elgamer.publicbuilds.gui.ReviewGui;
 import me.elgamer.publicbuilds.listeners.ChatListener;
 import me.elgamer.publicbuilds.listeners.ClaimEnter;
@@ -104,6 +108,10 @@ public class Main extends JavaPlugin {
 		//GUI
 		MainGui.initialize();
 		ReviewGui.initialize();
+		AcceptGui.initialize();
+		DenyGui.initialize();
+		PlotGui.initialize();
+		PlotInfo.initialize();
 
 		//Vault
 		setupPermissions();
@@ -125,7 +133,7 @@ public class Main extends JavaPlugin {
 			if (review.inReview(p)) {
 
 				int plot = review.getReview(p);
-				PlotData.cancelReview(plot);
+				PlotData.setStatus(plot, "submitted");
 
 			}
 		}

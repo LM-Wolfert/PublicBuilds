@@ -8,8 +8,12 @@ public class CurrentPlot {
 	
 HashMap<Player, Integer> plots = new HashMap<Player, Integer>();
 	
-	public void addPlayer(Player p, int id) {
-		plots.put(p, id);
+	public void addPlayer(Player p) {
+		plots.put(p, 0);
+	}
+	
+	public void setPlot(Player p, int id) {
+		plots.replace(p, id);
 	}
 	
 	public int getPlot(Player p) {

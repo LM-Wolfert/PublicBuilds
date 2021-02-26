@@ -31,13 +31,16 @@ public class PlotGui {
 		
 		inv.clear();
 		
+		//Get all plots owned by the player.
 		HashMap<Integer, String> plots = PlotData.getPlots(p.getUniqueId().toString());
 		
+		//Add all the plots to the gui in rows of 5.
 		int i = 2;
 		int j = 2;
 		
 		for (Map.Entry<Integer, String> entry : plots.entrySet()) {
 			
+			//If the plot is claimed, as in not submitted, completed or cancelled, then add it to the gui.
 			if (entry.getValue().equalsIgnoreCase("claimed")) {			
 				
 				Utils.createItem(inv, "LIME_TERRACOTTA", 1, ((j-1)*7)+i, Utils.chat("&9" + String.valueOf(entry.getKey())), Utils.chat("&1Click to open plot functions!"));
@@ -57,8 +60,10 @@ public class PlotGui {
 	
 	public static void clicked(Player p, int slot, ItemStack clicked, Inventory inv) {
 		
+		//Get plot id of the clicked plot in the gui, set that as the players current plot.
+		//Open the plot info gui of that plot.
 		int id = Integer.parseInt(clicked.getItemMeta().getDisplayName());
-		Main.getInstance().getCurrentPlot().addPlayer(p, id);
+		Main.getInstance().getCurrentPlot().setPlot(p, id);
 		p.closeInventory();
 		p.openInventory(PlotInfo.GUI(p));
 	}		

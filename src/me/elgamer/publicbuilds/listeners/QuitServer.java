@@ -24,26 +24,38 @@ public class QuitServer implements Listener {
 
 	@EventHandler
 	public void quitEvent(PlayerJoinEvent e) {
-		
+
+		//Get instance of plugin.
 		Main instance = Main.getInstance();
-		Tutorial t = instance.getTutorial();
-		Review r = instance.getReview();
-		Plots pl = instance.getPlots();
-		CurrentPlot cp = instance.getCurrentPlot();
+
+		//Get player instance.
 		Player p = e.getPlayer();
 
-		t.removePlayer(p);
+		//Remove player from the tutorial map.
+		Tutorial t = instance.getTutorial();
+		if (t.inTutorial(p)) {
+			t.removePlayer(p);
+		}
+
+		//Remove player from plots map.
+		Plots pl = instance.getPlots();
 		pl.removePlayer(p);
-		cp.removePlayer(p);
 		
+		//Remove player from currentPlot map.
+		CurrentPlot cp = instance.getCurrentPlot();
+		cp.removePlayer(p);
+
+		//Update the last online time of player.
 		PlayerData.updateTime(p.getUniqueId().toString());
 
+		//If the player is in a review, cancel it.
+		Review r = instance.getReview();
 		if (r.inReview(p)) {
-			
+
 			int plot = r.getReview(p);
-			PlotData.cancelReview(plot);
+			PlotData.setStatus(plot, "submitted");
 			r.removePlayer(p);
-			
+
 		}
 
 	}

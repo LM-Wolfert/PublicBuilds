@@ -2,9 +2,9 @@ package me.elgamer.publicbuilds.utils;
 
 public class Accept {
 	
-	int size = 0;
-	int accuracy = 0;
-	int quality = 0;
+	int size = 1;
+	int accuracy = 1;
+	int quality = 1;
 
 	public void setSize(int x) {
 		size = x;

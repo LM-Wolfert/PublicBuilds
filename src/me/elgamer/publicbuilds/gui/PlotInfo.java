@@ -37,8 +37,8 @@ public class PlotInfo {
 
 		inv.clear();
 
-		Utils.createItem(inv, "OAK_BOAT", 1, 22, Utils.chat("&9Cancel plot"), Utils.chat("&1Go to your plot!"));
-		Utils.createItem(inv, "OAK_BOAT", 1, 22, Utils.chat("&9Submit plot"), Utils.chat("&1Go to your plot!"));
+		Utils.createItem(inv, "OAK_BOAT", 1, 22, Utils.chat("&9Cancel plot"), Utils.chat("&1Cancel your plot, it will be removed from the world!"));
+		Utils.createItem(inv, "OAK_BOAT", 1, 22, Utils.chat("&9Submit plot"), Utils.chat("&1Submit your plot, it be available for review!"));
 		Utils.createItem(inv, "OAK_BOAT", 1, 22, Utils.chat("&9Teleport"), Utils.chat("&1Go to your plot!"));
 
 		toReturn.setContents(inv.getContents());
@@ -47,36 +47,40 @@ public class PlotInfo {
 
 	public static void clicked(Player p, int slot, ItemStack clicked, Inventory inv) {
 
+		//Get plugin instance, config and current plot.
 		Main instance = Main.getInstance();
 		FileConfiguration config = instance.getConfig();
 		CurrentPlot cp = instance.getCurrentPlot();
 		
+		//Get the id of the current plot.
 		int id = cp.getPlot(p);
 		
 		if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&9Teleport"))) {
 			
+			//Teleport the player to their plot.
 			p.closeInventory();
 			cp.removePlayer(p);
 			p.teleport(WorldGuard.getCurrentLocation(id));
+			p.sendMessage(Utils.chat("&1Teleported to plot: &9" + id));
 
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&9Cancel plot"))) {
 
+			//Cancels the plot.
 			List<BlockVector2D> vector = WorldGuard.getCorners(id);
 			WorldEditor.updateWorld(p, vector, Bukkit.getWorld(config.getString("saveWorld")), Bukkit.getWorld(config.getString("buildWorld")));
 			ClaimFunctions.removeClaim(id);
-			PlotData.setStatus(id, "removed");
+			PlotData.setStatus(id, "cancelled");
 			
 			p.closeInventory();
-			p.openInventory(PlotGui.GUI(p));
 			cp.removePlayer(p);
 			
 			
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&9Submit plot"))) {
 			
+			//Submits the plot.
 			PlotData.setStatus(id, "submitted");
 			
 			p.closeInventory();
-			p.openInventory(PlotGui.GUI(p));
 			cp.removePlayer(p);
 
 		} else {

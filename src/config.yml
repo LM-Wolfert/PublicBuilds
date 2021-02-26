@@ -71,3 +71,19 @@ tpll_points:
         
 building_height: 4
 tutorial_final_stage: 6
+
+#Building points
+#Points multiplier for each level
+#Example if size is 3 and size_multiplier is 5 then the player will receive 3*5=15 points for size.
+#This is done for each of the three categories
+size_multiplier: 1
+accuracy_multiplier: 1
+quality_multiplier: 1
+
+#Points multiplier
+#Calculated by building points multiplied by points_multiplier
+#Example the user received 15 building points and the points_multiplier is 3 then they will get 15*3=45 points.
+points_multiplier: 5
+
+#Number of days a player can be inactive before their plots get cancelled
+plot_inactive_cancel: 14
