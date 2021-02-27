@@ -11,6 +11,7 @@ import me.elgamer.publicbuilds.Main;
 
 public class PlotData {
 
+	//Will generate a new id as the lowest unused integer value.
 	public static int getNewID() {
 
 		Main instance = Main.getInstance();
@@ -33,6 +34,7 @@ public class PlotData {
 		}
 	}
 
+	//Created a new plot entry in the database.
 	public static boolean createPlot(int id, String uuid) {
 
 		Main instance = Main.getInstance();
@@ -54,6 +56,7 @@ public class PlotData {
 		}
 	}
 
+	//Checks whether the player has a plot that is claimed, submitted or under review.
 	public static boolean hasPlot(String uuid) {
 
 		Main instance = Main.getInstance();
@@ -75,6 +78,7 @@ public class PlotData {
 		}
 	}
 
+	//Checks whether there is a submitted plot to review.
 	public static boolean reviewExists() {
 
 		Main instance = Main.getInstance();
@@ -93,6 +97,8 @@ public class PlotData {
 		}
 	}
 
+	//Changed the status of the specific plot.
+	//Statuses options are: claimed, submitted, reviewing, cancelled, completed.
 	public static void setStatus(int plot, String status) {
 
 		Main instance = Main.getInstance();
@@ -109,6 +115,8 @@ public class PlotData {
 		}		
 	}
 
+	//Changes the status of all plots that are under review back to submitted.
+	//This is run on server start to make sure nothing gets stuck.
 	public static void clearReview() {
 
 		Main instance = Main.getInstance();
@@ -125,6 +133,8 @@ public class PlotData {
 		}		
 	}
 
+	//Selects the lowest id plot and sets it to reviewing.
+	//A reviewer will be assigned that plot.
 	public static int newReview() {
 
 		Main instance = Main.getInstance();
@@ -151,6 +161,7 @@ public class PlotData {
 		}		
 	}
 
+	//Gets all plots owned by a player and returns them in a hashmap with id and status.
 	public static HashMap<Integer, String> getPlots(String uuid) {
 
 		Main instance = Main.getInstance();
@@ -174,6 +185,7 @@ public class PlotData {
 		}
 	}
 
+	//Sets the deny message of a plot after it has been reviewed and denied.
 	public static void setDenyMessage(int plot, String message) {
 
 		Main instance = Main.getInstance();
@@ -190,6 +202,7 @@ public class PlotData {
 		}
 	}
 
+	//Returns the active plot count, this only includes plots that are claimed.
 	public static int activePlotCount(String uuid) {
 
 		Main instance = Main.getInstance();
@@ -210,6 +223,7 @@ public class PlotData {
 		}
 	}
 
+	//Returns total plot count, this includes plots that are claimed, submitted and under review.
 	public static int totalPlotCount(String uuid) {
 
 		Main instance = Main.getInstance();
@@ -232,6 +246,7 @@ public class PlotData {
 		}
 	}
 	
+	//Returns the uuid of the plot owner.
 	public static String getOwner(int plot) {
 		
 		Main instance = Main.getInstance();
@@ -252,6 +267,8 @@ public class PlotData {
 		
 	}
 	
+	//Returns a list of plots that are inactive.
+	//Inactive implies that the owner of the plot has not been online in at least 14 days.
 	public static List<Integer> getInactivePlots(List<String> players) {
 		
 		//Create list for the inactive plots.

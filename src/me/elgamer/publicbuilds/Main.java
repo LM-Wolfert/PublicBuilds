@@ -12,7 +12,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
@@ -73,24 +72,25 @@ public class Main extends JavaPlugin {
 		//MySQL		
 		mysqlSetup();
 		createPlayerData();
+		createPlotData();
 		PlotData.clearReview();
 
-		//Create Tutorial
+		//Create Tutorial Hashmap.
 		tutorial = new Tutorial();
 
-		//Create Review
+		//Create Review Hashmap.
 		review = new Review();
 		
-		//Create Plots
+		//Create Plots Hashmap.
 		plots = new Plots();
 		
-		//Create Reason
+		//Create Reason Hashmap.
 		reason = new Reason();
 		
-		//Create CurrentPlot
+		//Create CurrentPlot Hashmap.
 		currentPlot = new CurrentPlot();
 
-		//Create Accept
+		//Create Accept Hashmap.
 		accept = new HashMap<Player, Accept>();
 				
 		//Listeners
@@ -105,16 +105,13 @@ public class Main extends JavaPlugin {
 		getCommand("corner").setExecutor(new Corner());
 		getCommand("createarea").setExecutor(new CreateArea());
 
-		//GUI
+		//GUIs
 		MainGui.initialize();
 		ReviewGui.initialize();
 		AcceptGui.initialize();
 		DenyGui.initialize();
 		PlotGui.initialize();
 		PlotInfo.initialize();
-
-		//Vault
-		setupPermissions();
 	}
 
 	public void onDisable() {
@@ -128,6 +125,7 @@ public class Main extends JavaPlugin {
 			e.printStackTrace();
 		}
 
+		//Remove all players who are in review.
 		for (Player p: Bukkit.getOnlinePlayers()) {
 
 			if (review.inReview(p)) {
@@ -139,6 +137,7 @@ public class Main extends JavaPlugin {
 		}
 	}
 
+	//Creates the mysql connection.
 	public void mysqlSetup() {
 
 		host = config.getString("MySQL_host");
@@ -172,6 +171,7 @@ public class Main extends JavaPlugin {
 
 	}
 
+	//Returns the mysql connection.
 	public Connection getConnection() {
 
 		try {
@@ -185,24 +185,17 @@ public class Main extends JavaPlugin {
 		return connection;
 	}
 
+	//Sets the mysql connection as the variable 'connection'.
 	public void setConnection(Connection connection) {
 		this.connection = connection;
 	}
 
-	private boolean setupPermissions() {
-		RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
-		perms = rsp.getProvider();
-		return perms != null;
-	}
-
-	public static Permission getPermissions() {
-		return perms;		
-	}
-
+	//Returns an instance of the plugin.
 	public static Main getInstance() {
 		return instance;
 	}
 
+	//Returns an instance of WorldGuard.
 	public static WorldGuardPlugin getWorldGuard() {
 		Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin("WorldGuard");
 
@@ -213,6 +206,7 @@ public class Main extends JavaPlugin {
 		return (WorldGuardPlugin) plugin;
 	}
 	
+	//Returns an instance of WorldEdit.
 	public static WorldEditPlugin getWorldEdit() {
 		Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin("WorldEdit");
 
@@ -223,35 +217,56 @@ public class Main extends JavaPlugin {
 		return (WorldEditPlugin) plugin;
 	}
 	
+	//Returns tutorial.
 	public Tutorial getTutorial() {
 		return tutorial;
 	}
 	
+	//Returns review.
 	public Review getReview() {
 		return review;
 	}
 	
+	//Returns plots.
 	public Plots getPlots() {
 		return plots;
 	}
 	
+	//Returns reason.
 	public Reason getReason() {
 		return reason;
 	}
 	
+	
+	//Returns accept.
 	public Map<Player, Accept> getAccept(){
 		return accept;
 	}
 	
+	//Returns currentPlot.
 	public CurrentPlot getCurrentPlot() {
 		return currentPlot;
 	}
 	
+	//Setup player_data table for mysql database if it doesn't exist.
 	public void createPlayerData() {
 		try {
 			PreparedStatement statement = instance.getConnection().prepareStatement
 					("CREATE TABLE IF NOT EXISTS " + playerData
 							+ " ( ID VARCHAR(36) NOT NULL , NAME VARCHAR(20) NOT NULL , TUTORIAL_STAGE INT NOT NULL , BUILDING_POINTS INT NOT NULL , LAST_ONLINE BIGINT NOT NULL , UNIQUE (ID))");
+			statement.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	//Setup plot_data table for mysql database if it doesn't exist.
+	public void createPlotData() {
+		try {
+			PreparedStatement statement = instance.getConnection().prepareStatement
+					("CREATE TABLE IF NOT EXISTS " + plotData
+							+ " ( ID INT NOT NULL , OWNER TEXT NOT NULL , STATUS TEXT DEFAULT 'claimed' , MESSAGE TEXT NOT NULL , UNIQUE (ID))");
 			statement.executeUpdate();
 
 		} catch (SQLException e) {

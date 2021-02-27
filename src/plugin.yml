@@ -2,21 +2,16 @@ name: PublicBuilds
 version: 1.0
 main: me.elgamer.publicbuilds.Main
 description: Claiming System
-depend: [WorldEdit, WorldGuard]
+depend: [WorldEdit, WorldGuard, UKnetUtilities, BTEPoints]
 
 commands:
-    plot:
+    gui:
+        usage: /<command> 
+        description: Open the Main Gui of the plugin.
+    corner:
+        usage: /<command> 1|2|3|4
+        description: Sets the corner marker for a plot.
+    createarea:
         usage: /<command>
-        description: Open the plot gui.
-    createPlot:
-        usage: /<command>
-        description: Claim a plot from Worldedit selection.
-    removePlot:
-        usage: /<command>
-        description: Removes a plot.
-    submitPlot:
-        usage: /<command>
-        description: Submits a plot.
-    review:
-        usage: /<command>
-        description: Open the review gui.
+        description: Creates a polygonal area in which plots can be claimed, requires a polygon selection.
+    
