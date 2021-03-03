@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.worldedit.BlockVector2D;
+import com.sk89q.worldedit.math.BlockVector2;
 
 import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.mysql.PlayerData;
@@ -20,7 +20,7 @@ import me.elgamer.publicbuilds.utils.ClaimFunctions;
 import me.elgamer.publicbuilds.utils.Review;
 import me.elgamer.publicbuilds.utils.Utils;
 import me.elgamer.publicbuilds.utils.WorldEditor;
-import me.elgamer.publicbuilds.utils.WorldGuard;
+import me.elgamer.publicbuilds.utils.WorldGuardFunctions;
 
 public class AcceptGui {
 
@@ -29,7 +29,7 @@ public class AcceptGui {
 	public static int inv_rows = 5 * 9;
 
 	public static void initialize() {
-		inventory_name = Utils.chat("&9Menu");
+		inventory_name = Utils.chat("&9Accept");
 
 		inv = Bukkit.createInventory(null, inv_rows);
 
@@ -90,6 +90,7 @@ public class AcceptGui {
 		Map<Player, Accept> accept = Main.getInstance().getAccept();
 		Accept ac = accept.get(p);
 		
+		//Set the value in the acceptgui based on the button that is clicked.
 		if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&9Size: 1"))) {
 			p.closeInventory();
 			ac.setSize(1);
@@ -173,8 +174,8 @@ public class AcceptGui {
 			PlotData.setStatus(plot, "completed");
 			
 			//Add plot to saveWorld
-			List<BlockVector2D> corners = WorldGuard.getCorners(plot);
-			WorldEditor.updateWorld(p, corners, Bukkit.getWorld(config.getString("buildWorld")), Bukkit.getWorld(config.getString("saveWorld")));
+			List<BlockVector2> corners = WorldGuardFunctions.getCorners(plot);
+			WorldEditor.updateWorld(corners, Bukkit.getWorld(config.getString("buildWorld")), Bukkit.getWorld(config.getString("saveWorld")));
 			
 			//Remove plot from worldguard
 			ClaimFunctions.removeClaim(plot);

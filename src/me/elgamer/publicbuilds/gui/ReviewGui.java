@@ -11,7 +11,7 @@ import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.utils.Accept;
 import me.elgamer.publicbuilds.utils.Review;
 import me.elgamer.publicbuilds.utils.Utils;
-import me.elgamer.publicbuilds.utils.WorldGuard;
+import me.elgamer.publicbuilds.utils.WorldGuardFunctions;
 
 public class ReviewGui {
 
@@ -32,10 +32,10 @@ public class ReviewGui {
 
 		inv.clear();
 
-		Utils.createItem(inv, "", 1, 14, "&aBefore view!");
-		Utils.createItem(inv, "", 1, 14, "&aCurrent view!");
-		Utils.createItem(inv, "", 1, 14, "&aAccept!");
-		Utils.createItem(inv, "", 1, 14, "&aDeny!");
+		Utils.createItem(inv, "LIGHT_BLUE_CONCRETE", 1, 14, "&aBefore view!");
+		Utils.createItem(inv, "BLUE_CONCRETE", 1, 14, "&aCurrent view!");
+		Utils.createItem(inv, "LIME_CONCRETE", 1, 14, "&aAccept!");
+		Utils.createItem(inv, "RED_CONCRETE", 1, 14, "&aDeny!");
 
 		toReturn.setContents(inv.getContents());
 		return toReturn;
@@ -44,14 +44,17 @@ public class ReviewGui {
 	public static void clicked(Player p, int slot, ItemStack clicked, Inventory inv) {
 
 		if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&cBefore view"))) {
+			//Get the plot that is being reviewed and teleport the player do the plot in the saveWorld.
 			Review review = Main.getInstance().getReview();
 			int plot = review.getReview(p);
-			p.teleport(WorldGuard.getCurrentLocation(plot));
+			p.teleport(WorldGuardFunctions.getCurrentLocation(plot));
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&cCurrent view"))) {
+			//Get the plot that is being reviwed and teleport the player to the plot in the buildWorld.
 			Review review = Main.getInstance().getReview();
 			int plot = review.getReview(p);
-			p.teleport(WorldGuard.getBeforeLocation(plot));
+			p.teleport(WorldGuardFunctions.getBeforeLocation(plot));
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&cAccept"))) {
+			//Open the acceptgui with default values.
 			p.closeInventory();
 			Map<Player, Accept> accept = Main.getInstance().getAccept();
 			if (accept.containsKey(p)) {
@@ -61,6 +64,7 @@ public class ReviewGui {
 			}
 			p.openInventory(AcceptGui.GUI(p));
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&cDeny"))) {
+			//Open the denygui.
 			p.closeInventory();
 			p.openInventory(DenyGui.GUI(p));
 		} else {}

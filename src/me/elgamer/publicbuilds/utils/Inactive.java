@@ -37,7 +37,7 @@ public class Inactive {
 		//Iterate through all inactive plots and cancel them.
 		for (int plot : inactivePlots) {
 					
-			WorldEditor.updateWorld(p, WorldGuard.getCorners(plot), Bukkit.getWorld(config.getString("worlds.save")), Bukkit.getWorld(config.getString("worlds.build")));
+			WorldEditor.updateWorld(WorldGuardFunctions.getCorners(plot), Bukkit.getWorld(config.getString("worlds.save")), Bukkit.getWorld(config.getString("worlds.build")));
 			ClaimFunctions.removeClaim(plot);
 			PlotData.setStatus(plot, "cancelled");
 			Bukkit.broadcastMessage("Plot: " + plot + " has been cancelled due to inactivity!");

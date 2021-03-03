@@ -3,65 +3,55 @@ package me.elgamer.publicbuilds.utils;
 import java.util.List;
 
 import org.bukkit.World;
-import org.bukkit.entity.Player;
 
-import com.sk89q.worldedit.BlockVector2D;
 import com.sk89q.worldedit.EditSession;
-import com.sk89q.worldedit.LocalSession;
-import com.sk89q.worldedit.MaxChangedBlocksException;
 import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.extent.clipboard.BlockArrayClipboard;
 import com.sk89q.worldedit.function.operation.ForwardExtentCopy;
 import com.sk89q.worldedit.function.operation.Operation;
 import com.sk89q.worldedit.function.operation.Operations;
+import com.sk89q.worldedit.math.BlockVector2;
 import com.sk89q.worldedit.regions.Polygonal2DRegion;
 import com.sk89q.worldedit.session.ClipboardHolder;
 
-import me.elgamer.publicbuilds.Main;
-
 public class WorldEditor {
 
-	public static boolean updateWorld(Player p, List<BlockVector2D> vector, World copy, World paste) {
-
-		//Get instance of worldedit from Main
-		WorldEditPlugin wep = Main.getWorldEdit();
-		
-		//Get session of player
-		LocalSession session = wep.getSession(p);
+	public static boolean updateWorld(List<BlockVector2> vector, World copy, World paste) {
 
 		//Get the worlds in worldEdit format
 		com.sk89q.worldedit.world.World copyWorld = new BukkitWorld(copy);
 		com.sk89q.worldedit.world.World pasteWorld = new BukkitWorld(paste);
 
-		//Create editSession in the world which will be copied from
-		EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(copyWorld, -1);
-		Polygonal2DRegion selection = new Polygonal2DRegion(copyWorld, vector, 1, 256);
+		Polygonal2DRegion region = new Polygonal2DRegion(copyWorld, vector, 1, 256);
+		BlockArrayClipboard clipboard = new BlockArrayClipboard(region);
 
-		try {
-
-			//Create clipboard of region
-			BlockArrayClipboard cb = new BlockArrayClipboard(selection);
-			ForwardExtentCopy c = new ForwardExtentCopy(editSession, selection, cb, selection.getMinimumPoint());
-			Operations.completeLegacy(c);
-
-			//Create editSession in the world which will be pasted in
-			editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(pasteWorld, -1);
-			ClipboardHolder holder = new ClipboardHolder(cb, pasteWorld.getWorldData());
-			session.setClipboard(holder);
-
-			//Paste clipboard of region
-			Operation operation = holder.createPaste(editSession, pasteWorld.getWorldData()).to(selection.getMinimumPoint())
-					.ignoreAirBlocks(false).build();
-			Operations.completeLegacy(operation);
-
-			return true;
-		} catch (MaxChangedBlocksException ex) {
-			ex.printStackTrace();
+		try (EditSession editSession = WorldEdit.getInstance().newEditSession(copyWorld)) {
+			ForwardExtentCopy forwardExtentCopy = new ForwardExtentCopy(
+					editSession, region, clipboard, region.getMinimumPoint()
+					);
+			// configure here
+			Operations.complete(forwardExtentCopy);
+		} catch (WorldEditException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 			return false;
-		}	
+		}
 
+		try (EditSession editSession = WorldEdit.getInstance().newEditSession(pasteWorld);) {
+			Operation operation = new ClipboardHolder(clipboard)
+					.createPaste(editSession)
+					.to(region.getMinimumPoint())
+					// configure here
+					.build();
+			Operations.complete(operation);
+		} catch (WorldEditException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+		
+		return true;
 	}
-
 }

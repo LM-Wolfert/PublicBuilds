@@ -11,11 +11,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 import me.elgamer.publicbuilds.commands.Corner;
 import me.elgamer.publicbuilds.commands.CreateArea;
@@ -28,6 +24,7 @@ import me.elgamer.publicbuilds.gui.PlotInfo;
 import me.elgamer.publicbuilds.gui.ReviewGui;
 import me.elgamer.publicbuilds.listeners.ChatListener;
 import me.elgamer.publicbuilds.listeners.ClaimEnter;
+import me.elgamer.publicbuilds.listeners.CommandListener;
 import me.elgamer.publicbuilds.listeners.InventoryClicked;
 import me.elgamer.publicbuilds.listeners.JoinServer;
 import me.elgamer.publicbuilds.listeners.QuitServer;
@@ -99,6 +96,7 @@ public class Main extends JavaPlugin {
 		new InventoryClicked(this);
 		new ClaimEnter(this);
 		new ChatListener(this);
+		new CommandListener(this);
 
 		//Commands
 		getCommand("gui").setExecutor(new OpenGui());
@@ -146,8 +144,8 @@ public class Main extends JavaPlugin {
 		username = config.getString("MySQL_username");
 		password = config.getString("MySQL_password");
 		playerData = config.getString("MySQL_playerData");
-		plotData = config.getString("MYSQL_plotData");
-		areaData = config.getString("MYSQL_areaData");
+		plotData = config.getString("MySQL_plotData");
+		areaData = config.getString("MySQL_areaData");
 
 		try {
 
@@ -193,28 +191,6 @@ public class Main extends JavaPlugin {
 	//Returns an instance of the plugin.
 	public static Main getInstance() {
 		return instance;
-	}
-
-	//Returns an instance of WorldGuard.
-	public static WorldGuardPlugin getWorldGuard() {
-		Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin("WorldGuard");
-
-		if (plugin == null || !(plugin instanceof WorldGuardPlugin)) {
-			return null;
-		}
-
-		return (WorldGuardPlugin) plugin;
-	}
-	
-	//Returns an instance of WorldEdit.
-	public static WorldEditPlugin getWorldEdit() {
-		Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin("WorldEdit");
-
-		if (plugin == null || !(plugin instanceof WorldEditPlugin)) {
-			return null;
-		}
-
-		return (WorldEditPlugin) plugin;
 	}
 	
 	//Returns tutorial.
@@ -266,7 +242,7 @@ public class Main extends JavaPlugin {
 		try {
 			PreparedStatement statement = instance.getConnection().prepareStatement
 					("CREATE TABLE IF NOT EXISTS " + plotData
-							+ " ( ID INT NOT NULL , OWNER TEXT NOT NULL , STATUS TEXT DEFAULT 'claimed' , MESSAGE TEXT NOT NULL , UNIQUE (ID))");
+							+ " ( ID INT NOT NULL , OWNER TEXT NOT NULL , STATUS TEXT NOT NULL , MESSAGE TEXT NOT NULL , UNIQUE (ID))");
 			statement.executeUpdate();
 
 		} catch (SQLException e) {

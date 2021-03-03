@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.worldedit.BlockVector2D;
+import com.sk89q.worldedit.math.BlockVector2;
 
 import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.mysql.PlotData;
@@ -16,13 +16,13 @@ import me.elgamer.publicbuilds.utils.ClaimFunctions;
 import me.elgamer.publicbuilds.utils.CurrentPlot;
 import me.elgamer.publicbuilds.utils.Utils;
 import me.elgamer.publicbuilds.utils.WorldEditor;
-import me.elgamer.publicbuilds.utils.WorldGuard;
+import me.elgamer.publicbuilds.utils.WorldGuardFunctions;
 
 public class PlotInfo {
 
 	public static Inventory inv;
 	public static String inventory_name;
-	public static int inv_rows = 3 * 7;
+	public static int inv_rows = 3 * 9;
 
 	public static void initialize() {
 		inventory_name = Utils.chat("&9Plot Info");
@@ -60,14 +60,14 @@ public class PlotInfo {
 			//Teleport the player to their plot.
 			p.closeInventory();
 			cp.removePlayer(p);
-			p.teleport(WorldGuard.getCurrentLocation(id));
+			p.teleport(WorldGuardFunctions.getCurrentLocation(id));
 			p.sendMessage(Utils.chat("&1Teleported to plot: &9" + id));
 
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&9Cancel plot"))) {
 
 			//Cancels the plot.
-			List<BlockVector2D> vector = WorldGuard.getCorners(id);
-			WorldEditor.updateWorld(p, vector, Bukkit.getWorld(config.getString("saveWorld")), Bukkit.getWorld(config.getString("buildWorld")));
+			List<BlockVector2> vector = WorldGuardFunctions.getCorners(id);
+			WorldEditor.updateWorld(vector, Bukkit.getWorld(config.getString("saveWorld")), Bukkit.getWorld(config.getString("buildWorld")));
 			ClaimFunctions.removeClaim(id);
 			PlotData.setStatus(id, "cancelled");
 			

@@ -44,12 +44,16 @@ public class ChatListener implements Listener {
 			}
 		}
 		
+		//If a reviewer has denied a plot they will need to provide a reason, they will be added to the reason map.
+		//If they send a message and are in the reason map their message will be recorded as the reason for denying the plot.
+		//If they type a command it'll be cancelled.
 		if (r.inReason(p)) {
 			e.setCancelled(true);
 			if (e.getMessage().startsWith("/")) {
 				p.sendMessage(Utils.chat("&cYou must give a reason for denying the plot!"));
 				p.sendMessage(Utils.chat("&cType the reason in chat, the first message sent will count!"));
 			} else {
+				//Sets the deny message and returns or cancels the plot.
 				int plot = rv.getReview(p);
 				PlotData.setDenyMessage(plot, e.getMessage());
 				PlotData.setStatus(plot, r.getType(p));

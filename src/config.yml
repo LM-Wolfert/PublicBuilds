@@ -41,6 +41,10 @@ worlds:
 
 #Tutorial
 #The user has to create a plot that includes these points
+starting_position:
+    x:
+    y:
+    z:
 plot_corners:
     1:
         x: 2808086

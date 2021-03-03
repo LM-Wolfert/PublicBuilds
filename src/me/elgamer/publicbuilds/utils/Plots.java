@@ -6,24 +6,24 @@ import java.util.List;
 
 import org.bukkit.entity.Player;
 
-import com.sk89q.worldedit.BlockVector2D;
+import com.sk89q.worldedit.math.BlockVector2;
 
 public class Plots {
 	
 	//Creates a hashmap to stop the player and the corners that a player can create.
-	HashMap<Player, BlockVector2D[]> plots = new HashMap<Player, BlockVector2D[]>();
+	HashMap<Player, BlockVector2[]> plots = new HashMap<Player, BlockVector2[]>();
 	
 	//Adds the player to the hashmap with an array of BlockVector2D of size 4, which will be the 4 corners of a plot.
 	public void addPlayer(Player p) {
-		plots.put(p, new BlockVector2D[4]);
+		plots.put(p, new BlockVector2[4]);
 	}
 	
 	//Returns all 4 BlockVector2D locations stored in the hashmap of the player.
 	//It'll be returned as a list as this is how claims are creates.
 	//If there are less than 4 entered points then some of the values will be null.
-	public List<BlockVector2D> getLocations(Player p) {
-		List<BlockVector2D> vector = new ArrayList<BlockVector2D>();
-		BlockVector2D[] points = plots.get(p);
+	public List<BlockVector2> getLocations(Player p) {
+		List<BlockVector2> vector = new ArrayList<BlockVector2>();
+		BlockVector2[] points = plots.get(p);
 		
 		for (int i=0; i<points.length; i++) {
 			vector.add(points[i]);
@@ -33,9 +33,9 @@ public class Plots {
 	}
 	
 	//Adds a location to one of the 4 points.
-	public void addLocation(Player p, BlockVector2D point, int position) {
+	public void addLocation(Player p, BlockVector2 point, int position) {
 		
-		BlockVector2D[] points = plots.get(p);
+		BlockVector2[] points = plots.get(p);
 		points[position-1] = point;
 		plots.replace(p, points);
 	
@@ -49,7 +49,7 @@ public class Plots {
 	//Checks whether all 4 locations are entered into the array.
 	public boolean hasLocations(Player p) {
 		
-		BlockVector2D[] locations = plots.get(p);
+		BlockVector2[] locations = plots.get(p);
 		if (locations[0] == null || locations[1] == null || locations[2] == null || locations[3] == null) {
 			return false;
 		} else {
@@ -61,7 +61,7 @@ public class Plots {
 	//Calculates the smallest distance between any two points, if this is less than 5 meters then a plot will not be created.
 	public boolean minDis(Player p) {
 		
-		BlockVector2D[] points = plots.get(p);
+		BlockVector2[] points = plots.get(p);
 		double dis = 10;
 		double x = 0;
 		double z = 0;
@@ -89,7 +89,7 @@ public class Plots {
 	//If it is larger than is allowed for the players rank then a plot will not be created.
 	public boolean maxDis(Player p) {
 		
-		BlockVector2D[] points = plots.get(p);
+		BlockVector2[] points = plots.get(p);
 		double dis = 0;
 		double x = 0;
 		double z = 0;
@@ -117,7 +117,7 @@ public class Plots {
 	//If this is the case then a plot will have a usable shape and the plot will not be created.
 	public boolean hasIntersect(Player p) {
 		
-		BlockVector2D[] points = plots.get(p);
+		BlockVector2[] points = plots.get(p);
 		
 		double x1,x2,x3,x4,z1,z2,z3,z4,a1,a2,b1,b2,x;
 		

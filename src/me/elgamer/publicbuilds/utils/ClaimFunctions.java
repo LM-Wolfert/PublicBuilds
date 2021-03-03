@@ -8,21 +8,22 @@ import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import com.sk89q.worldedit.BlockVector2D;
-import com.sk89q.worldguard.bukkit.RegionContainer;
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.math.BlockVector2;
+import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.domains.DefaultDomain;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.managers.storage.StorageException;
 import com.sk89q.worldguard.protection.regions.ProtectedPolygonalRegion;
+import com.sk89q.worldguard.protection.regions.RegionContainer;
 
 import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.mysql.PlotData;
 
 public class ClaimFunctions {
 
-	public static String createClaim(String uuid, List<BlockVector2D> vector) {
+	public static String createClaim(String uuid, List<BlockVector2> vector) {
 
 		//Get plugin instance and config.
 		Main instance = Main.getInstance();
@@ -33,12 +34,12 @@ public class ClaimFunctions {
 		World buildWorld = Bukkit.getServer().getWorld(config.getString("buildWorld"));
 
 		//Get instance of WorldGuard.
-		WorldGuardPlugin wg = Main.getWorldGuard();
+		WorldGuard wg = WorldGuard.getInstance();
 
 		//Get regions.
-		RegionContainer container = wg.getRegionContainer();
-		RegionManager saveRegions = container.get(saveWorld);
-		RegionManager buildRegions = container.get(buildWorld);
+		RegionContainer container = wg.getPlatform().getRegionContainer();
+		RegionManager saveRegions = container.get(BukkitAdapter.adapt(saveWorld));
+		RegionManager buildRegions = container.get(BukkitAdapter.adapt(buildWorld));
 
 		//Create new id
 		int plotID = PlotData.getNewID();
@@ -78,7 +79,7 @@ public class ClaimFunctions {
 
 	}
 
-	public static String editClaim(int id, String uuid, List<BlockVector2D> vector) {
+	public static String editClaim(int id, String uuid, List<BlockVector2> vector) {
 
 		//Get instance of plugin and config
 		Main instance = Main.getInstance();
@@ -88,13 +89,13 @@ public class ClaimFunctions {
 		World saveWorld = Bukkit.getServer().getWorld(config.getString("worlds.save"));
 		World buildWorld = Bukkit.getServer().getWorld(config.getString("worlds.build"));
 
-		//Get worldguard instance from Main
-		WorldGuardPlugin wg = Main.getWorldGuard();
+		//Get instance of WorldGuard.
+		WorldGuard wg = WorldGuard.getInstance();
 
 		//Get worldguard region data
-		RegionContainer container = wg.getRegionContainer();
-		RegionManager saveRegions = container.get(saveWorld);
-		RegionManager buildRegions = container.get(buildWorld);
+		RegionContainer container = wg.getPlatform().getRegionContainer();
+		RegionManager saveRegions = container.get(BukkitAdapter.adapt(saveWorld));
+		RegionManager buildRegions = container.get(BukkitAdapter.adapt(buildWorld));
 
 		//If the regions exist continue
 		if (!(saveRegions.hasRegion(String.valueOf(id)))) {
@@ -152,13 +153,13 @@ public class ClaimFunctions {
 		World saveWorld = Bukkit.getServer().getWorld(config.getString("saveWorld"));
 		World buildWorld = Bukkit.getServer().getWorld(config.getString("buildWorld"));
 
-		//Get worldguard instance from Main
-		WorldGuardPlugin wg = Main.getWorldGuard();
+		//Get instance of WorldGuard.
+		WorldGuard wg = WorldGuard.getInstance();
 
 		//Get worldguard region data
-		RegionContainer container = wg.getRegionContainer();
-		RegionManager saveRegions = container.get(saveWorld);
-		RegionManager buildRegions = container.get(buildWorld);
+		RegionContainer container = wg.getPlatform().getRegionContainer();
+		RegionManager saveRegions = container.get(BukkitAdapter.adapt(saveWorld));
+		RegionManager buildRegions = container.get(BukkitAdapter.adapt(buildWorld));
 
 		//If the regions exist continue
 		if (!(saveRegions.hasRegion(String.valueOf(id)))) {

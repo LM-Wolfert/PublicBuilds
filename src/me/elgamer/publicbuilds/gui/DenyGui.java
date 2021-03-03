@@ -16,7 +16,7 @@ public class DenyGui {
 	public static int inv_rows = 5 * 9;
 	
 	public static void initialize() {
-		inventory_name = Utils.chat("&9Menu");
+		inventory_name = Utils.chat("&9Deny");
 		
 		inv = Bukkit.createInventory(null, inv_rows);
 		
@@ -43,6 +43,7 @@ public class DenyGui {
 		Reason r = Main.getInstance().getReason();
 		if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&9Another chance"))) {
 
+			//Will prompt the reviewer to input a reason.
 			p.closeInventory();
 			r.addReason(p,"claimed");
 			p.sendMessage(Utils.chat("&aBefore the plot gets denied you must give a reason!"));
@@ -54,6 +55,7 @@ public class DenyGui {
 			p.sendMessage(Utils.chat("&cCurrently Not Implemented!"));
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&cRemove plot"))) {
 			
+			//Will prompt the reviewer to to input a reason.
 			p.closeInventory();
 			r.addReason(p,"deleted");
 			p.sendMessage(Utils.chat("&aBefore the plot gets denied you must give a reason!"));

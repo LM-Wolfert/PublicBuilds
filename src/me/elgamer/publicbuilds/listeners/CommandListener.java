@@ -22,6 +22,7 @@ public class CommandListener implements Listener {
 	@EventHandler
 	public void chatEvent(PlayerCommandPreprocessEvent e) {
 
+		//If someone uses the /ll command check if they are in stage 1 of the tutorial since this is what they need to do.
 		if (e.getMessage().startsWith("/ll")) {
 
 			Tutorial t = Main.getInstance().getTutorial();
@@ -34,6 +35,7 @@ public class CommandListener implements Listener {
 				}
 			}
 
+			//If someone uses /tpll and are in stage 2 or 4 of the tutorial check if they input is correct and continue/redo the tutorial stage.
 		} else if (e.getMessage().startsWith("/tpll")) {
 
 			Tutorial t = Main.getInstance().getTutorial();

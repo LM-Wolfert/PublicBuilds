@@ -7,9 +7,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 import me.elgamer.publicbuilds.Main;
+import me.elgamer.publicbuilds.gui.AcceptGui;
 import me.elgamer.publicbuilds.gui.DenyGui;
 import me.elgamer.publicbuilds.gui.MainGui;
 import me.elgamer.publicbuilds.gui.PlotGui;
+import me.elgamer.publicbuilds.gui.PlotInfo;
 import me.elgamer.publicbuilds.gui.ReviewGui;
 
 public class InventoryClicked implements Listener {
@@ -56,6 +58,24 @@ public class InventoryClicked implements Listener {
 			}
 			if (title.equals(DenyGui.inventory_name)) {
 				DenyGui.clicked((Player) e.getWhoClicked(), e.getSlot(), e.getCurrentItem(), e.getInventory());
+			}
+		}
+		else if (title.equals(AcceptGui.inventory_name)) {
+			e.setCancelled(true);
+			if (e.getCurrentItem() == null){
+				return;
+			}
+			if (title.equals(AcceptGui.inventory_name)) {
+				ReviewGui.clicked((Player) e.getWhoClicked(), e.getSlot(), e.getCurrentItem(), e.getInventory());
+			}
+		}
+		else if (title.equals(PlotInfo.inventory_name)) {
+			e.setCancelled(true);
+			if (e.getCurrentItem() == null){
+				return;
+			}
+			if (title.equals(PlotInfo.inventory_name)) {
+				ReviewGui.clicked((Player) e.getWhoClicked(), e.getSlot(), e.getCurrentItem(), e.getInventory());
 			}
 		}
 		else {

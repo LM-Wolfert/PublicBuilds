@@ -8,11 +8,10 @@ import org.bukkit.entity.Player;
 
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.LocalSession;
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.regions.Polygonal2DRegion;
 import com.sk89q.worldedit.regions.Region;
 
-import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.utils.Utils;
 
 public class CreateArea implements CommandExecutor {
@@ -32,8 +31,8 @@ public class CreateArea implements CommandExecutor {
 			return true;
 		}
 
-		WorldEditPlugin we = Main.getWorldEdit();
-		LocalSession s = we.getSession(p);
+		WorldEdit we = WorldEdit.getInstance();
+		LocalSession s = we.getSessionManager().findByName(p.getName());;
 		Region r = null;
 
 		try {

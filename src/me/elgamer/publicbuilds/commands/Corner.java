@@ -1,15 +1,15 @@
 package me.elgamer.publicbuilds.commands;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.sk89q.worldedit.BlockVector2D;
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.math.BlockVector2;
+import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
-import com.sk89q.worldguard.protection.managers.RegionManager;
+import com.sk89q.worldguard.protection.regions.RegionQuery;
 
 import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.utils.Plots;
@@ -30,11 +30,11 @@ public class Corner implements CommandExecutor {
 		Player p = (Player) sender;
 
 		//Get instance of WorldGuard.
-		WorldGuardPlugin wg = Main.getWorldGuard();
+		WorldGuard wg = WorldGuard.getInstance();
 
 		//Check whether the point where the command is run is not in existing plot.
-		RegionManager rm = wg.getRegionManager(Bukkit.getWorld(Main.getInstance().getConfig().getString("saveWorld")));
-		ApplicableRegionSet ap = rm.getApplicableRegions(p.getLocation());
+		RegionQuery query = wg.getPlatform().getRegionContainer().createQuery();
+		ApplicableRegionSet ap = query.getApplicableRegions(BukkitAdapter.adapt(p.getLocation()));
 
 		//If it is in an existing plot then cancel.
 		if (ap.size() > 1) {
@@ -47,7 +47,7 @@ public class Corner implements CommandExecutor {
 
 			//Sets the position as a corner which is stored in the plots hashmap.
 			Plots plots = Main.getInstance().getPlots();
-			BlockVector2D pos = new BlockVector2D(p.getLocation().getX(), p.getLocation().getZ());
+			BlockVector2 pos = BlockVector2.at(p.getLocation().getX(), p.getLocation().getZ());
 			plots.addLocation(p, pos, Integer.valueOf(args[0]));
 			return true;
 

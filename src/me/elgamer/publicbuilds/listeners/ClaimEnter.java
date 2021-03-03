@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,12 +14,16 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
 
-import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.math.Vector3;
 import com.sk89q.worldguard.LocalPlayer;
+import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import com.sk89q.worldguard.protection.regions.RegionQuery;
 
 import me.elgamer.publicbuilds.Main;
 
@@ -28,7 +33,6 @@ public class ClaimEnter implements Listener{
 
 	public  ClaimEnter(Main plugin) {
 		
-		worldGuardPlugin = getWorldGuard();
 		Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 
@@ -55,13 +59,13 @@ public class ClaimEnter implements Listener{
 	
 	
 	public void enterRegion(Player player) {
-		LocalPlayer localPlayer = worldGuardPlugin.wrapPlayer(player);
-		Vector playerVector = localPlayer.getPosition();
-		RegionManager regionManager = worldGuardPlugin.getRegionManager(player.getWorld());
-		ApplicableRegionSet applicableRegionSet = regionManager.getApplicableRegions(playerVector);
+		
+		Location l = player.getLocation();
+		RegionQuery query = WorldGuard.getInstance().getPlatform().getRegionContainer().createQuery();
+		ApplicableRegionSet applicableRegionSet = query.getApplicableRegions(BukkitAdapter.adapt(l));
 		
 		for(ProtectedRegion regions: applicableRegionSet) {
-			if(regions.contains(playerVector)) {
+			if(regions.contains(BlockVector3.at(l.getX(), l.getY(), l.getZ()))) {
 				if(!entered.contains(player)) {
 					try {
 						left.remove(player);
@@ -87,15 +91,5 @@ public class ClaimEnter implements Listener{
 				player.playSound(player.getLocation(), Sound.ENTITY_CHICKEN_EGG, 1, 1);
 			}
 		}
-	}
-	
-	private WorldGuardPlugin getWorldGuard() {
-		Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin("WorldGuard");
-		
-		if (plugin == null || !(plugin instanceof WorldGuardPlugin)) {
-			return null;
-		}
-		
-		return (WorldGuardPlugin) plugin;
 	}
 }

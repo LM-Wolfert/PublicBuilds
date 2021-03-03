@@ -13,13 +13,13 @@ public class RankValues {
 		FileConfiguration config = instance.getConfig();
 		
 		if (p.hasPermission("group.builder")) {
-			return config.getInt("builderLimit");
+			return config.getInt("plot_limit.builder");
 		} else if (p.hasPermission("group.jr builder")) {
-			return config.getInt("jrbuilderLimit");
+			return config.getInt("plot_limit.jrbuilder");
 		} else if (p.hasPermission("group.apprentice")) {
-			return config.getInt("apprenticeLimit");
+			return config.getInt("plot_limit.apprentice");
 		} else {
-			return config.getInt("guestLimit");
+			return config.getInt("plot_limit.guest");
 		}
 	}
 
@@ -29,13 +29,13 @@ public class RankValues {
 		FileConfiguration config = instance.getConfig();
 		
 		if (p.hasPermission("group.builder")) {
-			return config.getInt("builderDistance");
+			return config.getInt("plot_distance.builder");
 		} else if (p.hasPermission("group.jr builder")) {
-			return config.getInt("jrbuilderDistance");
+			return config.getInt("plot_distance.jrbuilder");
 		} else if (p.hasPermission("group.apprentice")) {
-			return config.getInt("apprenticeDistance");
+			return config.getInt("plot_distance.apprentice");
 		} else {
-			return config.getInt("guestDistance");
+			return config.getInt("plot_distance.guest");
 		}
 	}
 

@@ -19,7 +19,7 @@ public class PlotGui {
 	public static int inv_rows = 5 * 9;
 	
 	public static void initialize() {
-		inventory_name = Utils.chat("&9Menu");
+		inventory_name = Utils.chat("&9Plots");
 		
 		inv = Bukkit.createInventory(null, inv_rows);
 		

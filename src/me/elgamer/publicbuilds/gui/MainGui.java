@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.worldedit.BlockVector2D;
+import com.sk89q.worldedit.math.BlockVector2;
 
 import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.mysql.PlotData;
@@ -46,7 +46,7 @@ public class MainGui {
 
 		Utils.createItem(inv, "GREEN_TERRACOTTA", 1, 5, Utils.chat("&9Create plot"), Utils.chat("&1Will create a new plot in the area selected with /corner."));
 
-		if (PlotData.hasPlot(uuid)) {
+		if (PlotData.hasPlot(uuid) && PlotData.activePlotCount(uuid) > 0) {
 			Utils.createItem(inv, "SPRUCE_DOOR", 1, 41, Utils.chat("&9Plot Menu"), Utils.chat("&1Show all your active plots!"));
 		}
 
@@ -173,7 +173,7 @@ public class MainGui {
 			}
 
 			//Get 4 corners.
-			List<BlockVector2D> vector = plots.getLocations(p);
+			List<BlockVector2> vector = plots.getLocations(p);
 			//Create claim
 			p.sendMessage(ClaimFunctions.createClaim(p.getUniqueId().toString(), vector));
 			p.closeInventory();

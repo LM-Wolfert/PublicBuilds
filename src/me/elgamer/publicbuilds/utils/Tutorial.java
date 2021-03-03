@@ -3,10 +3,12 @@ package me.elgamer.publicbuilds.utils;
 import java.util.HashMap;
 import java.util.List;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import com.sk89q.worldedit.BlockVector2D;
+import com.sk89q.worldedit.math.BlockVector2;
 import com.sk89q.worldguard.protection.regions.ProtectedPolygonalRegion;
 
 import me.elgamer.publicbuilds.Main;
@@ -83,6 +85,8 @@ public class Tutorial {
 
 	public void stage1(Player p) {
 
+		FileConfiguration config = Main.getInstance().getConfig();
+		p.teleport(new Location(Bukkit.getWorld(config.getString("worlds.tutorial.before")), config.getDouble("starting_position.x"), config.getDouble("starting_position.y"), config.getDouble("starting_position.z")));
 		p.sendMessage(Utils.chat("&9Before you can create a plot you must know where you are."));
 		p.sendMessage(Utils.chat("&9Using &7/ll &9your coordinates will show in chat with a link to google maps."));
 
@@ -123,6 +127,8 @@ public class Tutorial {
 	
 	public void stage6(Player p) {
 		
+		FileConfiguration config = Main.getInstance().getConfig();
+		p.teleport(new Location(Bukkit.getWorld(config.getString("worlds.tutorial.after")), config.getDouble("starting_position.x"), config.getDouble("starting_position.y"), config.getDouble("starting_position.z")));
 		p.sendMessage(Utils.chat("&9You have completed the tutorial, here is the building built by one of our builders."));
 		p.sendMessage(Utils.chat("&6To leave this area just enter the portal on to the right of the building."));
 		removePlayer(p);
@@ -131,15 +137,16 @@ public class Tutorial {
 
 	public boolean containsCorners(Player p) {
 
+		//Checks whether the corners the player has set include all 4 corners of the minimum plot size.
 		Plots plots = Main.getInstance().getPlots();
 		FileConfiguration config = Main.getInstance().getConfig();
-		List<BlockVector2D> vector = plots.getLocations(p);
+		List<BlockVector2> vector = plots.getLocations(p);
 		ProtectedPolygonalRegion region = new ProtectedPolygonalRegion("tutorial:" + p.getName(), vector, 1, 256);
 
-		BlockVector2D pos1 = new BlockVector2D(config.getInt("plot_corners.1.x"), config.getInt("plot_corners.1.z"));
-		BlockVector2D pos2 = new BlockVector2D(config.getInt("plot_corners.2.x"), config.getInt("plot_corners.2.z"));
-		BlockVector2D pos3 = new BlockVector2D(config.getInt("plot_corners.3.x"), config.getInt("plot_corners.3.z"));
-		BlockVector2D pos4 = new BlockVector2D(config.getInt("plot_corners.4.x"), config.getInt("plot_corners.4.z"));
+		BlockVector2 pos1 = BlockVector2.at(config.getInt("plot_corners.1.x"), config.getInt("plot_corners.1.z"));
+		BlockVector2 pos2 = BlockVector2.at(config.getInt("plot_corners.2.x"), config.getInt("plot_corners.2.z"));
+		BlockVector2 pos3 = BlockVector2.at(config.getInt("plot_corners.3.x"), config.getInt("plot_corners.3.z"));
+		BlockVector2 pos4 = BlockVector2.at(config.getInt("plot_corners.4.x"), config.getInt("plot_corners.4.z"));
 
 		if (region.contains(pos1) && region.contains(pos2) && region.contains(pos3) && region.contains(pos4)) {
 			return true;
@@ -150,6 +157,7 @@ public class Tutorial {
 
 	public boolean nearCorners(double[] coords) {
 		
+		//Checks whether the player has teleported near the 4 corners of the building using /tpll
 		FileConfiguration config = Main.getInstance().getConfig();
 		
 		if ((Math.abs(coords[0]-config.getDouble("tpll_points.1.x")) <= 0.5) && (Math.abs(coords[0]-config.getDouble("tpll_points.1.z")) <= 0.5)) {
@@ -167,6 +175,7 @@ public class Tutorial {
 
 	public boolean getHeight(Double h) {
 		
+		//Checks whether the player has given the correct height of the building.
 		FileConfiguration config = Main.getInstance().getConfig();
 		
 		if (Math.floor(h) == config.getInt("building_height")) {

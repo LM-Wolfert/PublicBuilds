@@ -41,11 +41,12 @@ public class PlotData {
 
 		try {
 			PreparedStatement insert = instance.getConnection().prepareStatement
-					("INSERT INTO " + instance.plotData + " (ID,OWNER,MESSAGE) VALUE (?,?,?)");
+					("INSERT INTO " + instance.plotData + " (ID,OWNER,MESSAGE,STATUS) VALUE (?,?,?,?)");
 
 			insert.setInt(1, id);
 			insert.setString(2, uuid);
 			insert.setString(3, "false");
+			insert.setString(4, "claimed");
 			insert.executeUpdate();
 
 			return true;
