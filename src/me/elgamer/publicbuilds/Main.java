@@ -28,6 +28,7 @@ import me.elgamer.publicbuilds.listeners.CommandListener;
 import me.elgamer.publicbuilds.listeners.InventoryClicked;
 import me.elgamer.publicbuilds.listeners.JoinServer;
 import me.elgamer.publicbuilds.listeners.QuitServer;
+import me.elgamer.publicbuilds.mysql.PlayerData;
 import me.elgamer.publicbuilds.mysql.PlotData;
 import me.elgamer.publicbuilds.utils.Accept;
 import me.elgamer.publicbuilds.utils.CurrentPlot;
@@ -52,7 +53,7 @@ public class Main extends JavaPlugin {
 	
 	Tutorial tutorial;
 	Review review;
-	Plots plots;
+	Map<Player, Plots> plots;
 	Reason reason;
 	CurrentPlot currentPlot;
 	Map<Player, Accept> accept;
@@ -79,7 +80,7 @@ public class Main extends JavaPlugin {
 		review = new Review();
 		
 		//Create Plots Hashmap.
-		plots = new Plots();
+		plots = new HashMap<Player, Plots>();
 		
 		//Create Reason Hashmap.
 		reason = new Reason();
@@ -117,6 +118,7 @@ public class Main extends JavaPlugin {
 		//MySQL
 		try {
 			if (connection != null && !connection.isClosed()) {
+				Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "MySQL disconnected from " + config.getString("MySQL_database"));
 				connection.close();
 			}
 		} catch (Exception e) {
@@ -126,10 +128,30 @@ public class Main extends JavaPlugin {
 		//Remove all players who are in review.
 		for (Player p: Bukkit.getOnlinePlayers()) {
 
-			if (review.inReview(p)) {
+			//Remove player from the tutorial map.
+			Tutorial t = instance.getTutorial();
+			if (t.inTutorial(p)) {
+				PlayerData.setTutorialStage(p.getUniqueId().toString(), t.getStage(p));
+				t.removePlayer(p);
+			}
 
-				int plot = review.getReview(p);
+			//Remove player from plots map.
+			Main.getInstance().getPlots().remove(p);
+			
+			//Remove player from currentPlot map.
+			CurrentPlot cp = instance.getCurrentPlot();
+			cp.removePlayer(p);
+
+			//Update the last online time of player.
+			PlayerData.updateTime(p.getUniqueId().toString());
+
+			//If the player is in a review, cancel it.
+			Review r = instance.getReview();
+			if (r.inReview(p)) {
+
+				int plot = r.getReview(p);
 				PlotData.setStatus(plot, "submitted");
+				r.removePlayer(p);
 
 			}
 		}
@@ -158,7 +180,7 @@ public class Main extends JavaPlugin {
 				setConnection(DriverManager.getConnection("jdbc:mysql://" + this.host + ":" 
 						+ this.port + "/" + this.database, this.username, this.password));
 
-				Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "MYSQL CONNECTED");
+				Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "MySQL connected to " + config.getString("MySQL_database"));
 			}
 
 		} catch (SQLException e) {
@@ -204,7 +226,7 @@ public class Main extends JavaPlugin {
 	}
 	
 	//Returns plots.
-	public Plots getPlots() {
+	public Map<Player, Plots> getPlots() {
 		return plots;
 	}
 	

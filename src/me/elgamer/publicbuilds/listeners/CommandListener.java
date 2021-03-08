@@ -57,8 +57,14 @@ public class CommandListener implements Listener {
 					}
 				} else if (t.getStage(p) == 4) {
 					
-					String[] args = e.getMessage().replace("/tpll", "").split(" ");
+					String[] message = e.getMessage().split("\\s+");
+					String[] args = new String[message.length-1];
+					for (int i = 0; i<message.length-1; i++) {
+						args[i] = message[i+1];
+					}
 					
+					p.sendMessage("args: " + args.length);
+					p.sendMessage(args[0] + " " + args[1]);
 					if(args.length==0) {
 						return;
 					}
@@ -101,7 +107,7 @@ public class CommandListener implements Listener {
 					ModifiedAirocean projection = new ModifiedAirocean();
 
 					double[] coords = projection.fromGeo(lon, lat);
-					
+					p.sendMessage("x: " + coords[0] + " z: " + coords[1]);
 					
 					if (t.nearCorners(coords)) {
 						t.updateStage(p, 5);

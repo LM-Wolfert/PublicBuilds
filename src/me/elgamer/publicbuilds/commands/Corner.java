@@ -1,22 +1,26 @@
 package me.elgamer.publicbuilds.commands;
 
+import java.util.Map;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldedit.math.BlockVector2;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
 
 import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.utils.Plots;
+import me.elgamer.publicbuilds.utils.Point;
 import me.elgamer.publicbuilds.utils.Utils;
 
 public class Corner implements CommandExecutor {
 
+	final String ERROR = Utils.chat("&c/corner <1|2|3|4>");
+	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		
@@ -28,7 +32,7 @@ public class Corner implements CommandExecutor {
 
 		//Get instance of the player.
 		Player p = (Player) sender;
-
+		
 		//Get instance of WorldGuard.
 		WorldGuard wg = WorldGuard.getInstance();
 
@@ -42,18 +46,18 @@ public class Corner implements CommandExecutor {
 			return true;
 		}
 
-		//If the command syntax is 1 through 4 then the command is valid.
-		if (args[0].equals("1") || args[0].equals("2") || args[0].equals("3") || args[0].equals("4")) {
-
-			//Sets the position as a corner which is stored in the plots hashmap.
-			Plots plots = Main.getInstance().getPlots();
-			BlockVector2 pos = BlockVector2.at(p.getLocation().getX(), p.getLocation().getZ());
-			plots.addLocation(p, pos, Integer.valueOf(args[0]));
-			return true;
-
-		} else {
-			p.sendMessage(Utils.chat("&c/corner <1|2|3|4>"));
-			return true;
+		Map<Player, Plots> plotMap = Main.getInstance().getPlots();
+		
+		if (!(plotMap.containsKey(p))) {
+			plotMap.put(p, new Plots());
 		}
+		
+		//Adds a new point to plots.
+		Plots plots = plotMap.get(p);
+		plots.add(new Point(p.getLocation().getX(), p.getLocation().getZ()));
+		plotMap.replace(p, plots);
+		p.sendMessage(Utils.chat("&aSet corner to x: " + (int) p.getLocation().getX() + " z: " + (int) p.getLocation().getZ()));
+		
+		return true;
 	}
 }

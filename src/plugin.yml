@@ -3,13 +3,14 @@ version: 1.0
 main: me.elgamer.publicbuilds.Main
 description: Claiming System
 depend: [WorldGuard, UKnetUtilities, BTEPoints]
+api-version: 1.16
 
 commands:
     gui:
         usage: /<command> 
         description: Open the Main Gui of the plugin.
     corner:
-        usage: /<command> 1|2|3|4
+        usage: /<command>
         description: Sets the corner marker for a plot.
     createarea:
         usage: /<command>

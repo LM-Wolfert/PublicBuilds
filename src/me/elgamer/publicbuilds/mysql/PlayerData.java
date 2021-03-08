@@ -70,6 +70,23 @@ public class PlayerData {
 			return 1;
 		}
 	}
+	
+	public static void setTutorialStage(String uuid, int stage) {
+
+		Main instance = Main.getInstance();
+
+		try {
+			PreparedStatement statement = instance.getConnection().prepareStatement
+					("UPDATE " + instance.playerData + " SET TUTORIAL_STAGE=? WHERE ID=?");
+			statement.setInt(1, stage);
+			statement.setString(2, uuid);
+			statement.executeUpdate();
+
+
+		} catch (SQLException sql) {
+			sql.printStackTrace();
+		}
+	}
 
 	public static void updateTime(String uuid) {
 

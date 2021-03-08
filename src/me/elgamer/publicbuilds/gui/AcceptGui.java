@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -52,32 +53,32 @@ public class AcceptGui {
 
 				if (j == 1) {
 					if (ac.size()<i) {
-						Utils.createItem(inv, "RED_CONCRETE", 1, row*9+i+2, Utils.chat("&9Size: " + i));
+						Utils.createItem(inv, Material.RED_CONCRETE, 1, row*9+i+2, Utils.chat("&9Size: " + i));
 					} else {
-						Utils.createItem(inv, "LIME_CONCRETE", 1, row*9+i+2, Utils.chat("&9Size: " + i));
+						Utils.createItem(inv, Material.LIME_CONCRETE, 1, row*9+i+2, Utils.chat("&9Size: " + i));
 					}
 				}
 				
 				if (j == 2) {
 					if (ac.accuracy()<i) {
-						Utils.createItem(inv, "RED_CONCRETE", 1, row*9+i+2, Utils.chat("&9Accuracy: " + i));
+						Utils.createItem(inv, Material.RED_CONCRETE, 1, row*9+i+2, Utils.chat("&9Accuracy: " + i));
 					} else {
-						Utils.createItem(inv, "LIME_CONCRETE", 1, row*9+i+2, Utils.chat("&9Accuracy: " + i));
+						Utils.createItem(inv, Material.LIME_CONCRETE, 1, row*9+i+2, Utils.chat("&9Accuracy: " + i));
 					}
 				}
 				
 				if (j == 3) {
 					if (ac.quality()<i) {
-						Utils.createItem(inv, "RED_CONCRETE", 1, row*9+i+2, Utils.chat("&9Quality: " + i));
+						Utils.createItem(inv, Material.RED_CONCRETE, 1, row*9+i+2, Utils.chat("&9Quality: " + i));
 					} else {
-						Utils.createItem(inv, "LIME_CONCRETE", 1, row*9+i+2, Utils.chat("&9Quality: " + i));
+						Utils.createItem(inv, Material.LIME_CONCRETE, 1, row*9+i+2, Utils.chat("&9Quality: " + i));
 					}
 				}
 
 			}
 		}
 		
-		Utils.createItem(inv, "ORANGE_CONCRETE", 1, 5, Utils.chat("&9Submit"));
+		Utils.createItem(inv, Material.ORANGE_CONCRETE, 1, 5, Utils.chat("&9Submit"));
 
 
 

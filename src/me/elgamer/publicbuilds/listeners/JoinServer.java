@@ -15,7 +15,6 @@ import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.mysql.PlayerData;
 import me.elgamer.publicbuilds.utils.CurrentPlot;
 import me.elgamer.publicbuilds.utils.Inactive;
-import me.elgamer.publicbuilds.utils.Plots;
 import me.elgamer.publicbuilds.utils.Tutorial;
 
 public class JoinServer implements Listener {
@@ -43,10 +42,6 @@ public class JoinServer implements Listener {
 
 		//If a player hasn't been online for more than 14 days their plot will cancelled.
 		Inactive.cancelInactivePlots(player);
-		
-		//Add player to the plots map.
-		Plots p = instance.getPlots();
-		p.addPlayer(player);
 		
 		//Add player to the currentPlot map.
 		CurrentPlot cp = instance.getCurrentPlot();

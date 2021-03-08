@@ -3,6 +3,7 @@ package me.elgamer.publicbuilds.gui;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -37,9 +38,9 @@ public class PlotInfo {
 
 		inv.clear();
 
-		Utils.createItem(inv, "OAK_BOAT", 1, 22, Utils.chat("&9Cancel plot"), Utils.chat("&1Cancel your plot, it will be removed from the world!"));
-		Utils.createItem(inv, "OAK_BOAT", 1, 22, Utils.chat("&9Submit plot"), Utils.chat("&1Submit your plot, it be available for review!"));
-		Utils.createItem(inv, "OAK_BOAT", 1, 22, Utils.chat("&9Teleport"), Utils.chat("&1Go to your plot!"));
+		Utils.createItem(inv, Material.OAK_BOAT, 1, 22, Utils.chat("&9Cancel plot"), Utils.chat("&1Cancel your plot, it will be removed from the world!"));
+		Utils.createItem(inv, Material.OAK_BOAT, 1, 22, Utils.chat("&9Submit plot"), Utils.chat("&1Submit your plot, it be available for review!"));
+		Utils.createItem(inv, Material.OAK_BOAT, 1, 22, Utils.chat("&9Teleport"), Utils.chat("&1Go to your plot!"));
 
 		toReturn.setContents(inv.getContents());
 		return toReturn;

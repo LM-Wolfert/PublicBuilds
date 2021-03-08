@@ -16,14 +16,14 @@ public class Utils {
 		return ChatColor.translateAlternateColorCodes('&', s);
 	}
 	
-	public static ItemStack createItem(Inventory inv, String materialName, int amount, int invSlot, String displayName, String... loreString) {
+	public static ItemStack createItem(Inventory inv, Material material, int amount, int invSlot, String displayName, String... loreString) {
 		
 		ItemStack item;
 		
 		List<String> lore = new ArrayList<String>();
 		
-		item = new ItemStack(Material.getMaterial(materialName));
-		
+		item = new ItemStack(material);
+
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName(Utils.chat(displayName));
 		for (String s : loreString) {

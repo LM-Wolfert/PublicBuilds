@@ -1,56 +1,102 @@
 package me.elgamer.publicbuilds.utils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import com.sk89q.worldedit.math.BlockVector2;
 
+import me.elgamer.publicbuilds.Main;
+
 public class Plots {
 	
-	//Creates a hashmap to stop the player and the corners that a player can create.
-	HashMap<Player, BlockVector2[]> plots = new HashMap<Player, BlockVector2[]>();
+	Point p1 = null;
+	Point p2 = null;
+	Point p3 = null;
+	Point p4 = null;
 	
-	//Adds the player to the hashmap with an array of BlockVector2D of size 4, which will be the 4 corners of a plot.
-	public void addPlayer(Player p) {
-		plots.put(p, new BlockVector2[4]);
-	}
+	int cv = 1;
 	
-	//Returns all 4 BlockVector2D locations stored in the hashmap of the player.
-	//It'll be returned as a list as this is how claims are creates.
-	//If there are less than 4 entered points then some of the values will be null.
-	public List<BlockVector2> getLocations(Player p) {
-		List<BlockVector2> vector = new ArrayList<BlockVector2>();
-		BlockVector2[] points = plots.get(p);
+	
+	//Adds a point to the correct p value.
+	public void add(Point p) {
 		
-		for (int i=0; i<points.length; i++) {
-			vector.add(points[i]);
+		switch(cv) {
+		
+		case 1:
+			p1 = p;
+			cv = 2;
+			break;
+			
+		case 2:
+			p2 = p;
+			cv = 3;
+			break;
+			
+		case 3:
+			p3 = p;
+			cv = 4;
+			break;
+			
+		case 4:
+			p4 = p;
+			cv = 1;
+			break;
+		
 		}
 		
-		return vector;
 	}
 	
-	//Adds a location to one of the 4 points.
-	public void addLocation(Player p, BlockVector2 point, int position) {
+	//Returns 4 BlockVector2D locations stored in the hashmap of the player.
+	//It'll be returned as a list as this is how claims are created.
+	public List<BlockVector2> getLocations(Player p) {
 		
-		BlockVector2[] points = plots.get(p);
-		points[position-1] = point;
-		plots.replace(p, points);
-	
-	}
-	
-	//Removed the player from the hashmap.
-	public void removePlayer(Player p) {
-		plots.remove(p);
+		List<BlockVector2> vector = new ArrayList<BlockVector2>();
+		
+		Line l1 = new Line(p1, p2);
+		Line l2 = new Line(p3, p4);
+		
+		Bukkit.broadcastMessage("x: " + p1.x + "z:" + p1.z);
+		Bukkit.broadcastMessage("x: " + p2.x + "z:" + p2.z);
+		Bukkit.broadcastMessage("x: " + p3.x + "z:" + p3.z);
+		Bukkit.broadcastMessage("x: " + p4.x + "z:" + p4.z);
+		
+		if (hasIntersect(l1, l2)) {
+			
+			vector.add(BlockVector2.at(p1.x, p1.z));
+			vector.add(BlockVector2.at(p3.x, p3.z));
+			vector.add(BlockVector2.at(p2.x, p2.z));
+			vector.add(BlockVector2.at(p4.x, p4.z));
+			return vector;
+		}
+		
+		Line l3 = new Line(p1, p3);
+		Line l4 = new Line(p2, p4);
+		
+		if (hasIntersect(l3, l4)) {
+			
+			vector.add(BlockVector2.at(p1.x, p1.z));
+			vector.add(BlockVector2.at(p2.x, p2.z));
+			vector.add(BlockVector2.at(p3.x, p3.z));
+			vector.add(BlockVector2.at(p4.x, p4.z));
+			return vector;
+			
+		} else {
+			
+			vector.add(BlockVector2.at(p1.x, p1.z));
+			vector.add(BlockVector2.at(p2.x, p2.z));
+			vector.add(BlockVector2.at(p4.x, p4.z));
+			vector.add(BlockVector2.at(p3.x, p3.z));
+			return vector;
+		}
 	}
 	
 	//Checks whether all 4 locations are entered into the array.
 	public boolean hasLocations(Player p) {
 		
-		BlockVector2[] locations = plots.get(p);
-		if (locations[0] == null || locations[1] == null || locations[2] == null || locations[3] == null) {
+		if (p1 == null || p2 == null || p3 == null || p4 == null) {
 			return false;
 		} else {
 			return true;
@@ -60,26 +106,13 @@ public class Plots {
 	
 	//Calculates the smallest distance between any two points, if this is less than 5 meters then a plot will not be created.
 	public boolean minDis(Player p) {
-		
-		BlockVector2[] points = plots.get(p);
-		double dis = 10;
-		double x = 0;
-		double z = 0;
-		
-		for (int i = 0; i < 4; i++) {			
-			for (int j = 0; j < 4; j++) {
 				
-				if (i == j) { continue; }
-				
-				x = (int) Math.abs((points[i].getX() - points[j].getX()));
-				z = (int) Math.abs((points[i].getZ() - points[j].getZ()));
-				
-				dis = Math.sqrt(x*x+z*z);
-				
-				if (dis < 5) { return true; }
-				
-			}
-		}
+		if (distance(p1, p2) < Main.getInstance().getConfig().getInt("min_dis")) { return true; }
+		if (distance(p1, p3) < Main.getInstance().getConfig().getInt("min_dis")) { return true; }
+		if (distance(p1, p4) < Main.getInstance().getConfig().getInt("min_dis")) { return true; }
+		if (distance(p2, p3) < Main.getInstance().getConfig().getInt("min_dis")) { return true; }
+		if (distance(p2, p4) < Main.getInstance().getConfig().getInt("min_dis")) { return true; }
+		if (distance(p3, p4) < Main.getInstance().getConfig().getInt("min_dis")) { return true; }
 		
 		return false;
 		
@@ -89,25 +122,12 @@ public class Plots {
 	//If it is larger than is allowed for the players rank then a plot will not be created.
 	public boolean maxDis(Player p) {
 		
-		BlockVector2[] points = plots.get(p);
-		double dis = 0;
-		double x = 0;
-		double z = 0;
-		
-		for (int i = 0; i < 4; i++) {			
-			for (int j = 0; j < 4; j++) {
-				
-				if (i == j) { continue; }
-				
-				x = (int) Math.abs((points[i].getX() - points[j].getX()));
-				z = (int) Math.abs((points[i].getZ() - points[j].getZ()));
-				
-				dis = Math.sqrt(x*x+z*z);
-				
-				if (dis > RankValues.maxDis(p)) { return true; }
-				
-			}
-		}
+		if (distance(p1, p2) > RankValues.maxDis(p)) { return true; }
+		if (distance(p1, p3) > RankValues.maxDis(p)) { return true; }
+		if (distance(p1, p4) > RankValues.maxDis(p)) { return true; }
+		if (distance(p2, p3) > RankValues.maxDis(p)) { return true; }
+		if (distance(p2, p4) > RankValues.maxDis(p)) { return true; }
+		if (distance(p3, p4) > RankValues.maxDis(p)) { return true; }		
 		
 		return false;
 		
@@ -115,45 +135,33 @@ public class Plots {
 	
 	//Checks whether a line between any two points intersects with a different line between two points.
 	//If this is the case then a plot will have a usable shape and the plot will not be created.
-	public boolean hasIntersect(Player p) {
+	public boolean hasIntersect(Line l1, Line l2) {
 		
-		BlockVector2[] points = plots.get(p);
-		
-		double x1,x2,x3,x4,z1,z2,z3,z4,a1,a2,b1,b2,x;
-		
-		for (int i = 0; i<points.length; i++) {
-			for (int j = 0; j<points.length; j++) {
-				
-				if (i == j) { continue; }
-				
-				x1 = points[i].getX();
-				z1 = points[i].getZ();
-				x2 = points[(i+1)%4].getX();
-				z2 = points[(i+1)%4].getZ();
-				
-				x3 = points[j].getX();
-				z3 = points[j].getZ();
-				x4 = points[(j+1)%4].getX();
-				z4 = points[(j+1)%4].getZ();
-				
-				a1 = (z2-z1)/(x2-x1);
-				b1 = z1-(a1*x1);
-				a2 = (z4-z3)/(x4-x3);
-				b2 = z3-(a2*x3);
-				
-				x = (b2-b1)/(a1-a2);
-				
-				if (a1 == a2 || b1 == b2) {
-					return true;
-				} else if (a1 == a2) {
-					continue;
-				} else if (Math.abs(x2-x)<Math.abs(x2-x1)) {
-					return true;
-				}
-			}
+		if (Math.abs(l1.a) == Math.abs(l2.a)) {
+			return false;
 		}
 		
-		return false;
+		double x = (l2.b-l1.b)/(l1.a-l2.a);
+		double y = (l1.a*x)+l1.b;
+		
+		Point ints = new Point(x,y);
+		
+		if ((distance(ints,l1.p1) > l1.dis) || (distance(ints,l1.p2) > l1.dis)) {
+			return false;
+		}
+		
+		if ((distance(ints,l2.p1) > l2.dis) || (distance(ints,l2.p2) > l2.dis)) {
+			return false;
+		}
+		
+		return true;
+		
+	}
+	
+	public double distance(Point p1, Point p2) {
+		
+		return (Math.sqrt(Math.pow((p2.x-p1.x),2)+Math.pow((p2.z-p1.z),2)));
+		
 	}
 	
 }

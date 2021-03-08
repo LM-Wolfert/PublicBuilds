@@ -3,6 +3,7 @@ package me.elgamer.publicbuilds.gui;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -32,10 +33,10 @@ public class ReviewGui {
 
 		inv.clear();
 
-		Utils.createItem(inv, "LIGHT_BLUE_CONCRETE", 1, 14, "&aBefore view!");
-		Utils.createItem(inv, "BLUE_CONCRETE", 1, 14, "&aCurrent view!");
-		Utils.createItem(inv, "LIME_CONCRETE", 1, 14, "&aAccept!");
-		Utils.createItem(inv, "RED_CONCRETE", 1, 14, "&aDeny!");
+		Utils.createItem(inv, Material.LIGHT_BLUE_CONCRETE, 1, 14, "&aBefore view!");
+		Utils.createItem(inv, Material.BLUE_CONCRETE, 1, 14, "&aCurrent view!");
+		Utils.createItem(inv, Material.LIME_CONCRETE, 1, 14, "&aAccept!");
+		Utils.createItem(inv, Material.RED_CONCRETE, 1, 14, "&aDeny!");
 
 		toReturn.setContents(inv.getContents());
 		return toReturn;

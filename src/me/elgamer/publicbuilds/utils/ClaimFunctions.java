@@ -30,8 +30,8 @@ public class ClaimFunctions {
 		FileConfiguration config = instance.getConfig();
 
 		//Get worlds.
-		World saveWorld = Bukkit.getServer().getWorld(config.getString("saveWorld"));
-		World buildWorld = Bukkit.getServer().getWorld(config.getString("buildWorld"));
+		World saveWorld = Bukkit.getServer().getWorld(config.getString("worlds.save"));
+		World buildWorld = Bukkit.getServer().getWorld(config.getString("worlds.build"));
 
 		//Get instance of WorldGuard.
 		WorldGuard wg = WorldGuard.getInstance();

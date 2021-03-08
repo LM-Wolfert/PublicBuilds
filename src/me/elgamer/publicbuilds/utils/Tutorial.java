@@ -104,9 +104,8 @@ public class Tutorial {
 
 		p.sendMessage(Utils.chat("&9Now that you know where you are you can pick out a building to build."));
 		p.sendMessage(Utils.chat("&9For this tutorial you should make a plot for 134+136 Marlborough Gardens, don't forget the garden."));
-		p.sendMessage(Utils.chat("&9To create a plot you need to mark all 4 corners with the command &7/corner &9, using the numbers 1 to 4 to indicate the corner."));
+		p.sendMessage(Utils.chat("&9To create a plot you need to mark all 4 corners with the command &7/corner."));
 		p.sendMessage(Utils.chat("&9It is recommended to keep a few blocks between the edge of the building and the edge of you selection."));
-		p.sendMessage(Utils.chat("&9Keep in mind that the order of the corners is important, they will also be marked in the world"));
 		p.sendMessage(Utils.chat("&9When you have all the corners set you can open the gui with &7/gui &9 and there is a button to create a plot."));
 
 	}
@@ -114,7 +113,7 @@ public class Tutorial {
 	public void stage4(Player p) {
 		
 		p.sendMessage(Utils.chat("&9Now that you have created a plot you can start to build, the first step is creating the outlines of the building."));
-		p.sendMessage(Utils.chat("&9This is again done with &7/tpll &p, right click on one of the corners of the building and teleport to that position."));
+		p.sendMessage(Utils.chat("&9This is again done with &7/tpll &9, right click on one of the corners of the building and teleport to that position."));
 		p.sendMessage(Utils.chat("&9Try to right click slightly inside the corner of the building, this is due to the roof sticking out more than the walls of the building."));
 	}
 	
@@ -138,10 +137,10 @@ public class Tutorial {
 	public boolean containsCorners(Player p) {
 
 		//Checks whether the corners the player has set include all 4 corners of the minimum plot size.
-		Plots plots = Main.getInstance().getPlots();
+		Plots plots = Main.getInstance().getPlots().get(p);
 		FileConfiguration config = Main.getInstance().getConfig();
 		List<BlockVector2> vector = plots.getLocations(p);
-		ProtectedPolygonalRegion region = new ProtectedPolygonalRegion("tutorial:" + p.getName(), vector, 1, 256);
+		ProtectedPolygonalRegion region = new ProtectedPolygonalRegion(p.getName(), vector, 1, 256);
 
 		BlockVector2 pos1 = BlockVector2.at(config.getInt("plot_corners.1.x"), config.getInt("plot_corners.1.z"));
 		BlockVector2 pos2 = BlockVector2.at(config.getInt("plot_corners.2.x"), config.getInt("plot_corners.2.z"));
@@ -160,13 +159,13 @@ public class Tutorial {
 		//Checks whether the player has teleported near the 4 corners of the building using /tpll
 		FileConfiguration config = Main.getInstance().getConfig();
 		
-		if ((Math.abs(coords[0]-config.getDouble("tpll_points.1.x")) <= 0.5) && (Math.abs(coords[0]-config.getDouble("tpll_points.1.z")) <= 0.5)) {
+		if ((Math.abs(coords[0]-config.getDouble("tpll_points.1.x")) <= 0.5) && (Math.abs(coords[1]-config.getDouble("tpll_points.1.z")) <= 0.5)) {
 			return true;
-		} else if ((Math.abs(coords[0]-config.getDouble("tpll_points.2.x")) <= 0.5) && (Math.abs(coords[0]-config.getDouble("tpll_points.2.z")) <= 0.5)) {
+		} else if ((Math.abs(coords[0]-config.getDouble("tpll_points.2.x")) <= 0.5) && (Math.abs(coords[1]-config.getDouble("tpll_points.2.z")) <= 0.5)) {
 			return true;
-		} else if ((Math.abs(coords[0]-config.getDouble("tpll_points.3.x")) <= 0.5) && (Math.abs(coords[0]-config.getDouble("tpll_points.3.z")) <= 0.5)) {
+		} else if ((Math.abs(coords[0]-config.getDouble("tpll_points.3.x")) <= 0.5) && (Math.abs(coords[1]-config.getDouble("tpll_points.3.z")) <= 0.5)) {
 			return true;
-		} else if ((Math.abs(coords[0]-config.getDouble("tpll_points.4.x")) <= 0.5) && (Math.abs(coords[0]-config.getDouble("tpll_points.4.z")) <= 0.5)) {
+		} else if ((Math.abs(coords[0]-config.getDouble("tpll_points.4.x")) <= 0.5) && (Math.abs(coords[1]-config.getDouble("tpll_points.4.z")) <= 0.5)) {
 			return true;
 		} else {
 			return false;

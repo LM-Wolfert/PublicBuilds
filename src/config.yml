@@ -19,6 +19,10 @@ plot_distance:
     apprentice: 50
     jrbuilder: 75
     builder: 100
+    
+#Minimum distance between 2 points of a claim
+min_dis: 5
+
 #Limit on active claimed plots
 
 #If user is at the limit they will no longer be able to create a new plot

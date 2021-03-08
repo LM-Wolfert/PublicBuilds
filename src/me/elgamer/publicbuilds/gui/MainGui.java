@@ -3,6 +3,7 @@ package me.elgamer.publicbuilds.gui;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -41,21 +42,21 @@ public class MainGui {
 
 		inv.clear();
 
-		Utils.createItem(inv, "SPRUCE_BOAT", 1, 22, Utils.chat("&9Belfast"), Utils.chat("&1Click here to build in Befast!"));
-		Utils.createItem(inv, "SHIELD", 1, 24, Utils.chat("&9London"), Utils.chat("&1Click here to build in London!"));
+		Utils.createItem(inv, Material.SPRUCE_BOAT, 1, 22, Utils.chat("&9Belfast"), Utils.chat("&1Click here to build in Befast!"));
+		Utils.createItem(inv, Material.SHIELD, 1, 24, Utils.chat("&9London"), Utils.chat("&1Click here to build in London!"));
 
-		Utils.createItem(inv, "GREEN_TERRACOTTA", 1, 5, Utils.chat("&9Create plot"), Utils.chat("&1Will create a new plot in the area selected with /corner."));
+		Utils.createItem(inv, Material.GREEN_TERRACOTTA, 1, 5, Utils.chat("&9Create plot"), Utils.chat("&1Will create a new plot in the area selected with /corner."));
 
 		if (PlotData.hasPlot(uuid) && PlotData.activePlotCount(uuid) > 0) {
-			Utils.createItem(inv, "SPRUCE_DOOR", 1, 41, Utils.chat("&9Plot Menu"), Utils.chat("&1Show all your active plots!"));
+			Utils.createItem(inv, Material.SPRUCE_DOOR, 1, 41, Utils.chat("&9Plot Menu"), Utils.chat("&1Show all your active plots!"));
 		}
 
 		if (Utils.isPlayerInGroup(p, "reviewer") && review.inReview(p)) {
-			Utils.createItem(inv, "YELLOW_CONCRETE", 1, 41, Utils.chat("&9Review Plot"), Utils.chat("&1Opens the review gui!"));
+			Utils.createItem(inv, Material.YELLOW_CONCRETE, 1, 41, Utils.chat("&9Review Plot"), Utils.chat("&1Opens the review gui!"));
 		}
 
 		else if (Utils.isPlayerInGroup(p, "reviewer") && PlotData.reviewExists()) {
-			Utils.createItem(inv, "LIME_CONCRETE", 1, 41, Utils.chat("&9New Review"), Utils.chat("&1Start reviewing a new plot!"));
+			Utils.createItem(inv, Material.LIME_CONCRETE, 1, 41, Utils.chat("&9New Review"), Utils.chat("&1Start reviewing a new plot!"));
 		}
 
 		toReturn.setContents(inv.getContents());
@@ -104,13 +105,6 @@ public class MainGui {
 				//If they are in the third stage of the tutorial check if the plot is valid.
 				if (tutorial.getStage(p) == 3) {
 
-					Plots plots = Main.getInstance().getPlots();
-
-					if (plots.hasIntersect(p)) {
-						p.sendMessage(Utils.chat("&cYour corners are not in a valid order!"));
-						p.closeInventory();
-						return;
-					}
 					if (tutorial.containsCorners(p)) {
 						p.sendMessage(Utils.chat("&9Plot was correctly created, well done!"));
 						tutorial.updateStage(p, 4);
@@ -142,7 +136,7 @@ public class MainGui {
 			}
 
 			//Check whether the player has selected the corners correctly.
-			Plots plots = Main.getInstance().getPlots();
+			Plots plots = Main.getInstance().getPlots().get(p);
 
 			//Has selected all 4 corners.
 			if (plots.hasLocations(p)) {
@@ -159,13 +153,6 @@ public class MainGui {
 					return;
 				}
 
-				//Does not have intersecting lines.
-				//Example: if the corners are in order 1324 then there would be intersecting lines.
-				if (plots.hasIntersect(p)) {
-					p.sendMessage(Utils.chat("&cYour corners are not in a valid order!"));
-					p.closeInventory();
-					return;
-				}
 			} else {
 				p.sendMessage(Utils.chat("&cTo create a plot you must select 4 corners with /corner <1|2|3|4>"));
 				p.closeInventory();

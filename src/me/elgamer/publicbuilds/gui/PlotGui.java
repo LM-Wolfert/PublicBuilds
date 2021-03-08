@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -43,7 +44,7 @@ public class PlotGui {
 			//If the plot is claimed, as in not submitted, completed or cancelled, then add it to the gui.
 			if (entry.getValue().equalsIgnoreCase("claimed")) {			
 				
-				Utils.createItem(inv, "LIME_TERRACOTTA", 1, ((j-1)*7)+i, Utils.chat("&9" + String.valueOf(entry.getKey())), Utils.chat("&1Click to open plot functions!"));
+				Utils.createItem(inv, Material.LIME_TERRACOTTA, 1, ((j-1)*7)+i, Utils.chat("&9" + String.valueOf(entry.getKey())), Utils.chat("&1Click to open plot functions!"));
 				
 				i += 1;
 				
