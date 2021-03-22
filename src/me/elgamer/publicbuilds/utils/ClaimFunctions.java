@@ -5,11 +5,11 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector2;
+import com.sk89q.worldedit.world.World;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.domains.DefaultDomain;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
@@ -30,16 +30,16 @@ public class ClaimFunctions {
 		FileConfiguration config = instance.getConfig();
 
 		//Get worlds.
-		World saveWorld = Bukkit.getServer().getWorld(config.getString("worlds.save"));
-		World buildWorld = Bukkit.getServer().getWorld(config.getString("worlds.build"));
-
+		World saveWorld = BukkitAdapter.adapt(Bukkit.getWorld(config.getString("worlds.save")));
+		World buildWorld = BukkitAdapter.adapt(Bukkit.getWorld(config.getString("worlds.build")));
+		
 		//Get instance of WorldGuard.
 		WorldGuard wg = WorldGuard.getInstance();
 
 		//Get regions.
 		RegionContainer container = wg.getPlatform().getRegionContainer();
-		RegionManager saveRegions = container.get(BukkitAdapter.adapt(saveWorld));
-		RegionManager buildRegions = container.get(BukkitAdapter.adapt(buildWorld));
+		RegionManager saveRegions = container.get(saveWorld);
+		RegionManager buildRegions = container.get(buildWorld);
 
 		//Create new id
 		int plotID = PlotData.getNewID();
@@ -85,17 +85,17 @@ public class ClaimFunctions {
 		Main instance = Main.getInstance();
 		FileConfiguration config = instance.getConfig();
 
-		//Get worlds from config
-		World saveWorld = Bukkit.getServer().getWorld(config.getString("worlds.save"));
-		World buildWorld = Bukkit.getServer().getWorld(config.getString("worlds.build"));
+		//Get worlds.
+		World saveWorld = BukkitAdapter.adapt(Bukkit.getWorld(config.getString("worlds.save")));
+		World buildWorld = BukkitAdapter.adapt(Bukkit.getWorld(config.getString("worlds.build")));
 
 		//Get instance of WorldGuard.
 		WorldGuard wg = WorldGuard.getInstance();
 
-		//Get worldguard region data
+		//Get regions.
 		RegionContainer container = wg.getPlatform().getRegionContainer();
-		RegionManager saveRegions = container.get(BukkitAdapter.adapt(saveWorld));
-		RegionManager buildRegions = container.get(BukkitAdapter.adapt(buildWorld));
+		RegionManager saveRegions = container.get(saveWorld);
+		RegionManager buildRegions = container.get(buildWorld);
 
 		//If the regions exist continue
 		if (!(saveRegions.hasRegion(String.valueOf(id)))) {
@@ -149,17 +149,17 @@ public class ClaimFunctions {
 		Main instance = Main.getInstance();
 		FileConfiguration config = instance.getConfig();
 
-		//Get worlds from config
-		World saveWorld = Bukkit.getServer().getWorld(config.getString("saveWorld"));
-		World buildWorld = Bukkit.getServer().getWorld(config.getString("buildWorld"));
+		//Get worlds.
+		World saveWorld = BukkitAdapter.adapt(Bukkit.getWorld(config.getString("worlds.save")));
+		World buildWorld = BukkitAdapter.adapt(Bukkit.getWorld(config.getString("worlds.build")));
 
 		//Get instance of WorldGuard.
 		WorldGuard wg = WorldGuard.getInstance();
 
-		//Get worldguard region data
+		//Get regions.
 		RegionContainer container = wg.getPlatform().getRegionContainer();
-		RegionManager saveRegions = container.get(BukkitAdapter.adapt(saveWorld));
-		RegionManager buildRegions = container.get(BukkitAdapter.adapt(buildWorld));
+		RegionManager saveRegions = container.get(saveWorld);
+		RegionManager buildRegions = container.get(buildWorld);
 
 		//If the regions exist continue
 		if (!(saveRegions.hasRegion(String.valueOf(id)))) {

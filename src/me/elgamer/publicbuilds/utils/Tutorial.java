@@ -139,7 +139,7 @@ public class Tutorial {
 		//Checks whether the corners the player has set include all 4 corners of the minimum plot size.
 		Plots plots = Main.getInstance().getPlots().get(p);
 		FileConfiguration config = Main.getInstance().getConfig();
-		List<BlockVector2> vector = plots.getLocations(p);
+		List<BlockVector2> vector = plots.getLocations();
 		ProtectedPolygonalRegion region = new ProtectedPolygonalRegion(p.getName(), vector, 1, 256);
 
 		BlockVector2 pos1 = BlockVector2.at(config.getInt("plot_corners.1.x"), config.getInt("plot_corners.1.z"));

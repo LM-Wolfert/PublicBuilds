@@ -210,7 +210,7 @@ public class PlotData {
 
 		try {
 			PreparedStatement statement = instance.getConnection().prepareStatement
-					("SELECT COUNT(*) FROM " + instance.plotData + " WHERE OWNER=? STATUS=?");
+					("SELECT COUNT(*) FROM " + instance.plotData + " WHERE OWNER=? AND STATUS=?");
 			statement.setString(1, uuid);
 			statement.setString(2, "claimed");
 
@@ -231,7 +231,7 @@ public class PlotData {
 
 		try {
 			PreparedStatement statement = instance.getConnection().prepareStatement
-					("SELECT COUNT(*) FROM " + instance.plotData + " WHERE OWNER=? STATUS=? OR STATUS=? OR STATUS=?");
+					("SELECT COUNT(*) FROM " + instance.plotData + " WHERE OWNER=? AND (STATUS=? OR STATUS=? OR STATUS=?)");
 			statement.setString(1, uuid);
 			statement.setString(2, "claimed");
 			statement.setString(3, "submitted");

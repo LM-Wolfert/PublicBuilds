@@ -3,7 +3,7 @@ package me.elgamer.publicbuilds.utils;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import com.sk89q.worldedit.math.BlockVector2;
@@ -51,17 +51,12 @@ public class Plots {
 	
 	//Returns 4 BlockVector2D locations stored in the hashmap of the player.
 	//It'll be returned as a list as this is how claims are created.
-	public List<BlockVector2> getLocations(Player p) {
+	public List<BlockVector2> getLocations() {
 		
 		List<BlockVector2> vector = new ArrayList<BlockVector2>();
 		
 		Line l1 = new Line(p1, p2);
 		Line l2 = new Line(p3, p4);
-		
-		Bukkit.broadcastMessage("x: " + p1.x + "z:" + p1.z);
-		Bukkit.broadcastMessage("x: " + p2.x + "z:" + p2.z);
-		Bukkit.broadcastMessage("x: " + p3.x + "z:" + p3.z);
-		Bukkit.broadcastMessage("x: " + p4.x + "z:" + p4.z);
 		
 		if (hasIntersect(l1, l2)) {
 			
@@ -162,6 +157,43 @@ public class Plots {
 		
 		return (Math.sqrt(Math.pow((p2.x-p1.x),2)+Math.pow((p2.z-p1.z),2)));
 		
+	}
+	
+	public List<Location> getMarkers(){
+		
+		if (p1 == null) {
+			return null;
+		}
+		
+		List<Location> ls = new ArrayList<Location>();
+		ls.add(p1.l);
+		
+		if (p2 == null) {
+			return ls;
+		}
+		ls.add(p2.l);
+		
+		if (p3 == null) {
+			return ls;
+		}
+		ls.add(p3.l);
+		
+		if (p4 == null) {
+			return ls;
+		}
+		ls.add(p4.l);
+		
+		return ls;
+		
+	}
+	
+	public void clearCorners() {
+		p1 = null;
+		p2 = null;
+		p3 = null;
+		p4 = null;
+		
+		cv = 1;
 	}
 	
 }

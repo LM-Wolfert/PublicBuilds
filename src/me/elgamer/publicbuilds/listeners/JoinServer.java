@@ -3,6 +3,7 @@ package me.elgamer.publicbuilds.listeners;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -15,6 +16,7 @@ import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.mysql.PlayerData;
 import me.elgamer.publicbuilds.utils.CurrentPlot;
 import me.elgamer.publicbuilds.utils.Inactive;
+import me.elgamer.publicbuilds.utils.Plots;
 import me.elgamer.publicbuilds.utils.Tutorial;
 
 public class JoinServer implements Listener {
@@ -46,6 +48,10 @@ public class JoinServer implements Listener {
 		//Add player to the currentPlot map.
 		CurrentPlot cp = instance.getCurrentPlot();
 		cp.addPlayer(player);
+		
+		//Add player to the plots map.
+		Map<Player, Plots> plots = Main.getInstance().getPlots();
+		plots.put(player, new Plots());
 		
 		//Check whether the player has an entry in the player_data table.
 		try {

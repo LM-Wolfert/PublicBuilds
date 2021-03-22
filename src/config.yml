@@ -44,11 +44,11 @@ worlds:
         after: tutorialAfter
 
 #Tutorial
-#The user has to create a plot that includes these points
 starting_position:
-    x:
-    y:
-    z:
+    x: 0
+    y: 70
+    z: 0
+#The user has to create a plot that includes these points
 plot_corners:
     1:
         x: 2808086

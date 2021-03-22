@@ -5,10 +5,12 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -32,6 +34,7 @@ import me.elgamer.publicbuilds.mysql.PlayerData;
 import me.elgamer.publicbuilds.mysql.PlotData;
 import me.elgamer.publicbuilds.utils.Accept;
 import me.elgamer.publicbuilds.utils.CurrentPlot;
+import me.elgamer.publicbuilds.utils.Particles;
 import me.elgamer.publicbuilds.utils.Plots;
 import me.elgamer.publicbuilds.utils.Reason;
 import me.elgamer.publicbuilds.utils.Review;
@@ -57,6 +60,8 @@ public class Main extends JavaPlugin {
 	Reason reason;
 	CurrentPlot currentPlot;
 	Map<Player, Accept> accept;
+	Plots pl;
+	List<Location> ls;
 
 	@Override
 	public void onEnable() {
@@ -111,6 +116,25 @@ public class Main extends JavaPlugin {
 		DenyGui.initialize();
 		PlotGui.initialize();
 		PlotInfo.initialize();
+		
+		//1 second timer.
+		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+			public void run() {
+				
+				for (Player p : Bukkit.getOnlinePlayers()) {
+					pl = plots.get(p);
+					ls = pl.getMarkers();
+					
+					if (ls != null) {
+						for (Location l : ls) {							
+							Particles.spawnParticles(p, l);
+						}
+					}
+					
+				}
+				
+			}
+		}, 0L, 20L);
 	}
 
 	public void onDisable() {

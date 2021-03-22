@@ -58,6 +58,11 @@ public class CommandListener implements Listener {
 				} else if (t.getStage(p) == 4) {
 					
 					String[] message = e.getMessage().split("\\s+");
+					
+					if (message.length == 1) {
+						return;
+					}
+					
 					String[] args = new String[message.length-1];
 					for (int i = 0; i<message.length-1; i++) {
 						args[i] = message[i+1];

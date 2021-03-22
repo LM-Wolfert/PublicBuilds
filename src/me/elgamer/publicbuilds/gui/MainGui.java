@@ -160,7 +160,8 @@ public class MainGui {
 			}
 
 			//Get 4 corners.
-			List<BlockVector2> vector = plots.getLocations(p);
+			List<BlockVector2> vector = plots.getLocations();
+			plots.clearCorners();
 			//Create claim
 			p.sendMessage(ClaimFunctions.createClaim(p.getUniqueId().toString(), vector));
 			p.closeInventory();
