@@ -89,7 +89,7 @@ public class Plots {
 	}
 	
 	//Checks whether all 4 locations are entered into the array.
-	public boolean hasLocations(Player p) {
+	public boolean hasLocations() {
 		
 		if (p1 == null || p2 == null || p3 == null || p4 == null) {
 			return false;

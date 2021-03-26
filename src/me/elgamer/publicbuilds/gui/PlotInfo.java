@@ -14,7 +14,7 @@ import com.sk89q.worldedit.math.BlockVector2;
 import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.mysql.PlotData;
 import me.elgamer.publicbuilds.utils.ClaimFunctions;
-import me.elgamer.publicbuilds.utils.CurrentPlot;
+import me.elgamer.publicbuilds.utils.User;
 import me.elgamer.publicbuilds.utils.Utils;
 import me.elgamer.publicbuilds.utils.WorldEditor;
 import me.elgamer.publicbuilds.utils.WorldGuardFunctions;
@@ -46,43 +46,41 @@ public class PlotInfo {
 		return toReturn;
 	}
 
-	public static void clicked(Player p, int slot, ItemStack clicked, Inventory inv) {
+	public static void clicked(User u, int slot, ItemStack clicked, Inventory inv) {
 
-		//Get plugin instance, config and current plot.
-		Main instance = Main.getInstance();
-		FileConfiguration config = instance.getConfig();
-		CurrentPlot cp = instance.getCurrentPlot();
+		//Get config.
+		FileConfiguration config = Main.getInstance().getConfig();
 		
-		//Get the id of the current plot.
-		int id = cp.getPlot(p);
+		//Get player
+		Player p = u.player;
 		
 		if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&9Teleport"))) {
 			
 			//Teleport the player to their plot.
 			p.closeInventory();
-			cp.removePlayer(p);
-			p.teleport(WorldGuardFunctions.getCurrentLocation(id));
-			p.sendMessage(Utils.chat("&1Teleported to plot: &9" + id));
+			p.teleport(WorldGuardFunctions.getCurrentLocation(u.currentPlot));
+			p.sendMessage(Utils.chat("&1Teleported to plot: &9" + u.currentPlot));
+			u.currentPlot = 0;
 
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&9Cancel plot"))) {
 
 			//Cancels the plot.
-			List<BlockVector2> vector = WorldGuardFunctions.getCorners(id);
+			List<BlockVector2> vector = WorldGuardFunctions.getCorners(u.currentPlot);
 			WorldEditor.updateWorld(vector, Bukkit.getWorld(config.getString("saveWorld")), Bukkit.getWorld(config.getString("buildWorld")));
-			ClaimFunctions.removeClaim(id);
-			PlotData.setStatus(id, "cancelled");
+			ClaimFunctions.removeClaim(u.currentPlot);
+			PlotData.setStatus(u.currentPlot, "cancelled");
 			
 			p.closeInventory();
-			cp.removePlayer(p);
+			u.currentPlot = 0;
 			
 			
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&9Submit plot"))) {
 			
 			//Submits the plot.
-			PlotData.setStatus(id, "submitted");
+			PlotData.setStatus(u.currentPlot, "submitted");
 			
 			p.closeInventory();
-			cp.removePlayer(p);
+			u.currentPlot = 0;
 
 		} else {
 			

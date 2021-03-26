@@ -9,8 +9,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.mysql.PlotData;
+import me.elgamer.publicbuilds.utils.User;
 import me.elgamer.publicbuilds.utils.Utils;
 
 public class PlotGui {
@@ -59,12 +59,14 @@ public class PlotGui {
 		return toReturn;
 	}
 	
-	public static void clicked(Player p, int slot, ItemStack clicked, Inventory inv) {
+	public static void clicked(User u, int slot, ItemStack clicked, Inventory inv) {
+		
+		Player p = u.player;
 		
 		//Get plot id of the clicked plot in the gui, set that as the players current plot.
 		//Open the plot info gui of that plot.
 		int id = Integer.parseInt(clicked.getItemMeta().getDisplayName());
-		Main.getInstance().getCurrentPlot().setPlot(p, id);
+		u.currentPlot = id;
 		p.closeInventory();
 		p.openInventory(PlotInfo.GUI(p));
 	}		

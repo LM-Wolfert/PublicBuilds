@@ -13,6 +13,31 @@ import me.elgamer.publicbuilds.utils.Time;
 
 public class PlayerData {
 
+	
+	public static boolean playerExists(String uuid) {
+		
+		Main instance = Main.getInstance();
+
+		try {
+			PreparedStatement statement = instance.getConnection().prepareStatement
+					("SELECT * FROM " + instance.playerData + " WHERE ID=?");
+			statement.setString(1, uuid);
+			ResultSet results = statement.executeQuery();
+
+			if (results.next()) {
+				return true;
+			} else {
+				return false;
+			}
+
+		} catch (SQLException sql) {
+			sql.printStackTrace();
+			return false;
+		}
+		
+		
+	}
+	
 	public static void updatePlayerName(String uuid, String name) {
 
 		Main instance = Main.getInstance();

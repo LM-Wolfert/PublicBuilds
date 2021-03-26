@@ -9,6 +9,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector2;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.World;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.domains.DefaultDomain;
@@ -49,8 +50,17 @@ public class ClaimFunctions {
 
 		//Check whether the region overlaps an existing plot, if true stop the process.
 		ApplicableRegionSet set = saveRegions.getApplicableRegions(region);
-		if (set.size() > 1) {
+		if (set.size() > 0) {
 			return (ChatColor.RED + "This region overlaps with an existing plot, please create a different plot.");
+		}
+			
+		for (BlockVector2 bv : vector) {
+			
+			set = buildRegions.getApplicableRegions(BlockVector3.at(bv.getX(), 64, bv.getZ()));
+			if (!set.testState(null, Main.CREATE_PLOT)) {
+				return (ChatColor.RED + "You may not create a plot here!");
+			}
+			
 		}
 
 		//Create an entry in the database for the plot.
@@ -107,7 +117,7 @@ public class ClaimFunctions {
 
 		//Check whether the new region overlaps an existing plot, if true stop the process, excluding the existing plot.
 		ApplicableRegionSet set = saveRegions.getApplicableRegions(region);
-		if (set.size() > 2) {
+		if (set.size() > 1) {
 			return (ChatColor.RED + "This region overlaps with another plot, you cannot expand it.");
 		}
 

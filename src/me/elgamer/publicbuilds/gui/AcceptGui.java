@@ -1,7 +1,6 @@
 package me.elgamer.publicbuilds.gui;
 
 import java.util.List;
-import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -18,7 +17,7 @@ import me.elgamer.publicbuilds.mysql.PlayerData;
 import me.elgamer.publicbuilds.mysql.PlotData;
 import me.elgamer.publicbuilds.utils.Accept;
 import me.elgamer.publicbuilds.utils.ClaimFunctions;
-import me.elgamer.publicbuilds.utils.Review;
+import me.elgamer.publicbuilds.utils.User;
 import me.elgamer.publicbuilds.utils.Utils;
 import me.elgamer.publicbuilds.utils.WorldEditor;
 import me.elgamer.publicbuilds.utils.WorldGuardFunctions;
@@ -36,13 +35,12 @@ public class AcceptGui {
 
 	}
 
-	public static Inventory GUI (Player p) {
+	public static Inventory GUI (User u) {
 
 		Inventory toReturn = Bukkit.createInventory(null, inv_rows, inventory_name);
 
 		inv.clear();
-		Map<Player, Accept> accept = Main.getInstance().getAccept();
-		Accept ac = accept.get(p);
+		Accept ac = u.accept;
 
 		int i;
 		int j;
@@ -86,72 +84,72 @@ public class AcceptGui {
 		return toReturn;
 	}
 
-	public static void clicked(Player p, int slot, ItemStack clicked, Inventory inv) {
+	public static void clicked(User u, int slot, ItemStack clicked, Inventory inv) {
 
-		Map<Player, Accept> accept = Main.getInstance().getAccept();
-		Accept ac = accept.get(p);
+		Player p = u.player;
+		Accept ac = u.accept;
 		
 		//Set the value in the acceptgui based on the button that is clicked.
 		if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&9Size: 1"))) {
 			p.closeInventory();
 			ac.setSize(1);
-			p.openInventory(GUI(p));
+			p.openInventory(GUI(u));
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&9Size: 2"))) {	
 			p.closeInventory();
 			ac.setSize(2);
-			p.openInventory(GUI(p));
+			p.openInventory(GUI(u));
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&9Size: 3"))) {
 			p.closeInventory();
 			ac.setSize(3);
-			p.openInventory(GUI(p));
+			p.openInventory(GUI(u));
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&9Size: 4"))) {
 			p.closeInventory();
 			ac.setSize(4);
-			p.openInventory(GUI(p));
+			p.openInventory(GUI(u));
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&9Size: 5"))) {
 			p.closeInventory();
 			ac.setSize(5);
-			p.openInventory(GUI(p));
+			p.openInventory(GUI(u));
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&9Accuracy: 1"))) {
 			p.closeInventory();
 			ac.setAccuracy(1);
-			p.openInventory(GUI(p));
+			p.openInventory(GUI(u));
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&9Accuracy: 2"))) {	
 			p.closeInventory();
 			ac.setAccuracy(2);
-			p.openInventory(GUI(p));
+			p.openInventory(GUI(u));
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&9Accuracy: 3"))) {
 			p.closeInventory();
 			ac.setAccuracy(3);
-			p.openInventory(GUI(p));
+			p.openInventory(GUI(u));
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&9Accuracy: 4"))) {
 			p.closeInventory();
 			ac.setAccuracy(4);
-			p.openInventory(GUI(p));
+			p.openInventory(GUI(u));
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&9Accuracy: 5"))) {
 			p.closeInventory();
 			ac.setAccuracy(5);
-			p.openInventory(GUI(p));
+			p.openInventory(GUI(u));
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&9Quality: 1"))) {
 			p.closeInventory();
 			ac.setQuality(1);
-			p.openInventory(GUI(p));
+			p.openInventory(GUI(u));
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&9Quality: 2"))) {
 			p.closeInventory();
 			ac.setQuality(2);
-			p.openInventory(GUI(p));
+			p.openInventory(GUI(u));
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&9Quality: 3"))) {
 			p.closeInventory();
 			ac.setQuality(3);
-			p.openInventory(GUI(p));
+			p.openInventory(GUI(u));
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&9Quality: 4"))) {
 			p.closeInventory();
 			ac.setQuality(4);
-			p.openInventory(GUI(p));
+			p.openInventory(GUI(u));
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&9Quality: 5"))) {
 			p.closeInventory();
 			ac.setQuality(5);
-			p.openInventory(GUI(p));
+			p.openInventory(GUI(u));
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&9Submit"))) {
 			
 			FileConfiguration config = Main.getInstance().getConfig();
@@ -162,28 +160,24 @@ public class AcceptGui {
 			
 			//Add points for building with multiplier
 			ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
-			Review r = Main.getInstance().getReview();
-			r.getReview(p);
-			int plot = r.getReview(p);
-			String name = PlotData.getOwner(plot);
+			String name = PlotData.getOwner(u.reviewing);
 			
 			String command = "addpoints " + name + " " + buildingPoints*config.getInt("points_multiplier");
 			Bukkit.dispatchCommand(console, command);
 			
 			//Remove reviewing status
-			r.removePlayer(p);
-			PlotData.setStatus(plot, "completed");
+			PlotData.setStatus(u.reviewing, "completed");
 			
 			//Add plot to saveWorld
-			List<BlockVector2> corners = WorldGuardFunctions.getCorners(plot);
+			List<BlockVector2> corners = WorldGuardFunctions.getCorners(u.reviewing);
 			WorldEditor.updateWorld(corners, Bukkit.getWorld(config.getString("buildWorld")), Bukkit.getWorld(config.getString("saveWorld")));
 			
 			//Remove plot from worldguard
-			ClaimFunctions.removeClaim(plot);
+			ClaimFunctions.removeClaim(u.reviewing);
+			u.reviewing = 0;
 			
 		} else {}
 		
-		accept.replace(p, ac);
 	}
 
 }

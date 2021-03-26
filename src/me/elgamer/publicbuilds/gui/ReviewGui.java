@@ -1,16 +1,12 @@
 package me.elgamer.publicbuilds.gui;
 
-import java.util.Map;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import me.elgamer.publicbuilds.Main;
-import me.elgamer.publicbuilds.utils.Accept;
-import me.elgamer.publicbuilds.utils.Review;
+import me.elgamer.publicbuilds.utils.User;
 import me.elgamer.publicbuilds.utils.Utils;
 import me.elgamer.publicbuilds.utils.WorldGuardFunctions;
 
@@ -42,28 +38,20 @@ public class ReviewGui {
 		return toReturn;
 	}
 
-	public static void clicked(Player p, int slot, ItemStack clicked, Inventory inv) {
+	public static void clicked(User u, int slot, ItemStack clicked, Inventory inv) {
 
+		Player p = u.player;
 		if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&cBefore view"))) {
 			//Get the plot that is being reviewed and teleport the player do the plot in the saveWorld.
-			Review review = Main.getInstance().getReview();
-			int plot = review.getReview(p);
-			p.teleport(WorldGuardFunctions.getCurrentLocation(plot));
+			p.teleport(WorldGuardFunctions.getCurrentLocation(u.reviewing));
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&cCurrent view"))) {
 			//Get the plot that is being reviwed and teleport the player to the plot in the buildWorld.
-			Review review = Main.getInstance().getReview();
-			int plot = review.getReview(p);
-			p.teleport(WorldGuardFunctions.getBeforeLocation(plot));
+			p.teleport(WorldGuardFunctions.getBeforeLocation(u.reviewing));
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&cAccept"))) {
 			//Open the acceptgui with default values.
 			p.closeInventory();
-			Map<Player, Accept> accept = Main.getInstance().getAccept();
-			if (accept.containsKey(p)) {
-				accept.replace(p, new Accept());
-			} else {
-				accept.put(p, new Accept());
-			}
-			p.openInventory(AcceptGui.GUI(p));
+			u.createAccept();
+			p.openInventory(AcceptGui.GUI(u));
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&cDeny"))) {
 			//Open the denygui.
 			p.closeInventory();

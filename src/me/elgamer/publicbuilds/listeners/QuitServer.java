@@ -9,9 +9,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.mysql.PlayerData;
 import me.elgamer.publicbuilds.mysql.PlotData;
-import me.elgamer.publicbuilds.utils.CurrentPlot;
-import me.elgamer.publicbuilds.utils.Review;
-import me.elgamer.publicbuilds.utils.Tutorial;
+import me.elgamer.publicbuilds.utils.User;
+import net.md_5.bungee.api.ChatColor;
 
 public class QuitServer implements Listener {
 
@@ -26,36 +25,33 @@ public class QuitServer implements Listener {
 
 		//Get instance of plugin.
 		Main instance = Main.getInstance();
+		
+		//Get user from the list.
+		User u = instance.getUser(e.getPlayer());
+		
+		//If no user was found print error in console.
+		if (u == null) {
+			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Error: User " + e.getPlayer().getName() + " not found in the list of online users!" );
+		}
 
 		//Get player instance.
 		Player p = e.getPlayer();
 
-		//Remove player from the tutorial map.
-		Tutorial t = instance.getTutorial();
-		if (t.inTutorial(p)) {
-			PlayerData.setTutorialStage(p.getUniqueId().toString(), t.getStage(p));
-			t.removePlayer(p);
-		}
-
-		//Remove player from plots map.
-		Main.getInstance().getPlots().remove(p);
-		
-		//Remove player from currentPlot map.
-		CurrentPlot cp = instance.getCurrentPlot();
-		cp.removePlayer(p);
+		//Set tutorial stage in PlayerData
+		PlayerData.setTutorialStage(u.uuid, u.tutorialStage);
 
 		//Update the last online time of player.
 		PlayerData.updateTime(p.getUniqueId().toString());
 
 		//If the player is in a review, cancel it.
-		Review r = instance.getReview();
-		if (r.inReview(p)) {
+		if (u.reviewing != 0) {
 
-			int plot = r.getReview(p);
-			PlotData.setStatus(plot, "submitted");
-			r.removePlayer(p);
+			PlotData.setStatus(u.reviewing, "submitted");
 
 		}
+		
+		//Remove user from list
+		instance.getUsers().remove(u);
 
 	}
 

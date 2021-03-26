@@ -1,7 +1,5 @@
 package me.elgamer.publicbuilds.commands;
 
-import java.util.Map;
-
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -13,8 +11,8 @@ import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
 
 import me.elgamer.publicbuilds.Main;
-import me.elgamer.publicbuilds.utils.Plots;
 import me.elgamer.publicbuilds.utils.Point;
+import me.elgamer.publicbuilds.utils.User;
 import me.elgamer.publicbuilds.utils.Utils;
 
 public class Corner implements CommandExecutor {
@@ -45,17 +43,11 @@ public class Corner implements CommandExecutor {
 			p.sendMessage(Utils.chat("&cThis location is already part of another plot!"));
 			return true;
 		}
-
-		Map<Player, Plots> plotMap = Main.getInstance().getPlots();
 		
-		if (!(plotMap.containsKey(p))) {
-			plotMap.put(p, new Plots());
-		}
+		User u = Main.getInstance().getUser(p);
 		
 		//Adds a new point to plots.
-		Plots plots = plotMap.get(p);
-		plots.add(new Point(p.getLocation().getX(), p.getLocation().getZ()));
-		plotMap.replace(p, plots);
+		u.plots.add(new Point(p.getLocation().getX(), p.getLocation().getZ()));
 		p.sendMessage(Utils.chat("&aSet corner to x: " + (int) p.getLocation().getX() + " z: " + (int) p.getLocation().getZ()));
 		
 		return true;

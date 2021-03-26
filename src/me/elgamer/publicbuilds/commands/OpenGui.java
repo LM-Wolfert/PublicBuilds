@@ -5,7 +5,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.gui.MainGui;
+import me.elgamer.publicbuilds.utils.User;
 
 public class OpenGui implements CommandExecutor {
 
@@ -17,8 +19,9 @@ public class OpenGui implements CommandExecutor {
 		}
 
 		Player p = (Player) sender;
-
-		p.openInventory(MainGui.GUI(p));
+		User u = Main.getInstance().getUser(p);
+		
+		p.openInventory(MainGui.GUI(u));
 		
 		return true;
 

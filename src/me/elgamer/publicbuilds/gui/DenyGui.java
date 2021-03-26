@@ -6,8 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import me.elgamer.publicbuilds.Main;
-import me.elgamer.publicbuilds.utils.Reason;
+import me.elgamer.publicbuilds.utils.User;
 import me.elgamer.publicbuilds.utils.Utils;
 
 public class DenyGui {
@@ -39,14 +38,15 @@ public class DenyGui {
 		return toReturn;
 	}
 	
-	public static void clicked(Player p, int slot, ItemStack clicked, Inventory inv) {
+	public static void clicked(User u, int slot, ItemStack clicked, Inventory inv) {
 		
-		Reason r = Main.getInstance().getReason();
+		Player p = u.player;
+		
 		if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&9Another chance"))) {
 
 			//Will prompt the reviewer to input a reason.
 			p.closeInventory();
-			r.addReason(p,"claimed");
+			u.reasonType = "claimed";
 			p.sendMessage(Utils.chat("&aBefore the plot gets denied you must give a reason!"));
 			p.sendMessage(Utils.chat("&aType the reason in chat, the first message sent will count!"));
 						
@@ -58,7 +58,7 @@ public class DenyGui {
 			
 			//Will prompt the reviewer to to input a reason.
 			p.closeInventory();
-			r.addReason(p,"deleted");
+			u.reasonType = "deleted";
 			p.sendMessage(Utils.chat("&aBefore the plot gets denied you must give a reason!"));
 			p.sendMessage(Utils.chat("&aType the reason in chat, the first message sent will count!"));
 			

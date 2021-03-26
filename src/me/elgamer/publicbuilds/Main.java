@@ -4,9 +4,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -14,6 +13,12 @@ import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.protection.flags.Flag;
+import com.sk89q.worldguard.protection.flags.StateFlag;
+import com.sk89q.worldguard.protection.flags.registry.FlagConflictException;
+import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 
 import me.elgamer.publicbuilds.commands.Corner;
 import me.elgamer.publicbuilds.commands.CreateArea;
@@ -32,13 +37,10 @@ import me.elgamer.publicbuilds.listeners.JoinServer;
 import me.elgamer.publicbuilds.listeners.QuitServer;
 import me.elgamer.publicbuilds.mysql.PlayerData;
 import me.elgamer.publicbuilds.mysql.PlotData;
-import me.elgamer.publicbuilds.utils.Accept;
-import me.elgamer.publicbuilds.utils.CurrentPlot;
 import me.elgamer.publicbuilds.utils.Particles;
 import me.elgamer.publicbuilds.utils.Plots;
-import me.elgamer.publicbuilds.utils.Reason;
-import me.elgamer.publicbuilds.utils.Review;
 import me.elgamer.publicbuilds.utils.Tutorial;
+import me.elgamer.publicbuilds.utils.User;
 import net.milkbowl.vault.permission.Permission;
 
 public class Main extends JavaPlugin {
@@ -54,18 +56,24 @@ public class Main extends JavaPlugin {
 	static Main instance;
 	static FileConfiguration config;
 	
+	ArrayList<User> users;
+	
 	Tutorial tutorial;
-	Review review;
-	Map<Player, Plots> plots;
-	Reason reason;
-	CurrentPlot currentPlot;
-	Map<Player, Accept> accept;
 	Plots pl;
 	List<Location> ls;
+	
+	public static StateFlag CREATE_PLOT;
 
 	@Override
+	public void onLoad() {
+		
+		//Setup worldguard flag
+		createFlag();
+	}
+	
+	@Override
 	public void onEnable() {
-
+		
 		//Config Setup
 		Main.instance = this;
 		Main.config = this.getConfig();
@@ -77,25 +85,10 @@ public class Main extends JavaPlugin {
 		createPlayerData();
 		createPlotData();
 		PlotData.clearReview();
-
-		//Create Tutorial Hashmap.
-		tutorial = new Tutorial();
-
-		//Create Review Hashmap.
-		review = new Review();
 		
-		//Create Plots Hashmap.
-		plots = new HashMap<Player, Plots>();
+		//Create list of users.
+		users = new ArrayList<User>();
 		
-		//Create Reason Hashmap.
-		reason = new Reason();
-		
-		//Create CurrentPlot Hashmap.
-		currentPlot = new CurrentPlot();
-
-		//Create Accept Hashmap.
-		accept = new HashMap<Player, Accept>();
-				
 		//Listeners
 		new JoinServer(this);
 		new QuitServer(this);
@@ -121,13 +114,13 @@ public class Main extends JavaPlugin {
 		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
 			public void run() {
 				
-				for (Player p : Bukkit.getOnlinePlayers()) {
-					pl = plots.get(p);
+				for (User u : users) {
+					pl = u.plots;
 					ls = pl.getMarkers();
 					
 					if (ls != null) {
 						for (Location l : ls) {							
-							Particles.spawnParticles(p, l);
+							Particles.spawnParticles(u.player, l);
 						}
 					}
 					
@@ -150,32 +143,18 @@ public class Main extends JavaPlugin {
 		}
 
 		//Remove all players who are in review.
-		for (Player p: Bukkit.getOnlinePlayers()) {
+		for (User u: users) {
 
-			//Remove player from the tutorial map.
-			Tutorial t = instance.getTutorial();
-			if (t.inTutorial(p)) {
-				PlayerData.setTutorialStage(p.getUniqueId().toString(), t.getStage(p));
-				t.removePlayer(p);
-			}
-
-			//Remove player from plots map.
-			Main.getInstance().getPlots().remove(p);
-			
-			//Remove player from currentPlot map.
-			CurrentPlot cp = instance.getCurrentPlot();
-			cp.removePlayer(p);
+			//Set tutorialStage in PlayData.
+			PlayerData.setTutorialStage(u.uuid, u.tutorialStage);
 
 			//Update the last online time of player.
-			PlayerData.updateTime(p.getUniqueId().toString());
+			PlayerData.updateTime(u.uuid);
 
 			//If the player is in a review, cancel it.
-			Review r = instance.getReview();
-			if (r.inReview(p)) {
+			if (u.reviewing != 0) {
 
-				int plot = r.getReview(p);
-				PlotData.setStatus(plot, "submitted");
-				r.removePlayer(p);
+				PlotData.setStatus(u.reviewing, "submitted");
 
 			}
 		}
@@ -239,37 +218,6 @@ public class Main extends JavaPlugin {
 		return instance;
 	}
 	
-	//Returns tutorial.
-	public Tutorial getTutorial() {
-		return tutorial;
-	}
-	
-	//Returns review.
-	public Review getReview() {
-		return review;
-	}
-	
-	//Returns plots.
-	public Map<Player, Plots> getPlots() {
-		return plots;
-	}
-	
-	//Returns reason.
-	public Reason getReason() {
-		return reason;
-	}
-	
-	
-	//Returns accept.
-	public Map<Player, Accept> getAccept(){
-		return accept;
-	}
-	
-	//Returns currentPlot.
-	public CurrentPlot getCurrentPlot() {
-		return currentPlot;
-	}
-	
 	//Setup player_data table for mysql database if it doesn't exist.
 	public void createPlayerData() {
 		try {
@@ -295,4 +243,50 @@ public class Main extends JavaPlugin {
 			e.printStackTrace();
 		}
 	}
+	
+	//Returns the User ArrayList.
+	public ArrayList<User> getUsers() {
+		return users;
+	}
+	
+	//Returns the specific user based on Player instance.
+	public User getUser(Player p) {
+		
+		for (User u : users) {
+			
+			if (u.player.equals(p)) {
+				return u;
+			}
+			
+		}
+		
+		return null;
+	}
+	
+	public void createFlag() {
+
+		FlagRegistry registry = WorldGuard.getInstance().getFlagRegistry();
+		
+		try {
+			
+			StateFlag flag = new StateFlag("create-plot", true);
+			registry.register(flag);
+			CREATE_PLOT = flag;
+			
+		} catch (FlagConflictException e) {
+			
+			Flag<?> existing = registry.get("create-plot");
+			if (existing instanceof StateFlag) {
+				CREATE_PLOT = (StateFlag) existing;
+			} else {
+				Bukkit.broadcastMessage("Plugin Conflict Error with PublicBuilds");
+			}
+			
+		}
+
+
+
+	}
+
+	
 }

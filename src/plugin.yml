@@ -2,7 +2,7 @@ name: PublicBuilds
 version: 1.0
 main: me.elgamer.publicbuilds.Main
 description: Claiming System
-depend: [WorldGuard, UKnetUtilities, BTEPoints]
+depend: [WorldGuard, WorldEdit, UKnetUtilities, BTEPoints]
 api-version: 1.16
 
 commands:
@@ -15,4 +15,6 @@ commands:
     createarea:
         usage: /<command>
         description: Creates a polygonal area in which plots can be claimed, requires a polygon selection.
-    
+    skiptutorial:
+    	usage: /<command>
+    	description: Skips the tutorial.

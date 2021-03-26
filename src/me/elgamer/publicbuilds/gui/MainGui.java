@@ -13,10 +13,9 @@ import com.sk89q.worldedit.math.BlockVector2;
 import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.mysql.PlotData;
 import me.elgamer.publicbuilds.utils.ClaimFunctions;
-import me.elgamer.publicbuilds.utils.Plots;
 import me.elgamer.publicbuilds.utils.RankValues;
-import me.elgamer.publicbuilds.utils.Review;
 import me.elgamer.publicbuilds.utils.Tutorial;
+import me.elgamer.publicbuilds.utils.User;
 import me.elgamer.publicbuilds.utils.Utils;
 
 public class MainGui {
@@ -32,11 +31,10 @@ public class MainGui {
 
 	}
 
-	public static Inventory GUI (Player p) {
+	public static Inventory GUI (User u) {
 
-		String uuid = p.getUniqueId().toString();
-		Main instance = Main.getInstance();
-		Review review = instance.getReview();
+		Player p = u.player;
+		String uuid = u.uuid;
 
 		Inventory toReturn = Bukkit.createInventory(null, inv_rows, inventory_name);
 
@@ -51,7 +49,7 @@ public class MainGui {
 			Utils.createItem(inv, Material.SPRUCE_DOOR, 1, 41, Utils.chat("&9Plot Menu"), Utils.chat("&1Show all your active plots!"));
 		}
 
-		if (Utils.isPlayerInGroup(p, "reviewer") && review.inReview(p)) {
+		if (Utils.isPlayerInGroup(p, "reviewer") && (u.reviewing != 0)) {
 			Utils.createItem(inv, Material.YELLOW_CONCRETE, 1, 41, Utils.chat("&9Review Plot"), Utils.chat("&1Opens the review gui!"));
 		}
 
@@ -63,8 +61,10 @@ public class MainGui {
 		return toReturn;
 	}
 
-	public static void clicked(Player p, int slot, ItemStack clicked, Inventory inv) {
+	public static void clicked(User u, int slot, ItemStack clicked, Inventory inv) {
 
+		Player p = u.player;
+		
 		if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&9Belfast"))) {
 
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&9London"))) {
@@ -86,9 +86,7 @@ public class MainGui {
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&9New Review"))) {
 			//If there is a plot available to review, create a new review and open the review gui.
 			if (PlotData.reviewExists()) {
-				Main instance = Main.getInstance();
-				Review review = instance.getReview();
-				review.addReview(p, PlotData.newReview());
+				u.reviewing = PlotData.newReview();
 				p.closeInventory();
 				p.openInventory(ReviewGui.GUI(p));
 			} else {
@@ -97,18 +95,18 @@ public class MainGui {
 			}
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&9Create plot"))) {
 
-			//If the player is in the tutorial no real plot can be created.
-			Tutorial tutorial = Main.getInstance().getTutorial();
-
-			if (tutorial.inTutorial(p)) {
-
 				//If they are in the third stage of the tutorial check if the plot is valid.
-				if (tutorial.getStage(p) == 3) {
+				if (u.tutorialStage == 3) {
 
-					if (tutorial.containsCorners(p)) {
+					if (!(u.plots.hasLocations())) {
+						p.sendMessage(Utils.chat("&9You have selected 4 corners!"));
+						return;
+					}
+					
+					if (Tutorial.containsCorners(u)) {
 						p.sendMessage(Utils.chat("&9Plot was correctly created, well done!"));
-						tutorial.updateStage(p, 4);
-						tutorial.continueTutorial(p);
+						u.setTutorialStage(4);
+						Tutorial.continueTutorial(u);
 						return;
 					} else {
 						p.sendMessage(Utils.chat("&9Your selection does not include all of the building and garden, please try again!"));
@@ -136,18 +134,16 @@ public class MainGui {
 			}
 
 			//Check whether the player has selected the corners correctly.
-			Plots plots = Main.getInstance().getPlots().get(p);
-
 			//Has selected all 4 corners.
-			if (plots.hasLocations(p)) {
+			if (u.plots.hasLocations()) {
 				//Is not too small.
-				if (plots.minDis(p)) {
+				if (u.plots.minDis(p)) {
 					p.sendMessage(Utils.chat("&cYour selection is too small!"));
 					p.closeInventory();
 					return;
 				}
 				//Does not exceed the size.
-				if (plots.maxDis(p)) {
+				if (u.plots.maxDis(p)) {
 					p.sendMessage(Utils.chat("&cYour selection is too large!"));
 					p.closeInventory();
 					return;
@@ -160,15 +156,12 @@ public class MainGui {
 			}
 
 			//Get 4 corners.
-			List<BlockVector2> vector = plots.getLocations();
-			plots.clearCorners();
+			List<BlockVector2> vector = u.plots.getLocations();
+			u.plots.clearCorners();
 			//Create claim
 			p.sendMessage(ClaimFunctions.createClaim(p.getUniqueId().toString(), vector));
 			p.closeInventory();
-			return;
-
-		}
-		else {}
+			return;			
 	}
 
 }
