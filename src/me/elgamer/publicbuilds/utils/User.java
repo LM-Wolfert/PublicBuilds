@@ -1,5 +1,6 @@
 package me.elgamer.publicbuilds.utils;
 
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import me.elgamer.publicbuilds.mysql.PlayerData;
@@ -16,6 +17,8 @@ public class User {
 	public String reasonType;
 	public int currentPlot = 0;
 	
+	public World world;
+	
 	public User(Player player) {
 		
 		//Set player, uuid and name variable.
@@ -28,11 +31,13 @@ public class User {
 			
 		//Continue the tutorial from where they last were.
 		tutorialStage = PlayerData.getTutorialStage(uuid);
-		Tutorial.continueTutorial(this);
 		
 		//Create plots map.
 		plots = new Plots();
 		
+		//Set current world
+		world = player.getWorld();
+
 	}
 	
 	//Update playerdata or create a new instance if it's their first time joining the server.
@@ -50,11 +55,6 @@ public class User {
 			
 		}
 		
-	}
-	
-	//Update tutorial stage.
-	public void setTutorialStage(int stage) {
-		tutorialStage = stage;
 	}
 	
 	//Create accept

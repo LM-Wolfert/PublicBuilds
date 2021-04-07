@@ -63,7 +63,7 @@ public class PlayerData {
 					("INSERT INTO " + instance.playerData + " (ID,NAME,TUTORIAL_STAGE,BUILDING_POINTS,LAST_ONLINE) VALUE (?,?,?,?,?)");
 			statement.setString(1, uuid);
 			statement.setString(2, name);
-			statement.setInt(3, 1);
+			statement.setInt(3, 0);
 			statement.setInt(4, 0);
 			statement.setLong(5, Time.currentTime());
 			statement.executeUpdate();

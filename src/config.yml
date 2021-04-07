@@ -51,17 +51,17 @@ starting_position:
 #The user has to create a plot that includes these points
 plot_corners:
     1:
-        x: 2808086
-        z: -5408457
+        x: 2808085
+        z: -5408451
     2:
-        x: 2808111
-        z: -5408432
+        x: 2808107
+        z: -5408431
     3:
-        x: 2808093
-        z: -5408415
+        x: 2808094
+        z: -5408418
     4:
-        x: 2808068
-        z: -5408440
+        x: 2808071
+        z: -5408439
         
 tpll_points:
     1:

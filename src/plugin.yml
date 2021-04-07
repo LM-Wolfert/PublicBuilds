@@ -9,12 +9,9 @@ commands:
     gui:
         usage: /<command> 
         description: Open the Main Gui of the plugin.
-    corner:
-        usage: /<command>
-        description: Sets the corner marker for a plot.
     createarea:
         usage: /<command>
         description: Creates a polygonal area in which plots can be claimed, requires a polygon selection.
     skiptutorial:
-    	usage: /<command>
-    	description: Skips the tutorial.
+        usage: /<command>
+        description: Skips the tutorial.

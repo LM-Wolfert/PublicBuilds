@@ -4,15 +4,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
+//import org.bukkit.Location;
+import org.bukkit.block.Block;
+//import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.worldedit.math.BlockVector2;
 
 import me.elgamer.publicbuilds.Main;
 
+//import me.elgamer.publicbuilds.Main;
+
 public class Plots {
 	
-	Point p1 = null;
+	public List<BlockVector2> vector = new ArrayList<BlockVector2>();
+	public List<Location> locations = new ArrayList<Location>();
+	
+	/*Point p1 = null;
 	Point p2 = null;
 	Point p3 = null;
 	Point p4 = null;
@@ -23,7 +32,7 @@ public class Plots {
 	//Adds a point to the correct p value.
 	public void add(Point p) {
 		
-		switch(cv) {
+		switch(vector.size()-1) {
 		
 		case 1:
 			p1 = p;
@@ -194,6 +203,56 @@ public class Plots {
 		p4 = null;
 		
 		cv = 1;
+	}*/
+	
+	public static void startSelection(User u, Block block) {
+		
+		BlockVector2 bv2 = BlockVector2.at(block.getX(), block.getZ());
+		
+		u.plots.vector = new ArrayList<BlockVector2>();
+		u.plots.locations = new ArrayList<Location>();
+		
+		u.plots.vector.add(bv2);
+		
+		Location l = block.getLocation();
+		l.setY(l.getY()+1);
+		u.plots.locations.add(l);
+		
+	}
+	
+	public static void addPoint(User u, Block block) {
+		
+		BlockVector2 bv2 = BlockVector2.at(block.getX(), block.getZ());
+		
+		u.plots.vector.add(bv2);
+		
+		Location l = block.getLocation();
+		l.setY(l.getY()+1);
+		u.plots.locations.add(l);
+		
+	}
+	
+	public static void giveSelectionTool(User u) {
+		
+		Inventory i = u.player.getInventory();
+		
+		for (ItemStack is : i.getContents()) {
+			if (is.equals(Main.selectionTool)) {
+				u.player.sendMessage(Utils.chat("&aYou already have the selection tool in your inventory!"));
+				return;
+			}
+		}
+		
+		
+		int slot = i.firstEmpty();
+		
+		if (slot == -1) {
+			u.player.sendMessage(Utils.chat("&cYour inventory is full, please make space first!"));
+			return;
+		} else {
+			i.setItem(slot, Main.selectionTool);
+		}
+		
 	}
 	
 }

@@ -32,8 +32,9 @@ public class ChatListener implements Listener {
 			try {
 				Double h = Double.parseDouble(e.getMessage());
 				if (Tutorial.getHeight(h)) {
-					u.setTutorialStage(6);
-					Tutorial.continueTutorial(u);
+					u.tutorialStage = 6;
+				} else {
+					p.sendMessage(Utils.chat("&cThis is not close enough, place try again!"));
 				}
 			} catch (NumberFormatException ex) {
 				p.sendMessage("&cThis is not a valid number, please try again!");

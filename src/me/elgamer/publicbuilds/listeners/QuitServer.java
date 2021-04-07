@@ -25,10 +25,10 @@ public class QuitServer implements Listener {
 
 		//Get instance of plugin.
 		Main instance = Main.getInstance();
-		
+
 		//Get user from the list.
 		User u = instance.getUser(e.getPlayer());
-		
+
 		//If no user was found print error in console.
 		if (u == null) {
 			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Error: User " + e.getPlayer().getName() + " not found in the list of online users!" );
@@ -49,7 +49,7 @@ public class QuitServer implements Listener {
 			PlotData.setStatus(u.reviewing, "submitted");
 
 		}
-		
+
 		//Remove user from list
 		instance.getUsers().remove(u);
 

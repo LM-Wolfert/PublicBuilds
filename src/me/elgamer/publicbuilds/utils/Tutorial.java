@@ -1,7 +1,5 @@
 package me.elgamer.publicbuilds.utils;
 
-import java.util.List;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -18,6 +16,9 @@ public class Tutorial {
 
 		switch (u.tutorialStage) {
 
+		case 0:
+			return;
+			
 		case 1:
 			stage1(u);
 			break;
@@ -101,8 +102,8 @@ public class Tutorial {
 		FileConfiguration config = Main.getInstance().getConfig();
 		p.teleport(new Location(Bukkit.getWorld(config.getString("worlds.tutorial.after")), config.getDouble("starting_position.x"), config.getDouble("starting_position.y"), config.getDouble("starting_position.z")));
 		p.sendMessage(Utils.chat("&9You have completed the tutorial, here is the building built by one of our builders."));
-		p.sendMessage(Utils.chat("&6To leave this area just enter the portal on to the right of the building."));
-		u.setTutorialStage(7);
+		p.sendMessage(Utils.chat("&6To leave this area just enter the portal to the right of the building."));
+		u.tutorialStage = 7;
 		
 	}
 
@@ -110,8 +111,7 @@ public class Tutorial {
 
 		//Checks whether the corners the player has set include all 4 corners of the minimum plot size.
 		FileConfiguration config = Main.getInstance().getConfig();
-		List<BlockVector2> vector = u.plots.getLocations();
-		ProtectedPolygonalRegion region = new ProtectedPolygonalRegion(u.name, vector, 1, 256);
+		ProtectedPolygonalRegion region = new ProtectedPolygonalRegion(u.name, u.plots.vector, 1, 256);
 
 		BlockVector2 pos1 = BlockVector2.at(config.getInt("plot_corners.1.x"), config.getInt("plot_corners.1.z"));
 		BlockVector2 pos2 = BlockVector2.at(config.getInt("plot_corners.2.x"), config.getInt("plot_corners.2.z"));

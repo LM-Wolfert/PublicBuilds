@@ -1,7 +1,6 @@
 package me.elgamer.publicbuilds.commands;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

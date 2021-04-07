@@ -29,7 +29,7 @@ public class CommandListener implements Listener {
 		if (e.getMessage().startsWith("/ll")) {
 
 			if (u.tutorialStage == 1) {
-				u.setTutorialStage(2);;
+				u.tutorialStage = 2;
 				Tutorial.continueTutorial(u);;
 			}
 
@@ -46,7 +46,7 @@ public class CommandListener implements Listener {
 					catch(NumberFormatException ne)
 					{return;}
 
-					u.setTutorialStage(3);;
+					u.tutorialStage = 3;
 					Tutorial.continueTutorial(u);
 				}
 			} else if (u.tutorialStage == 4) {
@@ -110,7 +110,7 @@ public class CommandListener implements Listener {
 				p.sendMessage("x: " + coords[0] + " z: " + coords[1]);
 
 				if (Tutorial.nearCorners(coords)) {
-					u.setTutorialStage(5);;
+					u.tutorialStage = 5;
 					Tutorial.continueTutorial(u);
 				} else {
 					p.sendMessage(Utils.chat("&9This is not close enough to the corner of the building, please try again!"));
