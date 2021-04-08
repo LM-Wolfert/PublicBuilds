@@ -32,7 +32,7 @@ import me.elgamer.publicbuilds.utils.Utils;
 public class CreateArea implements CommandExecutor {
 
 	@Override
-	public boolean onCommand(CommandSender sender, Command cmd, String lavel, String[] args) {
+	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
 		if (!(sender instanceof Player)) {
 			sender.sendMessage("&cThis command can only run as a player!");

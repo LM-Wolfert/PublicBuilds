@@ -39,12 +39,9 @@ public class JoinServer implements Listener {
 				u.player.teleport(new Location(Bukkit.getWorld(config.getString("worlds.tutorial.before")), config.getDouble("starting_position.x"), config.getDouble("starting_position.y"), config.getDouble("starting_position.z")));
 			}
 			
-			u.player.sendMessage("Stage: " + u.tutorialStage);
 			Tutorial.continueTutorial(u);
 		}
-		
-		u.player.sendMessage("Stage: " + u.tutorialStage);
-		
+
 		//Get player instance.
 		Player player = e.getPlayer();
 

@@ -60,6 +60,7 @@ public class PlayerInteract implements Listener {
 		}
 		
 		if (e.getPlayer().getInventory().getItemInMainHand().equals(Main.gui)) {
+			e.setCancelled(true);
 			e.getPlayer().openInventory(MainGui.GUI(u));
 		}
 
