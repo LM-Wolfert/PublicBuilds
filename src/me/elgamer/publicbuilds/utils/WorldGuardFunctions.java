@@ -26,7 +26,7 @@ public class WorldGuardFunctions {
 		FileConfiguration config = instance.getConfig();
 
 		//Get worlds from config
-		World buildWorld = Bukkit.getServer().getWorld(config.getString("buildWorld"));
+		World buildWorld = Bukkit.getServer().getWorld(config.getString("worlds.build"));
 
 		//Get worldguard instance
 		WorldGuard wg = WorldGuard.getInstance();
@@ -52,7 +52,7 @@ public class WorldGuardFunctions {
 		FileConfiguration config = instance.getConfig();
 
 		//Get worlds from config
-		World saveWorld = Bukkit.getServer().getWorld(config.getString("saveWorld"));
+		World saveWorld = Bukkit.getServer().getWorld(config.getString("worlds.save"));
 
 		//Get worldguard instance
 		WorldGuard wg = WorldGuard.getInstance();
@@ -70,14 +70,14 @@ public class WorldGuardFunctions {
 
 	}
 
-	public static List<BlockVector2> getCorners(int plot) {
+	public static List<BlockVector2> getPoints(int plot) {
 
 		//Get instance of plugin and config
 		Main instance = Main.getInstance();
 		FileConfiguration config = instance.getConfig();
 
 		//Get worlds from config
-		World saveWorld = Bukkit.getServer().getWorld(config.getString("saveWorld"));
+		World saveWorld = Bukkit.getServer().getWorld(config.getString("worlds.save"));
 
 		//Get worldguard instance
 		WorldGuard wg = WorldGuard.getInstance();

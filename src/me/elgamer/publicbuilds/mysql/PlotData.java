@@ -162,7 +162,7 @@ public class PlotData {
 		}		
 	}
 
-	//Gets all plots owned by a player and returns them in a hashmap with id and status.
+	//Gets all plots claimed or submitted by a player and returns them in a hashmap with id and status.
 	public static HashMap<Integer, String> getPlots(String uuid) {
 
 		Main instance = Main.getInstance();
@@ -170,8 +170,10 @@ public class PlotData {
 
 		try {			
 			PreparedStatement statement = instance.getConnection().prepareStatement
-					("SELECT * FROM " + instance.plotData + " WHERE OWNER=?");
+					("SELECT * FROM " + instance.plotData + " WHERE OWNER=? AND (STATUS=? OR STATUS=?)");
 			statement.setString(1, uuid);
+			statement.setString(2, "claimed");
+			statement.setString(3, "submitted");
 			ResultSet results = statement.executeQuery();
 
 			while (results.next()) {
@@ -246,10 +248,31 @@ public class PlotData {
 			return 0;
 		}
 	}
-	
+
+	//Returns completed plot count.
+	public static int completedPlots(String uuid) {
+
+		Main instance = Main.getInstance();
+
+		try {
+			PreparedStatement statement = instance.getConnection().prepareStatement
+					("SELECT COUNT(*) FROM " + instance.plotData + " WHERE OWNER=? AND STATUS=?");
+			statement.setString(1, uuid);
+			statement.setString(2, "completed");
+
+			ResultSet results = statement.executeQuery();
+			results.next();
+			return results.getInt(1);
+
+		} catch (SQLException sql) {
+			sql.printStackTrace();
+			return 0;
+		}
+	}
+
 	//Returns the uuid of the plot owner.
 	public static String getOwner(int plot) {
-		
+
 		Main instance = Main.getInstance();
 
 		try {
@@ -265,40 +288,40 @@ public class PlotData {
 			sql.printStackTrace();
 			return null;
 		}
-		
+
 	}
-	
+
 	//Returns a list of plots that are inactive.
 	//Inactive implies that the owner of the plot has not been online in at least 14 days.
 	public static List<Integer> getInactivePlots(List<String> players) {
-		
+
 		//Create list for the inactive plots.
 		List<Integer> plots = new ArrayList<Integer>();
-		
+
 		//Get instance of plugin.
 		Main instance = Main.getInstance();
-		
+
 		//Get all plots that are owned by players that are inactive, only active plots will be counted, not submitted ones.
 		try {
 			PreparedStatement statement = instance.getConnection().prepareStatement
-					("SELECT * FROM " + instance.playerData + " WHERE STATUS=?");
+					("SELECT * FROM " + instance.plotData + " WHERE STATUS=?");
 			statement.setString(1, "claimed");
 
 			ResultSet results = statement.executeQuery();
-			
+
 			while (results.next()) {
 				if (players.contains(results.getString("OWNER"))) {
 					plots.add(results.getInt("ID"));
 				}
 			}
-			
+
 			return plots;
-			
+
 		} catch (SQLException sql) {
 			sql.printStackTrace();
 			return null;
 		}
-		
+
 	}
 
 }

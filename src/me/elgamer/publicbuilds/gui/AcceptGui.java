@@ -156,7 +156,7 @@ public class AcceptGui {
 			
 			//Calculate building points and add them
 			int buildingPoints = ac.size()*config.getInt("size_multiplier") + ac.accuracy()*config.getInt("accuracy_multiplier") + ac.quality()*config.getInt("quality_multiplier");
-			PlayerData.addPoints(p.getUniqueId().toString(), buildingPoints);
+			PlayerData.addPoints(u.uuid, buildingPoints);
 			
 			//Add points for building with multiplier
 			ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
@@ -169,7 +169,7 @@ public class AcceptGui {
 			PlotData.setStatus(u.reviewing, "completed");
 			
 			//Add plot to saveWorld
-			List<BlockVector2> corners = WorldGuardFunctions.getCorners(u.reviewing);
+			List<BlockVector2> corners = WorldGuardFunctions.getPoints(u.reviewing);
 			WorldEditor.updateWorld(corners, Bukkit.getWorld(config.getString("buildWorld")), Bukkit.getWorld(config.getString("saveWorld")));
 			
 			//Remove plot from worldguard

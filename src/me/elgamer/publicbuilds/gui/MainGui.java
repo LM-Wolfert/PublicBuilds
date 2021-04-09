@@ -7,6 +7,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import me.elgamer.publicbuilds.Main;
+import me.elgamer.publicbuilds.mysql.PlayerData;
 import me.elgamer.publicbuilds.mysql.PlotData;
 import me.elgamer.publicbuilds.utils.ClaimFunctions;
 import me.elgamer.publicbuilds.utils.Plots;
@@ -14,15 +15,16 @@ import me.elgamer.publicbuilds.utils.RankValues;
 import me.elgamer.publicbuilds.utils.Tutorial;
 import me.elgamer.publicbuilds.utils.User;
 import me.elgamer.publicbuilds.utils.Utils;
+import net.md_5.bungee.api.ChatColor;
 
 public class MainGui {
 
 	public static Inventory inv;
 	public static String inventory_name;
-	public static int inv_rows = 5 * 9;
+	public static int inv_rows = 3 * 9;
 
 	public static void initialize() {
-		inventory_name = Utils.chat("&9Menu");
+		inventory_name = ChatColor.AQUA + "" + ChatColor.BOLD + "Building Menu";
 
 		inv = Bukkit.createInventory(null, inv_rows);
 
@@ -31,28 +33,48 @@ public class MainGui {
 	public static Inventory GUI (User u) {
 
 		Player p = u.player;
-		String uuid = u.uuid;
 
 		Inventory toReturn = Bukkit.createInventory(null, inv_rows, inventory_name);
 
 		inv.clear();
 
-		Utils.createItem(inv, Material.SPRUCE_BOAT, 1, 23, Utils.chat("&9Build"), Utils.chat("&1Click here if you want to build!"));
+		Utils.createItem(inv, Material.SPRUCE_BOAT, 1, 5, ChatColor.AQUA + "" + ChatColor.BOLD + "Build", 
+				Utils.chat("&fClick here to pick a location to build!"));
 
-		Utils.createItem(inv, Material.GREEN_TERRACOTTA, 1, 5, Utils.chat("&9Create Plot"), Utils.chat("Start the plot creation process!"));
+		Utils.createItem(inv, Material.EMERALD, 1, 20, ChatColor.AQUA + "" + ChatColor.BOLD + "Create Plot",
+				Utils.chat("&fWill create a plot with the points you have selected."),
+				Utils.chat("&fA minimum of 3 points are required for a valid plot."));
 
-		Utils.createItem(inv, Material.BLAZE_ROD, 1, 40, Utils.chat("&9Selection Tool"), Utils.chat("&1Gives you the selection tool, used to create plot selections!"));
+		Utils.createItem(inv, Material.BLAZE_ROD, 1, 21, ChatColor.AQUA + "" + ChatColor.BOLD + "Selection Tool", 
+				Utils.chat("&fGives you the selection tool."),
+				Utils.chat("&fIt is used to create your plot outline."));
 
-		if (PlotData.hasPlot(uuid) && PlotData.activePlotCount(uuid) > 0) {
-			Utils.createItem(inv, Material.SPRUCE_DOOR, 1, 42, Utils.chat("&9Plot Menu"), Utils.chat("&1Show all your active plots!"));
-		}
+		Utils.createItem(inv, Material.CHEST, 1, 22, ChatColor.AQUA + "" + ChatColor.BOLD + "Plot Menu", 
+				Utils.chat("&fShows all your current active plots."),
+				Utils.chat("&fThis is where you can submit, remove"),
+				Utils.chat("&fand teleport to your plot."));
+
+		Utils.createPlayerSkull(inv, p, 1, 24, ChatColor.AQUA + "" + ChatColor.BOLD + "Stats", 
+				Utils.chat("&fBuilding Points: " + PlayerData.getPoints(u.uuid)),
+				Utils.chat("&fCompleted Plots: " + PlotData.completedPlots(u.uuid)));
+
+		Utils.createItem(inv, Material.WHITE_BANNER, 1, 25, ChatColor.AQUA + "" + ChatColor.BOLD + "Banner Maker", 
+				Utils.chat("&fOpens the Banner Maker!"));
+
+		Utils.createItem(inv, Material.SKELETON_SKULL, 1, 26, ChatColor.AQUA + "" + ChatColor.BOLD + "Head Database", 
+				Utils.chat("&fOpens the Head Database!"));
 
 		if (Utils.isPlayerInGroup(p, "reviewer") && (u.reviewing != 0)) {
-			Utils.createItem(inv, Material.YELLOW_CONCRETE, 1, 41, Utils.chat("&9Review Plot"), Utils.chat("&1Opens the review gui!"));
+			Utils.createItem(inv, Material.YELLOW_CONCRETE, 1, 23, ChatColor.AQUA + "" + ChatColor.BOLD + "Review Plot", 
+					Utils.chat("&fOpens the review gui."),
+					Utils.chat("&fAllows you to accept and deny"),
+					Utils.chat("&fas well as teleport to the before and after view."));
 		}
 
 		else if (Utils.isPlayerInGroup(p, "reviewer") && PlotData.reviewExists()) {
-			Utils.createItem(inv, Material.LIME_CONCRETE, 1, 41, Utils.chat("&9New Review"), Utils.chat("&1Start reviewing a new plot!"));
+			Utils.createItem(inv, Material.LIME_CONCRETE, 1, 23, ChatColor.AQUA + "" + ChatColor.BOLD + "New Review", 
+					Utils.chat("&fStart reviewing a new plot."),
+					Utils.chat("&fWill instantly open the review gui."));
 		}
 
 		toReturn.setContents(inv.getContents());
@@ -63,22 +85,20 @@ public class MainGui {
 
 		Player p = u.player;
 
-		if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&9Build"))) {
+		if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Build")) {
 
-		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&9Selection Tool"))) {
+			p.closeInventory();
+			p.openInventory(LocationGUI.GUI(p));
+
+		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Selection Tool")) {
 			Plots.giveSelectionTool(u);
 			p.closeInventory();
 
-		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&9Plot Menu"))) {
-			//Open the plot gui if the player has at least 1 plot.
-			if (PlotData.hasPlot(p.getUniqueId().toString())) {
-				if (PlotData.activePlotCount(p.getUniqueId().toString()) > 0) {
-					p.closeInventory();
-					p.openInventory(PlotGui.GUI(p));
-				}
-			} else {
-				p.sendMessage(Utils.chat("&cYou don't have any active plots!"));
-			}
+		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Plot Menu")) {
+			//Open the plot gui.
+			p.closeInventory();
+			p.openInventory(PlotGui.GUI(u));
+
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&9Review Plot"))) {
 			//Open the review gui.
 			p.closeInventory();
@@ -139,6 +159,21 @@ public class MainGui {
 			//Check whether the player has selected the corners correctly.
 			//Has selected all 4 corners.
 			if (u.plots.vector.size() >= 3) {
+
+				//Does not exceed the size.
+				if (Plots.largestDistance(u.plots.vector) > RankValues.maxDis(p)) {
+					p.sendMessage(Utils.chat("&cYour selection is too large!"));
+					p.closeInventory();
+
+				}
+
+				//Is not too small.
+				if (Plots.largestDistance(u.plots.vector) < 5) {
+					p.sendMessage(Utils.chat("&cYour selection is too small!"));
+					p.closeInventory();
+
+				}
+
 				/*//Is not too small.
 				if (u.plots.minDis(p)) {
 					p.sendMessage(Utils.chat("&cYour selection is too small!"));
@@ -159,9 +194,20 @@ public class MainGui {
 			}
 
 			//Create claim
-			p.sendMessage(ClaimFunctions.createClaim(p.getUniqueId().toString(), u.plots.vector));
+			p.sendMessage(ClaimFunctions.createClaim(u, u.plots.vector));
 			p.closeInventory();
-			return;			
+			return;	
+
+		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Head Database")) {
+
+			p.closeInventory();
+			p.performCommand("headdb");
+
+		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Banner Maker")) {
+
+			p.closeInventory();
+			p.performCommand("bm");
+
 		}
 	}
 

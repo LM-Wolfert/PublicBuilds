@@ -24,7 +24,7 @@ import me.elgamer.publicbuilds.mysql.PlotData;
 
 public class ClaimFunctions {
 
-	public static String createClaim(String uuid, List<BlockVector2> vector) {
+	public static String createClaim(User u, List<BlockVector2> vector) {
 
 		//Get plugin instance and config.
 		Main instance = Main.getInstance();
@@ -54,23 +54,33 @@ public class ClaimFunctions {
 			return (ChatColor.RED + "This region overlaps with an existing plot, please create a different plot.");
 		}
 			
+		//Check if the player is allowed to create a plot in this location.
+		//They need to be in a valid area and also have the minimum rank required to create a plot here.
 		for (BlockVector2 bv : vector) {
 			
 			set = buildRegions.getApplicableRegions(BlockVector3.at(bv.getX(), 64, bv.getZ()));
-			if (!set.testState(null, Main.CREATE_PLOT)) {
+			if ((!set.testState(null, Main.CREATE_PLOT_GUEST)) && (!set.testState(null, Main.CREATE_PLOT_APPRENTICE)) && (!set.testState(null, Main.CREATE_PLOT_JRBUILDER))) {
 				return (ChatColor.RED + "You may not create a plot here!");
+			}
+			
+			if (set.testState(null, Main.CREATE_PLOT_JRBUILDER) && !(u.player.hasPermission("group.jrbuilder"))) {
+				return (ChatColor.RED + "You must be Jr.Builder or higher to create a plot here!");
+				
+			} else if (set.testState(null, Main.CREATE_PLOT_APPRENTICE) && !(u.player.hasPermission("group.apprentice"))) {
+				return (ChatColor.RED + "You must be Apprentice or higher to create a plot here!");
+				
 			}
 			
 		}
 
 		//Create an entry in the database for the plot.
-		if (!(PlotData.createPlot(plotID, uuid))) {
+		if (!(PlotData.createPlot(plotID, u.uuid))) {
 			return (ChatColor.RED + "An error occured, please try again!");
 		}
 
 		//Set owner of the region
 		DefaultDomain owners = new DefaultDomain();
-		owners.addPlayer(UUID.fromString(uuid));
+		owners.addPlayer(UUID.fromString(u.uuid));
 		region.setOwners(owners);
 
 		//Add the regions to the worlds

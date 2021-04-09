@@ -8,7 +8,9 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 
 import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.gui.AcceptGui;
+import me.elgamer.publicbuilds.gui.ConfirmCancel;
 import me.elgamer.publicbuilds.gui.DenyGui;
+import me.elgamer.publicbuilds.gui.LocationGUI;
 import me.elgamer.publicbuilds.gui.MainGui;
 import me.elgamer.publicbuilds.gui.PlotGui;
 import me.elgamer.publicbuilds.gui.PlotInfo;
@@ -24,6 +26,11 @@ public class InventoryClicked implements Listener {
 	
 	@EventHandler
 	public void onClick(InventoryClickEvent e) {
+		
+		if (e.getCurrentItem() == null) {
+			return;
+		}
+		
 		String title = e.getView().getTitle();
 		
 		User u = Main.getInstance().getUser((Player) e.getWhoClicked());
@@ -34,6 +41,15 @@ public class InventoryClicked implements Listener {
 			}
 			if (title.equals(MainGui.inventory_name)) {
 				MainGui.clicked(u, e.getSlot(), e.getCurrentItem(), e.getInventory());
+			}
+		}
+		else if (title.equals(LocationGUI.inventory_name)) {
+			e.setCancelled(true);
+			if (e.getCurrentItem() == null){
+				return;
+			}
+			if (title.equals(LocationGUI.inventory_name)) {
+				LocationGUI.clicked(u, e.getSlot(), e.getCurrentItem(), e.getInventory());
 			}
 		}
 		else if (title.equals(ReviewGui.inventory_name)) {
@@ -69,7 +85,7 @@ public class InventoryClicked implements Listener {
 				return;
 			}
 			if (title.equals(AcceptGui.inventory_name)) {
-				ReviewGui.clicked(u, e.getSlot(), e.getCurrentItem(), e.getInventory());
+				AcceptGui.clicked(u, e.getSlot(), e.getCurrentItem(), e.getInventory());
 			}
 		}
 		else if (title.equals(PlotInfo.inventory_name)) {
@@ -78,8 +94,22 @@ public class InventoryClicked implements Listener {
 				return;
 			}
 			if (title.equals(PlotInfo.inventory_name)) {
-				ReviewGui.clicked(u, e.getSlot(), e.getCurrentItem(), e.getInventory());
+				PlotInfo.clicked(u, e.getSlot(), e.getCurrentItem(), e.getInventory());
 			}
+		}
+		else if (title.equals(ConfirmCancel.inventory_name)) {
+			e.setCancelled(true);
+			if (e.getCurrentItem() == null){
+				return;
+			}
+			if (title.equals(ConfirmCancel.inventory_name)) {
+				ConfirmCancel.clicked(u, e.getSlot(), e.getCurrentItem(), e.getInventory());
+			}
+		}
+		else if (e.getCurrentItem().equals(Main.gui)) {
+			e.setCancelled(true);
+			u.player.closeInventory();
+			u.player.openInventory(MainGui.GUI(u));
 		}
 		else {
 			

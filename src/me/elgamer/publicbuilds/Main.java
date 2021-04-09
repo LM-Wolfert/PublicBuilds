@@ -28,7 +28,9 @@ import me.elgamer.publicbuilds.commands.CreateArea;
 import me.elgamer.publicbuilds.commands.OpenGui;
 import me.elgamer.publicbuilds.commands.SkipTutorial;
 import me.elgamer.publicbuilds.gui.AcceptGui;
+import me.elgamer.publicbuilds.gui.ConfirmCancel;
 import me.elgamer.publicbuilds.gui.DenyGui;
+import me.elgamer.publicbuilds.gui.LocationGUI;
 import me.elgamer.publicbuilds.gui.MainGui;
 import me.elgamer.publicbuilds.gui.PlotGui;
 import me.elgamer.publicbuilds.gui.PlotInfo;
@@ -66,15 +68,20 @@ public class Main extends JavaPlugin {
 	Tutorial tutorial;
 	List<Location> lc;
 
-	public static StateFlag CREATE_PLOT;
+	public static StateFlag CREATE_PLOT_GUEST;
+	public static StateFlag CREATE_PLOT_APPRENTICE;
+	public static StateFlag CREATE_PLOT_JRBUILDER;
 	public static ItemStack selectionTool;
 	public static ItemStack gui;
+
+	//Map Locations
+	public static Location cranham;
 
 	@Override
 	public void onLoad() {
 
 		//Setup worldguard flag
-		createFlag();
+		createFlags();
 	}
 
 	@Override
@@ -104,7 +111,7 @@ public class Main extends JavaPlugin {
 		//Create gui item				
 		gui = new ItemStack(Material.NETHER_STAR);
 		ItemMeta meta2 = gui.getItemMeta();
-		meta2.setDisplayName(Utils.chat("&aGui"));
+		meta2.setDisplayName(ChatColor.AQUA + "" + ChatColor.BOLD + "Building Menu");
 		gui.setItemMeta(meta2);
 
 		//Listeners
@@ -129,6 +136,14 @@ public class Main extends JavaPlugin {
 		DenyGui.initialize();
 		PlotGui.initialize();
 		PlotInfo.initialize();
+		LocationGUI.initialize();
+		ConfirmCancel.initialize();
+
+		//Locations
+		cranham = new Location(Bukkit.getWorld(config.getString("worlds.build")), 
+				config.getDouble("location.cranham.map.x"),
+				config.getDouble("location.cranham.map.y"),
+				config.getDouble("location.cranham.map.z"));
 
 		//1 second timer.
 		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
@@ -297,21 +312,55 @@ public class Main extends JavaPlugin {
 		return null;
 	}
 
-	public void createFlag() {
+	public void createFlags() {
 
 		FlagRegistry registry = WorldGuard.getInstance().getFlagRegistry();
 
 		try {
 
-			StateFlag flag = new StateFlag("create-plot", true);
+			StateFlag flag = new StateFlag("create-plot-guest", true);
 			registry.register(flag);
-			CREATE_PLOT = flag;
+			CREATE_PLOT_GUEST = flag;
 
 		} catch (FlagConflictException e) {
 
-			Flag<?> existing = registry.get("create-plot");
+			Flag<?> existing = registry.get("create-plot-guest");
 			if (existing instanceof StateFlag) {
-				CREATE_PLOT = (StateFlag) existing;
+				CREATE_PLOT_GUEST = (StateFlag) existing;
+			} else {
+				Bukkit.broadcastMessage("Plugin Conflict Error with PublicBuilds");
+			}
+
+		}
+
+		try {
+
+			StateFlag flag = new StateFlag("create-plot-apprentice", true);
+			registry.register(flag);
+			CREATE_PLOT_APPRENTICE = flag;
+
+		} catch (FlagConflictException e) {
+
+			Flag<?> existing = registry.get("create-plot-apprentice");
+			if (existing instanceof StateFlag) {
+				CREATE_PLOT_APPRENTICE = (StateFlag) existing;
+			} else {
+				Bukkit.broadcastMessage("Plugin Conflict Error with PublicBuilds");
+			}
+
+		}
+
+		try {
+
+			StateFlag flag = new StateFlag("create-plot-jrbuilder", true);
+			registry.register(flag);
+			CREATE_PLOT_JRBUILDER = flag;
+
+		} catch (FlagConflictException e) {
+
+			Flag<?> existing = registry.get("create-plot-jrbuilder");
+			if (existing instanceof StateFlag) {
+				CREATE_PLOT_JRBUILDER = (StateFlag) existing;
 			} else {
 				Bukkit.broadcastMessage("Plugin Conflict Error with PublicBuilds");
 			}
@@ -321,6 +370,4 @@ public class Main extends JavaPlugin {
 
 
 	}
-
-
 }

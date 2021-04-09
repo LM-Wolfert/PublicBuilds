@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.mysql.PlayerData;
 import me.elgamer.publicbuilds.mysql.PlotData;
+import net.md_5.bungee.api.ChatColor;
 
 public class Inactive {
 	
@@ -37,10 +38,10 @@ public class Inactive {
 		//Iterate through all inactive plots and cancel them.
 		for (int plot : inactivePlots) {
 					
-			WorldEditor.updateWorld(WorldGuardFunctions.getCorners(plot), Bukkit.getWorld(config.getString("worlds.save")), Bukkit.getWorld(config.getString("worlds.build")));
+			WorldEditor.updateWorld(WorldGuardFunctions.getPoints(plot), Bukkit.getWorld(config.getString("worlds.save")), Bukkit.getWorld(config.getString("worlds.build")));
 			ClaimFunctions.removeClaim(plot);
 			PlotData.setStatus(plot, "cancelled");
-			Bukkit.broadcastMessage("Plot: " + plot + " has been cancelled due to inactivity!");
+			Bukkit.broadcastMessage(ChatColor.RED + "Plot " + plot + " has been removed due to inactivity!");
 		}
 		
 		

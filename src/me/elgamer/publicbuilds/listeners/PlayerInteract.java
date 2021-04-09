@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
@@ -30,6 +31,10 @@ public class PlayerInteract implements Listener {
 
 		User u = Main.getInstance().getUser(e.getPlayer());
 
+		if (e.getPlayer().getOpenInventory().getType() != InventoryType.CRAFTING && e.getPlayer().getOpenInventory().getType() != InventoryType.CREATIVE) {
+		    return;
+		}
+		
 		if (e.getPlayer().getInventory().getItemInMainHand().equals(Main.selectionTool)) {
 			if (e.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
 

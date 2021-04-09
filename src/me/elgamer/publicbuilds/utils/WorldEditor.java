@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.bukkit.World;
 
+import com.boydti.fawe.util.EditSessionBuilder;
 import com.sk89q.worldedit.EditSession;
-import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.extent.clipboard.BlockArrayClipboard;
@@ -27,7 +27,9 @@ public class WorldEditor {
 		Polygonal2DRegion region = new Polygonal2DRegion(copyWorld, vector, 1, 256);
 		BlockArrayClipboard clipboard = new BlockArrayClipboard(region);
 
-		try (EditSession editSession = WorldEdit.getInstance().newEditSession(copyWorld)) {
+		try (EditSession editSession = new EditSessionBuilder(copyWorld)
+				.checkMemory(false).fastmode(true).limitUnlimited()
+				.changeSetNull().autoQueue(false).build();) {
 			ForwardExtentCopy forwardExtentCopy = new ForwardExtentCopy(
 					editSession, region, clipboard, region.getMinimumPoint()
 					);
@@ -39,7 +41,9 @@ public class WorldEditor {
 			return false;
 		}
 
-		try (EditSession editSession = WorldEdit.getInstance().newEditSession(pasteWorld);) {
+		try (EditSession editSession = new EditSessionBuilder(pasteWorld)
+				.checkMemory(false).fastmode(true).limitUnlimited()
+				.changeSetNull().autoQueue(false).build();) {
 			Operation operation = new ClipboardHolder(clipboard)
 					.createPaste(editSession)
 					.to(region.getMinimumPoint())

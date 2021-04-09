@@ -16,6 +16,7 @@ public class User {
 	public int reviewing = 0;
 	public String reasonType;
 	public int currentPlot = 0;
+	public String currentStatus = null;
 	
 	public World world;
 	
@@ -51,7 +52,17 @@ public class User {
 			
 		} else {
 			
-			PlayerData.createPlayerInstance(player.getUniqueId().toString(), player.getName());
+			String role = "guest";
+			
+			if (player.hasPermission("group.builder")) {
+				role = "builder";
+			} else if (player.hasPermission("group.jrbuilder")) {
+				role = "jrbuilder";
+			} else if (player.hasPermission("group.apprentice")) {
+				role = "apprentice";
+			}
+			
+			PlayerData.createPlayerInstance(player.getUniqueId().toString(), player.getName(), role);
 			
 		}
 		

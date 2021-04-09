@@ -9,13 +9,14 @@ import java.util.List;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import me.elgamer.publicbuilds.Main;
+import me.elgamer.publicbuilds.utils.Ranks;
 import me.elgamer.publicbuilds.utils.Time;
 
 public class PlayerData {
 
-	
+
 	public static boolean playerExists(String uuid) {
-		
+
 		Main instance = Main.getInstance();
 
 		try {
@@ -34,10 +35,10 @@ public class PlayerData {
 			sql.printStackTrace();
 			return false;
 		}
-		
-		
+
+
 	}
-	
+
 	public static void updatePlayerName(String uuid, String name) {
 
 		Main instance = Main.getInstance();
@@ -54,18 +55,19 @@ public class PlayerData {
 		}
 	}
 
-	public static void createPlayerInstance(String uuid, String name) {
+	public static void createPlayerInstance(String uuid, String name, String role) {
 
 		Main instance = Main.getInstance();
 
 		try {
 			PreparedStatement statement = instance.getConnection().prepareStatement
-					("INSERT INTO " + instance.playerData + " (ID,NAME,TUTORIAL_STAGE,BUILDING_POINTS,LAST_ONLINE) VALUE (?,?,?,?,?)");
+					("INSERT INTO " + instance.playerData + " (ID,NAME,TUTORIAL_STAGE,BUILDING_POINTS,LAST_ONLINE,BUILDER_ROLE) VALUE (?,?,?,?,?,?)");
 			statement.setString(1, uuid);
 			statement.setString(2, name);
 			statement.setInt(3, 0);
 			statement.setInt(4, 0);
 			statement.setLong(5, Time.currentTime());
+			statement.setString(6, role);
 			statement.executeUpdate();
 
 		} catch (SQLException sql) {
@@ -86,16 +88,16 @@ public class PlayerData {
 			if (results.next()) {
 				return (results.getInt("TUTORIAL_STAGE"));
 			} else {
-				return 1;
+				return 0;
 			}
 
 
 		} catch (SQLException sql) {
 			sql.printStackTrace();
-			return 1;
+			return 0;
 		}
 	}
-	
+
 	public static void setTutorialStage(String uuid, int stage) {
 
 		Main instance = Main.getInstance();
@@ -139,9 +141,85 @@ public class PlayerData {
 			statement.setString(1, uuid);
 			statement.executeUpdate();
 
+			Ranks.checkRankup(uuid);
+
 		} catch (SQLException sql) {
 			sql.printStackTrace();
 		}
+	}
+
+	public static int getPoints(String uuid) {
+
+		Main instance = Main.getInstance();
+
+		try {
+			PreparedStatement statement = instance.getConnection().prepareStatement
+					("SELECT * FROM " + instance.playerData + " WHERE ID=?");
+			statement.setString(1, uuid);
+			ResultSet results = statement.executeQuery();
+
+			if (results.next()) {
+				return (results.getInt("BUILDING_POINTS"));
+			} else {
+				return 0;
+			}
+
+		} catch (SQLException sql) {
+			sql.printStackTrace();
+			return 0;
+		}
+	}
+
+	public static String getRole(String uuid) {
+
+		Main instance = Main.getInstance();
+
+		try {
+			PreparedStatement statement = instance.getConnection().prepareStatement
+					("SELECT * FROM " + instance.playerData + " WHERE ID=?");
+			statement.setString(1, uuid);
+			ResultSet results = statement.executeQuery();
+
+			if (results.next()) {
+				return (results.getString("BUILDER_ROLE"));
+			} else {
+				return null;
+			}
+
+		} catch (SQLException sql) {
+			sql.printStackTrace();
+			return null;
+		}
+	}
+	
+	public static void promoteRole(String uuid, String role) {
+		
+		String newRole = null;
+		
+		if (role.equals("guest")) {
+			newRole = "apprentice";
+		} else if (role.equals("apprentice")) {
+			newRole = "jrbuilder";
+		} else if (role.equals("jrbuilder")) {
+			newRole = "builder";
+		} else {return;}
+		
+		Main instance = Main.getInstance();
+
+		try {
+			PreparedStatement statement = instance.getConnection().prepareStatement
+					("UPDATE " + instance.playerData + " SET BUILDER_ROLE=? WHERE ID=?");
+			
+			statement.setString(1, newRole);
+			statement.setString(2, uuid);
+			statement.executeUpdate();
+
+			Ranks.checkRankup(uuid);
+
+		} catch (SQLException sql) {
+			sql.printStackTrace();
+		}
+		
 	}
 
 	public static List<String> getInactivePlayers() {
@@ -155,10 +233,10 @@ public class PlayerData {
 		long time = inactiveMax*24*60*60*1000;
 		long currentTime = Time.currentTime();
 		long timeCheck = currentTime - time;
-		
+
 		//Create list of inactive players.
 		List<String> players = new ArrayList<String>();
-		
+
 		//Find all players who have not been online since the timeCheck time.
 		try {
 			PreparedStatement statement = instance.getConnection().prepareStatement

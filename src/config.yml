@@ -13,12 +13,12 @@ MySQL_playerData: player_data
 MySQL_plotData: plot_data
 
 #Plot Limits
-#Limit on maximum distance between 2 corners of a plot
+#Limit on maximum distance between 2 points of a plot
 plot_distance:
-    guest: 25
-    apprentice: 50
-    jrbuilder: 75
-    builder: 100
+    guest: 50
+    apprentice: 75
+    jrbuilder: 100
+    builder: 200
     
 #Minimum distance between 2 points of a claim
 min_dis: 5
@@ -95,3 +95,11 @@ points_multiplier: 5
 
 #Number of days a player can be inactive before their plots get cancelled
 plot_inactive_cancel: 14
+
+#Locations
+location:
+    cranham:
+        map:
+            x:
+            y:
+            z:

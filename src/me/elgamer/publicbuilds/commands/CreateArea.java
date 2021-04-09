@@ -45,6 +45,16 @@ public class CreateArea implements CommandExecutor {
 			p.sendMessage(ChatColor.RED + "You do not have permission for this command!");
 			return true;
 		}
+		
+		if (args.length < 2) {
+			p.sendMessage(ChatColor.RED + "/createarea <name> <guest/apprentice/jrbuilder>");
+			return true;
+		}
+		
+		if (!(args[1].equalsIgnoreCase("guest") || args[1].equalsIgnoreCase("apprentice") || args[1].equalsIgnoreCase("jrbuilder"))) {
+			p.sendMessage(ChatColor.RED + "/createarea <area> <guest/apprentice/jrbuilder>");
+			return true;
+		}
 
 		WorldEdit we = WorldEdit.getInstance();
 		LocalSession s = we.getSessionManager().findByName(p.getName());;
@@ -89,7 +99,15 @@ public class CreateArea implements CommandExecutor {
 			return true;
 		}
 		
-		polyregion.setFlag(Main.CREATE_PLOT, StateFlag.State.ALLOW);
+		if (args[1].equalsIgnoreCase("guest")) {
+			polyregion.setFlag(Main.CREATE_PLOT_GUEST, StateFlag.State.ALLOW);
+		} else if (args[1].equalsIgnoreCase("apprentice")) {
+			polyregion.setFlag(Main.CREATE_PLOT_APPRENTICE, StateFlag.State.ALLOW);
+		} else if (args[1].equalsIgnoreCase("jrbuilder")) {
+			polyregion.setFlag(Main.CREATE_PLOT_JRBUILDER, StateFlag.State.ALLOW);
+		} else {
+			return false;
+		}
 
 		//Add the regions to the worlds
 		buildRegions.addRegion(polyregion);
@@ -101,7 +119,7 @@ public class CreateArea implements CommandExecutor {
 			e1.printStackTrace();
 		}
 
-		p.sendMessage(ChatColor.GREEN + "Area created with Name " + ChatColor.DARK_AQUA + args[0]);
+		p.sendMessage(ChatColor.GREEN + "Area created with Name " + ChatColor.GRAY + args[0]);
 		return true;
 		
 	}
