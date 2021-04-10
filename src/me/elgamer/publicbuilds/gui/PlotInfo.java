@@ -6,7 +6,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import me.elgamer.publicbuilds.Main;
+import me.elgamer.publicbuilds.mysql.PlayerData;
 import me.elgamer.publicbuilds.mysql.PlotData;
+import me.elgamer.publicbuilds.utils.Time;
 import me.elgamer.publicbuilds.utils.User;
 import me.elgamer.publicbuilds.utils.Utils;
 import me.elgamer.publicbuilds.utils.WorldGuardFunctions;
@@ -30,7 +33,7 @@ public class PlotInfo {
 		Inventory toReturn = Bukkit.createInventory(null, inv_rows, inventory_name);
 
 		inv.clear();
-		
+
 		if (u.currentStatus.equals("claimed")) {
 			Utils.createItem(inv, Material.LIGHT_BLUE_CONCRETE, 1, 12, ChatColor.AQUA + "" + ChatColor.BOLD + "Submit Plot",
 					Utils.chat("&fSubmit your plot and put it up for review."),
@@ -48,7 +51,7 @@ public class PlotInfo {
 				Utils.chat("&fTeleports you to your plot."));
 		Utils.createItem(inv, Material.SPRUCE_DOOR, 1, 27, ChatColor.AQUA + "" + ChatColor.BOLD + "Return",
 				Utils.chat("&fGo back to the plot menu."));
-		
+
 		toReturn.setContents(inv.getContents());
 		return toReturn;
 	}
@@ -57,9 +60,9 @@ public class PlotInfo {
 
 		//Get player
 		Player p = u.player;
-		
+
 		if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Teleport")) {
-			
+
 			//Teleport the player to their plot.
 			p.closeInventory();
 			p.teleport(WorldGuardFunctions.getCurrentLocation(u.currentPlot));
@@ -72,23 +75,49 @@ public class PlotInfo {
 			p.closeInventory();
 			p.openInventory(ConfirmCancel.GUI(u));
 			return;
-			
-			
+
+
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Submit Plot")) {
-			
+
+			long lon_min = Main.getInstance().getConfig().getInt("submit_cooldown")*60*1000;
+
+			if (Time.currentTime() - PlayerData.getSubmit(u.uuid) <= lon_min) {
+
+				long lon_dif = lon_min - (Time.currentTime() - PlayerData.getSubmit(u.uuid));
+
+				int sec = (int) ((lon_dif / 1000) % 60);
+				int min = (int) ((lon_dif / 1000) / 60);
+
+				String time;
+
+				if (min == 0) {
+					time = sec + " second";
+				} else {
+					if (sec == 0) {
+						time = min + " minute";
+					} else {
+						time = min + " minute and " + sec + " second";
+					}
+				}
+
+				p.sendMessage(ChatColor.RED + "You have a " + time + " cooldown before you can submit a plot!");
+				return;
+			}
+
 			//Submits the plot.
 			PlotData.setStatus(u.currentPlot, "submitted");
-			p.sendMessage(ChatColor.RED + "Plot " + u.currentPlot + " has been submitted.");
-			
+			PlayerData.newSubmit(u.uuid);
+			p.sendMessage(ChatColor.GREEN + "Plot " + u.currentPlot + " has been submitted.");
+
 			p.closeInventory();
 			return;
 
-		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Retract Plot")) {
-			
+		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Retract Submission")) {
+
 			//Retracts a plot submission.
 			PlotData.setStatus(u.currentPlot, "claimed");
 			p.sendMessage(ChatColor.RED + "The submission for plot " + u.currentPlot + " has been retracted.");
-			
+
 			p.closeInventory();
 			return;
 

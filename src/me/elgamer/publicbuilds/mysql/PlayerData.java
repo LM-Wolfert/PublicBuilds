@@ -61,13 +61,14 @@ public class PlayerData {
 
 		try {
 			PreparedStatement statement = instance.getConnection().prepareStatement
-					("INSERT INTO " + instance.playerData + " (ID,NAME,TUTORIAL_STAGE,BUILDING_POINTS,LAST_ONLINE,BUILDER_ROLE) VALUE (?,?,?,?,?,?)");
+					("INSERT INTO " + instance.playerData + " (ID,NAME,TUTORIAL_STAGE,BUILDING_POINTS,LAST_ONLINE,BUILDER_ROLE,LAST_SUBMIT) VALUE (?,?,?,?,?,?,?)");
 			statement.setString(1, uuid);
 			statement.setString(2, name);
 			statement.setInt(3, 0);
 			statement.setInt(4, 0);
 			statement.setLong(5, Time.currentTime());
 			statement.setString(6, role);
+			statement.setLong(7, 1);
 			statement.executeUpdate();
 
 		} catch (SQLException sql) {
@@ -260,6 +261,42 @@ public class PlayerData {
 		}
 
 
+	}
+	
+	public static void newSubmit(String uuid) {
+
+		Main instance = Main.getInstance();
+
+		try {
+			PreparedStatement statement = instance.getConnection().prepareStatement
+					("UPDATE " + instance.playerData + " SET LAST_SUBMIT=? WHERE ID=?");
+			statement.setLong(1, Time.currentTime());
+			statement.setString(2, uuid);
+			statement.executeUpdate();
+
+		} catch (SQLException sql) {
+			sql.printStackTrace();
+		}
+	}
+	
+	public static long getSubmit(String uuid) {
+		
+		Main instance = Main.getInstance();
+
+		try {
+			PreparedStatement statement = instance.getConnection().prepareStatement
+					("SELECT * FROM " + instance.playerData + " WHERE ID=?");
+			statement.setString(1, uuid);
+			
+			ResultSet results = statement.executeQuery();
+			results.next();
+			return (results.getLong("LAST_SUBMIT"));
+
+		} catch (SQLException sql) {
+			sql.printStackTrace();
+			return 0;
+		}
+		
 	}
 
 }

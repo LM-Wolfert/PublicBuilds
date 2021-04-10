@@ -32,9 +32,11 @@ import me.elgamer.publicbuilds.gui.ConfirmCancel;
 import me.elgamer.publicbuilds.gui.DenyGui;
 import me.elgamer.publicbuilds.gui.LocationGUI;
 import me.elgamer.publicbuilds.gui.MainGui;
+import me.elgamer.publicbuilds.gui.NavigationGUI;
 import me.elgamer.publicbuilds.gui.PlotGui;
 import me.elgamer.publicbuilds.gui.PlotInfo;
 import me.elgamer.publicbuilds.gui.ReviewGui;
+import me.elgamer.publicbuilds.gui.SwitchServerGUI;
 import me.elgamer.publicbuilds.listeners.ChatListener;
 import me.elgamer.publicbuilds.listeners.ClaimEnter;
 import me.elgamer.publicbuilds.listeners.CommandListener;
@@ -74,7 +76,8 @@ public class Main extends JavaPlugin {
 	public static ItemStack selectionTool;
 	public static ItemStack gui;
 
-	//Map Locations
+	//Locations
+	public static Location spawn;
 	public static Location cranham;
 
 	@Override
@@ -98,6 +101,9 @@ public class Main extends JavaPlugin {
 		createPlayerData();
 		createPlotData();
 		PlotData.clearReview();
+		
+		//Bungeecord
+		this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
 		//Create list of users.
 		users = new ArrayList<User>();
@@ -138,8 +144,14 @@ public class Main extends JavaPlugin {
 		PlotInfo.initialize();
 		LocationGUI.initialize();
 		ConfirmCancel.initialize();
+		NavigationGUI.initialize();
+		SwitchServerGUI.initialize();
 
 		//Locations
+		spawn = new Location(Bukkit.getWorld("Lobby"), 
+				config.getDouble("location.spawn.x"),
+				config.getDouble("location.spawn.y"),
+				config.getDouble("location.spawn.z"));
 		cranham = new Location(Bukkit.getWorld(config.getString("worlds.build")), 
 				config.getDouble("location.cranham.map.x"),
 				config.getDouble("location.cranham.map.y"),
@@ -272,7 +284,7 @@ public class Main extends JavaPlugin {
 		try {
 			PreparedStatement statement = instance.getConnection().prepareStatement
 					("CREATE TABLE IF NOT EXISTS " + playerData
-							+ " ( ID VARCHAR(36) NOT NULL , NAME VARCHAR(20) NOT NULL , TUTORIAL_STAGE INT NOT NULL , BUILDING_POINTS INT NOT NULL , LAST_ONLINE BIGINT NOT NULL , UNIQUE (ID))");
+							+ " ( ID VARCHAR(36) NOT NULL , NAME VARCHAR(20) NOT NULL , TUTORIAL_STAGE INT NOT NULL , BUILDING_POINTS INT NOT NULL , LAST_ONLINE BIGINT NOT NULL , BUILDER_ROLE VARCHAR(20) NOT NULL , LAST_SUBMIT BIGINT NOT NULL , UNIQUE (ID))");
 			statement.executeUpdate();
 
 		} catch (SQLException e) {

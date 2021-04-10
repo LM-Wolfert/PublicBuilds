@@ -271,7 +271,7 @@ public class Plots {
 					continue;
 				}
 				
-				val = Math.sqrt(Math.abs(bv.getX()-bv2.getX()) + Math.abs(bv.getZ()-bv2.getZ()));
+				val = Math.sqrt(Math.pow(Math.abs(bv.getX()-bv2.getX()),2) + Math.pow(Math.abs(bv.getZ()-bv2.getZ()),2));
 				
 				if (val > size) {
 					size = val;

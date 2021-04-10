@@ -12,9 +12,11 @@ import me.elgamer.publicbuilds.gui.ConfirmCancel;
 import me.elgamer.publicbuilds.gui.DenyGui;
 import me.elgamer.publicbuilds.gui.LocationGUI;
 import me.elgamer.publicbuilds.gui.MainGui;
+import me.elgamer.publicbuilds.gui.NavigationGUI;
 import me.elgamer.publicbuilds.gui.PlotGui;
 import me.elgamer.publicbuilds.gui.PlotInfo;
 import me.elgamer.publicbuilds.gui.ReviewGui;
+import me.elgamer.publicbuilds.gui.SwitchServerGUI;
 import me.elgamer.publicbuilds.utils.User;
 
 public class InventoryClicked implements Listener {
@@ -104,6 +106,24 @@ public class InventoryClicked implements Listener {
 			}
 			if (title.equals(ConfirmCancel.inventory_name)) {
 				ConfirmCancel.clicked(u, e.getSlot(), e.getCurrentItem(), e.getInventory());
+			}
+		}
+		else if (title.equals(SwitchServerGUI.inventory_name)) {
+			e.setCancelled(true);
+			if (e.getCurrentItem() == null){
+				return;
+			}
+			if (title.equals(SwitchServerGUI.inventory_name)) {
+				SwitchServerGUI.clicked(u, e.getSlot(), e.getCurrentItem(), e.getInventory());
+			}
+		}
+		else if (title.equals(NavigationGUI.inventory_name)) {
+			e.setCancelled(true);
+			if (e.getCurrentItem() == null){
+				return;
+			}
+			if (title.equals(NavigationGUI.inventory_name)) {
+				NavigationGUI.clicked(u, e.getSlot(), e.getCurrentItem(), e.getInventory());
 			}
 		}
 		else if (e.getCurrentItem().equals(Main.gui)) {

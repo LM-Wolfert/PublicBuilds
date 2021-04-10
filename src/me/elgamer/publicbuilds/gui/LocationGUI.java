@@ -24,7 +24,7 @@ public class LocationGUI {
 		
 	}
 	
-	public static Inventory GUI (Player p) {
+	public static Inventory GUI (User u) {
 		
 		Inventory toReturn = Bukkit.createInventory(null, inv_rows, inventory_name);
 		
@@ -37,7 +37,8 @@ public class LocationGUI {
 				Utils.chat("&fnow it is peripheral to London"),
 				Utils.chat("&fforming the eastern edge of the urban sprawl."));
 		
-		Utils.createItem(inv, Material.SPRUCE_DOOR, 1, 27, ChatColor.AQUA + "" + ChatColor.BOLD + "Return", Utils.chat("&fGo back to the building menu."));	
+		Utils.createItem(inv, Material.SPRUCE_DOOR, 1, 27, ChatColor.AQUA + "" + ChatColor.BOLD + "Return", 
+				Utils.chat("&fGo back to the navigation menu."));	
 		
 		toReturn.setContents(inv.getContents());
 		return toReturn;
@@ -53,7 +54,7 @@ public class LocationGUI {
 			p.teleport(Main.cranham);
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Return")) {
 			p.closeInventory();
-			p.openInventory(MainGui.GUI(u));
+			p.openInventory(NavigationGUI.GUI(u));
 		}
 	}
 

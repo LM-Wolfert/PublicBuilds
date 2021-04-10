@@ -96,8 +96,15 @@ points_multiplier: 5
 #Number of days a player can be inactive before their plots get cancelled
 plot_inactive_cancel: 14
 
+#Cooldown between plot submissions in minutes
+submit_cooldown: 5
+
 #Locations
 location:
+    spawn:
+        x:
+        y:
+        z:
     cranham:
         map:
             x:

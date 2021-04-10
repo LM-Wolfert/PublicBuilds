@@ -40,7 +40,7 @@ public class WorldGuardFunctions {
 		BlockVector3 bv = region.getMinimumPoint();
 		Location l = new Location(buildWorld, bv.getX(), bv.getY(), bv.getZ());
 
-		l.setY(buildWorld.getHighestBlockYAt(l));
+		l.setY(buildWorld.getHighestBlockYAt(l)+1);
 		return(l);
 
 	}
@@ -65,7 +65,7 @@ public class WorldGuardFunctions {
 		BlockVector3 bv = region.getMinimumPoint();
 		Location l = new Location(saveWorld, bv.getX(), bv.getY(), bv.getZ());
 
-		l.setY(saveWorld.getHighestBlockYAt(l));
+		l.setY(saveWorld.getHighestBlockYAt(l)+1);
 		return(l);
 
 	}

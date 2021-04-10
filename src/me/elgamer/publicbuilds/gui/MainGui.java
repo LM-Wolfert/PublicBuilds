@@ -38,8 +38,10 @@ public class MainGui {
 
 		inv.clear();
 
-		Utils.createItem(inv, Material.SPRUCE_BOAT, 1, 5, ChatColor.AQUA + "" + ChatColor.BOLD + "Build", 
-				Utils.chat("&fClick here to pick a location to build!"));
+		Utils.createItem(inv, Material.SPRUCE_BOAT, 1, 5, ChatColor.AQUA + "" + ChatColor.BOLD + "Navigation Menu", 
+				Utils.chat("&fOpens the navigation menu."),
+				Utils.chat("&fFrom here you can choose where to go."),
+				Utils.chat("&fBuild, go to spawn or switch to a different server."));
 
 		Utils.createItem(inv, Material.EMERALD, 1, 20, ChatColor.AQUA + "" + ChatColor.BOLD + "Create Plot",
 				Utils.chat("&fWill create a plot with the points you have selected."),
@@ -85,10 +87,10 @@ public class MainGui {
 
 		Player p = u.player;
 
-		if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Build")) {
+		if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Navigation Menu")) {
 
 			p.closeInventory();
-			p.openInventory(LocationGUI.GUI(p));
+			p.openInventory(NavigationGUI.GUI(u));
 
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Selection Tool")) {
 			Plots.giveSelectionTool(u);
@@ -113,7 +115,7 @@ public class MainGui {
 				p.closeInventory();
 				p.sendMessage(Utils.chat("&cThere are no plots available for review!"));
 			}
-		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&9Create Plot"))) {
+		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Create Plot")) {
 
 			//If they are in the third stage of the tutorial check if the plot is valid.
 			if (u.tutorialStage == 3) {
@@ -149,7 +151,7 @@ public class MainGui {
 				}
 
 				//Count total plots, this includes claimed, submitted and under review, if they exceed the limit then end the method.
-				if (PlotData.totalPlotCount(p.getUniqueId().toString()) > Main.getInstance().getConfig().getInt("maxPlots")) {
+				if (PlotData.totalPlotCount(p.getUniqueId().toString()) > Main.getInstance().getConfig().getInt("plot_maximum")) {
 					p.sendMessage(Utils.chat("&cYou have too many plots submitted/claimed, please wait for at least 1 to be reviewed!"));
 					p.closeInventory();
 					return;
@@ -164,6 +166,7 @@ public class MainGui {
 				if (Plots.largestDistance(u.plots.vector) > RankValues.maxDis(p)) {
 					p.sendMessage(Utils.chat("&cYour selection is too large!"));
 					p.closeInventory();
+					return;
 
 				}
 
@@ -171,6 +174,7 @@ public class MainGui {
 				if (Plots.largestDistance(u.plots.vector) < 5) {
 					p.sendMessage(Utils.chat("&cYour selection is too small!"));
 					p.closeInventory();
+					return;
 
 				}
 
@@ -188,7 +192,7 @@ public class MainGui {
 				}*/
 
 			} else {
-				p.sendMessage(Utils.chat("&cYou must move a minimum of 3 points to create a plot!"));
+				p.sendMessage(Utils.chat("&cYou must select a minimum of 3 points to create a plot!"));
 				p.closeInventory();
 				return;
 			}
