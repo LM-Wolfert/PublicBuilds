@@ -119,7 +119,7 @@ public class CreateArea implements CommandExecutor {
 			e1.printStackTrace();
 		}
 
-		p.sendMessage(ChatColor.GREEN + "Area created with Name " + ChatColor.GRAY + args[0]);
+		p.sendMessage(ChatColor.GREEN + "Area created with Name " + args[0]);
 		return true;
 		
 	}

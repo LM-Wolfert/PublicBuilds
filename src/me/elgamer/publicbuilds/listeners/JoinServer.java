@@ -3,7 +3,6 @@ package me.elgamer.publicbuilds.listeners;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -41,12 +40,9 @@ public class JoinServer implements Listener {
 			
 			Tutorial.continueTutorial(u);
 		}
-
-		//Get player instance.
-		Player player = e.getPlayer();
-
+		
 		//If a player hasn't been online for more than 14 days their plot will cancelled.
-		Inactive.cancelInactivePlots(player);
+		Inactive.cancelInactivePlots();
 					
 	}
 

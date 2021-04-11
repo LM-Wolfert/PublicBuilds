@@ -23,7 +23,7 @@ public class ReviewGui {
 
 	}
 
-	public static Inventory GUI (Player p) {
+	public static Inventory GUI (User u) {
 
 		Inventory toReturn = Bukkit.createInventory(null, inv_rows, inventory_name);
 

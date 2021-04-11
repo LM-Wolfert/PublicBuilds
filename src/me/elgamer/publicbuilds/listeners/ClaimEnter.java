@@ -1,17 +1,13 @@
 package me.elgamer.publicbuilds.listeners;
 
-import java.util.ArrayList;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Sound;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
@@ -22,70 +18,88 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
 
 import me.elgamer.publicbuilds.Main;
+import me.elgamer.publicbuilds.mysql.PlotData;
+import me.elgamer.publicbuilds.utils.User;
+import net.md_5.bungee.api.ChatColor;
 
 public class ClaimEnter implements Listener{
-	
+
 	public WorldGuardPlugin worldGuardPlugin;
 
 	public  ClaimEnter(Main plugin) {
-		
+
 		Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
 	}
+	
+	@EventHandler
+	public void joinEvent(PlayerJoinEvent e) {
+		
+		User u = Main.getInstance().getUser(e.getPlayer());
+		checkRegion(u);
+		
+	}
 
-	private ArrayList<Player> entered = new ArrayList<>();
-	private ArrayList<Player> left = new ArrayList<>();
-	
 	@EventHandler
-	public void quitEvent(PlayerQuitEvent event) {
-		Player player = event.getPlayer();
-		
-		if(entered.contains(player) || left.contains(player)) {
-			left.remove(player);
-			entered.remove(player);
-		}
+	public void moveEvent(PlayerMoveEvent e) {
+		User u = Main.getInstance().getUser(e.getPlayer());
+		checkRegion(u);
 	}
-	
-	@EventHandler
-	public void moveEvent(PlayerMoveEvent event) {
-		Player player = event.getPlayer();
-		enterRegion(player);
-	}
-	
-	
-	
-	
-	public void enterRegion(Player player) {
-		
-		Location l = player.getLocation();
+
+
+
+
+	public void checkRegion(User u) {
+
+		Location l = u.player.getLocation();
+
 		RegionQuery query = WorldGuard.getInstance().getPlatform().getRegionContainer().createQuery();
 		ApplicableRegionSet applicableRegionSet = query.getApplicableRegions(BukkitAdapter.adapt(l));
-		
+
 		for(ProtectedRegion regions: applicableRegionSet) {
 			if(regions.contains(BlockVector3.at(l.getX(), l.getY(), l.getZ()))) {
-				if(!entered.contains(player)) {
-					try {
-						left.remove(player);
-						entered.add(player);
+				try {
+
+					String owners = regions.getOwners().toPlayersString();
+					owners = owners.replace("uuid:", "");
+					
+					int plot = tryParse(regions.getId());
+					
+					if (plot == 0) {continue;}
+					
+					if (u.inPlot != plot) {
 						
-						String owners = regions.getOwners().toPlayersString();
-						owners = owners.replace("uuid:", "");
-						
-						Player regionPlayer = Bukkit.getServer().getPlayer(UUID.fromString(owners));
-						player.playSound(player.getLocation(), Sound.ENTITY_CHICKEN_EGG, 1, 1);
-						player.sendMessage(ChatColor.GREEN + "Now Entering: ");
-						player.sendMessage(ChatColor.BLUE + regionPlayer.getName() + "'s plot");
-					} catch (Exception e) {
-						e.printStackTrace();
+						u.inPlot = plot;
+						u.plotOwner = owners;
+						u.player.sendMessage(ChatColor.GREEN + "You have entered " + Bukkit.getPlayer(UUID.fromString(owners)).getName() + "'s plot!");
 					}
+						
+					if (u.uuid.equals(owners)) {
+							
+						PlotData.setLastVisit(u.uuid, u.inPlot);
+
+					}
+								
+
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
+
 			}
 		}
-		if (!left.contains(player)) {
-			if (applicableRegionSet.size() == 0) {
-				entered.remove(player);
-				left.add(player);
-				player.playSound(player.getLocation(), Sound.ENTITY_CHICKEN_EGG, 1, 1);
-			}
+		
+		if (applicableRegionSet.size() < 2 && u.inPlot != 0) {
+			
+			u.player.sendMessage(ChatColor.GREEN + "You have left " + Bukkit.getPlayer(UUID.fromString(u.plotOwner)).getName() + "'s plot!");
+			u.inPlot = 0;
+			
+		}
+	}
+	
+	public static int tryParse(String text) {
+		try {
+			return Integer.parseInt(text);
+		} catch (NumberFormatException e) {
+			return 0;
 		}
 	}
 }

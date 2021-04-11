@@ -18,6 +18,9 @@ public class User {
 	public int currentPlot = 0;
 	public String currentStatus = null;
 	
+	public int inPlot = 0;
+	public String plotOwner = null;
+	
 	public World world;
 	
 	public User(Player player) {

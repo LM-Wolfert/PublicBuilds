@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import me.elgamer.publicbuilds.Main;
+import me.elgamer.publicbuilds.utils.Time;
 
 public class PlotData {
 
@@ -41,12 +42,13 @@ public class PlotData {
 
 		try {
 			PreparedStatement insert = instance.getConnection().prepareStatement
-					("INSERT INTO " + instance.plotData + " (ID,OWNER,MESSAGE,STATUS) VALUE (?,?,?,?)");
+					("INSERT INTO " + instance.plotData + " (ID,OWNER,MESSAGE,STATUS,LAST_VISIT) VALUE (?,?,?,?,?)");
 
 			insert.setInt(1, id);
 			insert.setString(2, uuid);
 			insert.setString(3, "false");
 			insert.setString(4, "claimed");
+			insert.setLong(5, Time.currentTime());
 			insert.executeUpdate();
 
 			return true;
@@ -293,7 +295,7 @@ public class PlotData {
 
 	//Returns a list of plots that are inactive.
 	//Inactive implies that the owner of the plot has not been online in at least 14 days.
-	public static List<Integer> getInactivePlots(List<String> players) {
+	public static List<Integer> getInactivePlots(long time) {
 
 		//Create list for the inactive plots.
 		List<Integer> plots = new ArrayList<Integer>();
@@ -304,24 +306,40 @@ public class PlotData {
 		//Get all plots that are owned by players that are inactive, only active plots will be counted, not submitted ones.
 		try {
 			PreparedStatement statement = instance.getConnection().prepareStatement
-					("SELECT * FROM " + instance.plotData + " WHERE STATUS=?");
-			statement.setString(1, "claimed");
+					("SELECT * FROM " + instance.plotData + " WHERE LAST_VISIT<=? AND STATUS=?");
+			statement.setLong(1, time);
+			statement.setString(2, "claimed");
 
 			ResultSet results = statement.executeQuery();
 
 			while (results.next()) {
-				if (players.contains(results.getString("OWNER"))) {
-					plots.add(results.getInt("ID"));
-				}
+				plots.add(results.getInt("ID"));
 			}
 
-			return plots;
+		return plots;
 
-		} catch (SQLException sql) {
-			sql.printStackTrace();
-			return null;
-		}
-
+	} catch (SQLException sql) {
+		sql.printStackTrace();
+		return null;
 	}
+
+}
+
+public static void setLastVisit(String uuid, int plot) {
+
+	Main instance = Main.getInstance();
+
+	try {
+		PreparedStatement update = instance.getConnection().prepareStatement
+				("UPDATE " + instance.plotData + " SET LAST_VISIT=? WHERE ID=?");
+		update.setLong(1, Time.currentTime());
+		update.setInt(2, plot);
+		update.executeUpdate();
+
+	} catch (SQLException sql) {
+		sql.printStackTrace();
+	}
+
+}
 
 }

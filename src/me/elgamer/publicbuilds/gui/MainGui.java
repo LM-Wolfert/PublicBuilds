@@ -66,19 +66,6 @@ public class MainGui {
 		Utils.createItem(inv, Material.SKELETON_SKULL, 1, 26, ChatColor.AQUA + "" + ChatColor.BOLD + "Head Database", 
 				Utils.chat("&fOpens the Head Database!"));
 
-		if (Utils.isPlayerInGroup(p, "reviewer") && (u.reviewing != 0)) {
-			Utils.createItem(inv, Material.YELLOW_CONCRETE, 1, 23, ChatColor.AQUA + "" + ChatColor.BOLD + "Review Plot", 
-					Utils.chat("&fOpens the review gui."),
-					Utils.chat("&fAllows you to accept and deny"),
-					Utils.chat("&fas well as teleport to the before and after view."));
-		}
-
-		else if (Utils.isPlayerInGroup(p, "reviewer") && PlotData.reviewExists()) {
-			Utils.createItem(inv, Material.LIME_CONCRETE, 1, 23, ChatColor.AQUA + "" + ChatColor.BOLD + "New Review", 
-					Utils.chat("&fStart reviewing a new plot."),
-					Utils.chat("&fWill instantly open the review gui."));
-		}
-
 		toReturn.setContents(inv.getContents());
 		return toReturn;
 	}
@@ -101,20 +88,6 @@ public class MainGui {
 			p.closeInventory();
 			p.openInventory(PlotGui.GUI(u));
 
-		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&9Review Plot"))) {
-			//Open the review gui.
-			p.closeInventory();
-			p.openInventory(ReviewGui.GUI(p));
-		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&9New Review"))) {
-			//If there is a plot available to review, create a new review and open the review gui.
-			if (PlotData.reviewExists()) {
-				u.reviewing = PlotData.newReview();
-				p.closeInventory();
-				p.openInventory(ReviewGui.GUI(p));
-			} else {
-				p.closeInventory();
-				p.sendMessage(Utils.chat("&cThere are no plots available for review!"));
-			}
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Create Plot")) {
 
 			//If they are in the third stage of the tutorial check if the plot is valid.
