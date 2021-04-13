@@ -1,6 +1,7 @@
 package me.elgamer.publicbuilds.listeners;
 
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -8,9 +9,14 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.mysql.PlotData;
+import me.elgamer.publicbuilds.mysql.PlotMessage;
+import me.elgamer.publicbuilds.utils.ClaimFunctions;
 import me.elgamer.publicbuilds.utils.Tutorial;
 import me.elgamer.publicbuilds.utils.User;
 import me.elgamer.publicbuilds.utils.Utils;
+import me.elgamer.publicbuilds.utils.WorldEditor;
+import me.elgamer.publicbuilds.utils.WorldGuardFunctions;
+import net.md_5.bungee.api.ChatColor;
 
 public class ChatListener implements Listener {
 
@@ -47,13 +53,22 @@ public class ChatListener implements Listener {
 		if (u.reasonType != null) {
 			e.setCancelled(true);
 			if (e.getMessage().startsWith("/")) {
-				p.sendMessage(Utils.chat("&cYou must give a reason for denying the plot!"));
-				p.sendMessage(Utils.chat("&cType the reason in chat, the first message sent will count!"));
+				p.sendMessage(Utils.chat("&cYou must give a reason for denying the plot."));
+				p.sendMessage(Utils.chat("&cType the reason in chat, the first message sent will count."));
 			} else {
+
+				FileConfiguration config = Main.getInstance().getConfig();
+
+				if (u.reasonType.equals("deleted")) {
+					WorldEditor.updateWorld(WorldGuardFunctions.getPoints(u.reviewing), Bukkit.getWorld(config.getString("worlds.save")), Bukkit.getWorld(config.getString("worlds.build")));
+					ClaimFunctions.removeClaim(u.reviewing);
+				}
+				
 				//Sets the deny message and returns or cancels the plot.
-				PlotData.setDenyMessage(u.reviewing, e.getMessage());
+				PlotMessage.addDenyMessage(u.reviewing, PlotData.getOwner(u.reviewing), e.getMessage(), u.reasonType);
 				PlotData.setStatus(u.reviewing, u.reasonType);
 
+				p.sendMessage(ChatColor.GREEN + "Plot " + u.reviewing + " denied with reason: " + e.getMessage());
 				//Set the reasonType and reviewing back to default values.
 				u.reasonType = null;
 				u.reviewing = 0;

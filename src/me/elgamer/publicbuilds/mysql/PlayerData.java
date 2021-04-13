@@ -298,5 +298,24 @@ public class PlayerData {
 		}
 		
 	}
+	
+	public static String getName(String uuid) {
+		
+		Main instance = Main.getInstance();
+
+		try {
+			PreparedStatement statement = instance.getConnection().prepareStatement
+					("SELECT * FROM " + instance.playerData + " WHERE ID=?");
+			statement.setString(1, uuid);
+			
+			ResultSet results = statement.executeQuery();
+			results.next();
+			return (results.getString("NAME"));
+
+		} catch (SQLException sql) {
+			sql.printStackTrace();
+			return null;
+		}
+	}
 
 }

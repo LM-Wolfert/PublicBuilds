@@ -8,15 +8,16 @@ import org.bukkit.inventory.ItemStack;
 
 import me.elgamer.publicbuilds.utils.User;
 import me.elgamer.publicbuilds.utils.Utils;
+import net.md_5.bungee.api.ChatColor;
 
 public class DenyGui {
 	
 	public static Inventory inv;
 	public static String inventory_name;
-	public static int inv_rows = 5 * 9;
+	public static int inv_rows = 3 * 9;
 	
 	public static void initialize() {
-		inventory_name = Utils.chat("&9Deny");
+		inventory_name = ChatColor.AQUA + "" + ChatColor.BOLD + "Deny Plot";
 		
 		inv = Bukkit.createInventory(null, inv_rows);
 		
@@ -28,11 +29,13 @@ public class DenyGui {
 		
 		inv.clear();
 		
-		Utils.createItem(inv, Material.LIME_CONCRETE, 1, 22, Utils.chat("&9Another chance"), Utils.chat("&1Deny the plot and give the builder another chance!"));
+		Utils.createItem(inv, Material.SPRUCE_DOOR, 1, 27, ChatColor.AQUA + "" + ChatColor.BOLD + "Return", Utils.chat("&fGo back to the review menu."));
 		
-		Utils.createItem(inv, Material.YELLOW_CONCRETE, 1, 24, Utils.chat("&9Resize plot"), Utils.chat("&1Edit the plot boundaries to include more or less!"));
+		Utils.createItem(inv, Material.LIME_CONCRETE, 1, 13, ChatColor.AQUA + "" + ChatColor.BOLD + "Another Chance", Utils.chat("&fDeny the plot and return it to the builder."));
 		
-		Utils.createItem(inv, Material.RED_CONCRETE, 1, 24, Utils.chat("&9Remove plot"), Utils.chat("&1Will deny and reset the plot to its original state!"));
+		//Utils.createItem(inv, Material.YELLOW_CONCRETE, 1, 24, Utils.chat("&9Resize plot"), Utils.chat("&1Edit the plot boundaries to include more or less!"));
+		
+		Utils.createItem(inv, Material.RED_CONCRETE, 1, 15, ChatColor.AQUA + "" + ChatColor.BOLD + "Remove Plot", Utils.chat("&fDeny the plot and return it to its orginal state."));
 			
 		toReturn.setContents(inv.getContents());
 		return toReturn;
@@ -42,7 +45,13 @@ public class DenyGui {
 		
 		Player p = u.player;
 		
-		if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&9Another chance"))) {
+		if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Return")) {
+			//Open the review gui.
+			p.closeInventory();
+			p.openInventory(ReviewGui.GUI(u));
+			return;
+			
+		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Another Chance")) {
 
 			//Will prompt the reviewer to input a reason.
 			p.closeInventory();
@@ -54,7 +63,7 @@ public class DenyGui {
 			
 			p.closeInventory();
 			p.sendMessage(Utils.chat("&cCurrently Not Implemented!"));
-		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&cRemove plot"))) {
+		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Remove Plot")) {
 			
 			//Will prompt the reviewer to to input a reason.
 			p.closeInventory();

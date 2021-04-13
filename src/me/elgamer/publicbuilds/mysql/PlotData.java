@@ -9,6 +9,7 @@ import java.util.List;
 
 import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.utils.Time;
+import me.elgamer.publicbuilds.utils.User;
 
 public class PlotData {
 
@@ -42,7 +43,7 @@ public class PlotData {
 
 		try {
 			PreparedStatement insert = instance.getConnection().prepareStatement
-					("INSERT INTO " + instance.plotData + " (ID,OWNER,MESSAGE,STATUS,LAST_VISIT) VALUE (?,?,?,?,?)");
+					("INSERT INTO " + instance.plotData + " (ID,OWNER,STATUS,LAST_VISIT) VALUE (?,?,?,?)");
 
 			insert.setInt(1, id);
 			insert.setString(2, uuid);
@@ -82,7 +83,7 @@ public class PlotData {
 	}
 
 	//Checks whether there is a submitted plot to review.
-	public static boolean reviewExists() {
+	public static boolean reviewExists(User u) {
 
 		Main instance = Main.getInstance();
 
@@ -92,7 +93,15 @@ public class PlotData {
 			statement.setString(1, "submitted");
 
 			ResultSet results = statement.executeQuery();
-			return results.next();
+			while (results.next()) {
+				if (results.getString("OWNER").equals(u.uuid)) {
+					continue;
+				} else {
+					return true;
+				}
+			}
+			
+			return false;
 
 		} catch (SQLException sql) {
 			sql.printStackTrace();
@@ -138,7 +147,7 @@ public class PlotData {
 
 	//Selects the lowest id plot and sets it to reviewing.
 	//A reviewer will be assigned that plot.
-	public static int newReview() {
+	public static int newReview(User u) {
 
 		Main instance = Main.getInstance();
 
@@ -148,15 +157,22 @@ public class PlotData {
 			statement.setString(1, "submitted");
 			ResultSet results = statement.executeQuery();
 
-			results.next();
-			int plot = results.getInt("ID");
+			while (results.next()) {
+				if (results.getString("OWNER").equals(u.uuid)) {
+					continue;
+				} else {
+					int plot = results.getInt("ID");
 
-			PreparedStatement update = instance.getConnection().prepareStatement
-					("UPDATE " + instance.plotData + " SET STATUS=? WHERE ID=?");
-			update.setString(1, "reviewing");
-			update.setInt(2, plot);
+					PreparedStatement update = instance.getConnection().prepareStatement
+							("UPDATE " + instance.plotData + " SET STATUS=? WHERE ID=?");
+					update.setString(1, "reviewing");
+					update.setInt(2, plot);
 
-			return(plot);
+					return(plot);
+				}
+			}
+			
+			return 0;
 
 		} catch (SQLException sql) {
 			sql.printStackTrace();
@@ -187,23 +203,6 @@ public class PlotData {
 		} catch (SQLException sql) {
 			sql.printStackTrace();
 			return null;
-		}
-	}
-
-	//Sets the deny message of a plot after it has been reviewed and denied.
-	public static void setDenyMessage(int plot, String message) {
-
-		Main instance = Main.getInstance();
-
-		try {
-			PreparedStatement update = instance.getConnection().prepareStatement
-					("UPDATE " + instance.plotData + " SET MESSAGE=? WHERE ID=?");
-			update.setString(1, message);
-			update.setInt(2, plot);
-			update.executeUpdate();
-
-		} catch (SQLException sql) {
-			sql.printStackTrace();
 		}
 	}
 

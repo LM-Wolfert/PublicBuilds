@@ -17,6 +17,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.earth2me.essentials.Essentials;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.flags.StateFlag;
@@ -46,6 +47,7 @@ import me.elgamer.publicbuilds.listeners.PlayerInteract;
 import me.elgamer.publicbuilds.listeners.QuitServer;
 import me.elgamer.publicbuilds.mysql.PlayerData;
 import me.elgamer.publicbuilds.mysql.PlotData;
+import me.elgamer.publicbuilds.mysql.PlotMessage;
 import me.elgamer.publicbuilds.utils.Particles;
 import me.elgamer.publicbuilds.utils.Tutorial;
 import me.elgamer.publicbuilds.utils.User;
@@ -56,7 +58,7 @@ public class Main extends JavaPlugin {
 
 	//MySQL
 	private Connection connection;
-	public String host, database, username, password, playerData, plotData, areaData;
+	public String host, database, username, password, playerData, plotData, areaData, denyData, acceptData;
 	public int port;
 
 	//Other
@@ -80,6 +82,8 @@ public class Main extends JavaPlugin {
 	public static Location spawn;
 	public static Location cranham;
 
+	public static Essentials ess;
+
 	@Override
 	public void onLoad() {
 
@@ -100,8 +104,11 @@ public class Main extends JavaPlugin {
 		mysqlSetup();
 		createPlayerData();
 		createPlotData();
+		createDenyData();
+		createAcceptData();
+		createAreaData();
 		PlotData.clearReview();
-		
+
 		//Bungeecord
 		this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
@@ -134,6 +141,9 @@ public class Main extends JavaPlugin {
 		//getCommand("corner").setExecutor(new Corner());
 		getCommand("createarea").setExecutor(new CreateArea());
 		getCommand("skiptutorial").setExecutor(new SkipTutorial());
+
+		//Get essentials
+		ess = (Essentials) Bukkit.getServer().getPluginManager().getPlugin("Essentials");
 
 		//GUIs
 		MainGui.initialize();
@@ -178,9 +188,36 @@ public class Main extends JavaPlugin {
 
 					//Set the world of the player.
 					u.world = u.player.getWorld();
-					if (u.world.getName().equals(config.getString("worlds.build")) && u.tutorialStage == 0) {
-						u.tutorialStage = 1;
-						Tutorial.continueTutorial(u);
+					if (u.world.getName().equals(config.getString("worlds.build")) && u.tutorialStage < 6) {
+						if (u.tutorialStage == 0) {
+							u.tutorialStage = 1;
+							Tutorial.continueTutorial(u);
+						} else {
+							u.player.teleport(new Location(Bukkit.getWorld(config.getString("worlds.tutorial.before")), config.getDouble("starting_position.x"), config.getDouble("starting_position.y"), config.getDouble("starting_position.z")));
+							Tutorial.continueTutorial(u);
+						}
+					}
+
+					if (!(ess.getUser(u.player).isAfk())) {
+						if (PlotMessage.hasAcceptMessage(u.uuid)) {
+							int plot = PlotMessage.getAccept(u.uuid);
+							u.player.sendMessage(ChatColor.GREEN + "Your plot with ID " + plot + " has been accepted.");
+						}
+
+						if (PlotMessage.hasDenyMessage(u.uuid)) {
+							int plot = PlotMessage.getDenyPlot(u.uuid);
+							String reason = PlotMessage.getDenyReason(plot);
+							String type = PlotMessage.getDenyType(plot);
+							PlotMessage.deleteDenyMessage(plot);
+
+							if (type.equals("claimed")) {
+								u.player.sendMessage(ChatColor.RED + "Your plot with ID " + plot + " has been denied and returned.");
+								u.player.sendMessage(ChatColor.RED + "Reason: " + reason);
+							} else if (type.equals("deleted")) {
+								u.player.sendMessage(ChatColor.RED + "Your plot with ID " + plot + " has been denied and removed.");
+								u.player.sendMessage(ChatColor.RED + "Reason: " + reason);
+							}
+						}
 					}
 
 					u.player.getInventory().setItem(8, gui);
@@ -232,6 +269,8 @@ public class Main extends JavaPlugin {
 		playerData = config.getString("MySQL_playerData");
 		plotData = config.getString("MySQL_plotData");
 		areaData = config.getString("MySQL_areaData");
+		denyData = config.getString("MySQL_denyData");
+		acceptData = config.getString("MySQL_acceptData");
 
 		try {
 
@@ -297,7 +336,46 @@ public class Main extends JavaPlugin {
 		try {
 			PreparedStatement statement = instance.getConnection().prepareStatement
 					("CREATE TABLE IF NOT EXISTS " + plotData
-							+ " ( ID INT NOT NULL , OWNER TEXT NOT NULL , STATUS TEXT NOT NULL , MESSAGE TEXT NOT NULL , LAST_VISIT BIGINT NOT NULL , UNIQUE (ID))");
+							+ " ( ID INT NOT NULL , OWNER TEXT NOT NULL , STATUS TEXT NOT NULL , LAST_VISIT BIGINT NOT NULL , UNIQUE (ID))");
+			statement.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	//Setup deny_data table for mysql database if it doesn't exist.
+	public void createDenyData() {
+		try {
+			PreparedStatement statement = instance.getConnection().prepareStatement
+					("CREATE TABLE IF NOT EXISTS " + denyData
+							+ " ( ID INT NOT NULL , OWNER TEXT NOT NULL , MESSAGE TEXT NOT NULL , TYPE TEXT NOT NULL , UNIQUE (ID))");
+			statement.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	//Setup accept_data table for mysql database if it doesn't exist.
+	public void createAcceptData() {
+		try {
+			PreparedStatement statement = instance.getConnection().prepareStatement
+					("CREATE TABLE IF NOT EXISTS " + acceptData
+							+ " ( ID INT NOT NULL , OWNER TEXT NOT NULL , POINTS INT NOT NULL , UNIQUE (ID))");
+			statement.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	//Setup area_data table for mysql database if it doesn't exist.
+	public void createAreaData() {
+		try {
+			PreparedStatement statement = instance.getConnection().prepareStatement
+					("CREATE TABLE IF NOT EXISTS " + areaData
+							+ " ( ID INT NOT NULL , NAME TEXT NOT NULL , TYPE TEXT NOT NULL , STATUS TEXT NOT NULL , UNIQUE (ID))");
 			statement.executeUpdate();
 
 		} catch (SQLException e) {

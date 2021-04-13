@@ -34,7 +34,7 @@ public class JoinServer implements Listener {
 		
 		
 		if (0 < u.tutorialStage && u.tutorialStage < 6) {
-			if (u.world.getName().equals(config.getString("worlds.tutorial.before"))) {
+			if (!u.world.getName().equals(config.getString("worlds.tutorial.before"))) {
 				u.player.teleport(new Location(Bukkit.getWorld(config.getString("worlds.tutorial.before")), config.getDouble("starting_position.x"), config.getDouble("starting_position.y"), config.getDouble("starting_position.z")));
 			}
 			
