@@ -3,7 +3,7 @@ package me.elgamer.publicbuilds.utils;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.Location;
+//import org.bukkit.Location;
 //import org.bukkit.Location;
 import org.bukkit.block.Block;
 //import org.bukkit.entity.Player;
@@ -19,7 +19,7 @@ import me.elgamer.publicbuilds.Main;
 public class Plots {
 
 	public List<BlockVector2> vector = new ArrayList<BlockVector2>();
-	public List<Location> locations = new ArrayList<Location>();
+	//public List<Location> locations = new ArrayList<Location>();
 
 	/*Point p1 = null;
 	Point p2 = null;
@@ -210,13 +210,13 @@ public class Plots {
 		BlockVector2 bv2 = BlockVector2.at(block.getX(), block.getZ());
 
 		u.plots.vector = new ArrayList<BlockVector2>();
-		u.plots.locations = new ArrayList<Location>();
+		//u.plots.locations = new ArrayList<Location>();
 
 		u.plots.vector.add(bv2);
 
-		Location l = block.getLocation();
-		l.setY(l.getY()+1);
-		u.plots.locations.add(l);
+		//Location l = block.getLocation();
+		//l.setY(l.getY()+1);
+		//u.plots.locations.add(l);
 
 	}
 
@@ -226,9 +226,9 @@ public class Plots {
 
 		u.plots.vector.add(bv2);
 
-		Location l = block.getLocation();
-		l.setY(l.getY()+1);
-		u.plots.locations.add(l);
+		//Location l = block.getLocation();
+		//l.setY(l.getY()+1);
+		//u.plots.locations.add(l);
 
 	}
 

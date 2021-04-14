@@ -117,14 +117,14 @@ public class MainGui {
 			//Check whether the player has a plot.
 			if (PlotData.hasPlot(p.getUniqueId().toString())) {
 				//Count all active plots, if they exceed the limit then end the method.
-				if (PlotData.activePlotCount(p.getUniqueId().toString()) > RankValues.plotLimit(p)) {
+				if (PlotData.activePlotCount(p.getUniqueId().toString()) >= RankValues.plotLimit(p)) {
 					p.sendMessage(Utils.chat("&cYou have reached your plot limit, please complete and existing plot to create a new one!"));
 					p.closeInventory();
 					return;
 				}
 
 				//Count total plots, this includes claimed, submitted and under review, if they exceed the limit then end the method.
-				if (PlotData.totalPlotCount(p.getUniqueId().toString()) > Main.getInstance().getConfig().getInt("plot_maximum")) {
+				if (PlotData.totalPlotCount(p.getUniqueId().toString()) >= Main.getInstance().getConfig().getInt("plot_maximum")) {
 					p.sendMessage(Utils.chat("&cYou have too many plots submitted/claimed, please wait for at least 1 to be reviewed!"));
 					p.closeInventory();
 					return;

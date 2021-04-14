@@ -47,9 +47,8 @@ public class PlotData {
 
 			insert.setInt(1, id);
 			insert.setString(2, uuid);
-			insert.setString(3, "false");
-			insert.setString(4, "claimed");
-			insert.setLong(5, Time.currentTime());
+			insert.setString(3, "claimed");
+			insert.setLong(4, Time.currentTime());
 			insert.executeUpdate();
 
 			return true;

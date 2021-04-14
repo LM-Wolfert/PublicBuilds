@@ -5,7 +5,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -18,6 +20,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.earth2me.essentials.Essentials;
+import com.sk89q.worldedit.math.BlockVector2;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.flags.StateFlag;
@@ -52,6 +55,7 @@ import me.elgamer.publicbuilds.utils.Particles;
 import me.elgamer.publicbuilds.utils.Tutorial;
 import me.elgamer.publicbuilds.utils.User;
 import me.elgamer.publicbuilds.utils.Utils;
+import me.elgamer.publicbuilds.utils.WorldGuardFunctions;
 import net.milkbowl.vault.permission.Permission;
 
 public class Main extends JavaPlugin {
@@ -70,7 +74,9 @@ public class Main extends JavaPlugin {
 	ArrayList<User> users;
 
 	Tutorial tutorial;
-	List<Location> lc;
+	HashMap<Integer, String> pl;
+	List<BlockVector2> pt;
+	Location lo;
 
 	public static StateFlag CREATE_PLOT_GUEST;
 	public static StateFlag CREATE_PLOT_APPRENTICE;
@@ -178,13 +184,54 @@ public class Main extends JavaPlugin {
 					}
 
 					//Spawn particles at plot markers so they are visible.
-					lc = u.plots.locations;
+					pt = u.plots.vector;
 
-					if (lc != null) {
-						for (Location l : lc) {							
-							Particles.spawnParticles(u.player, l);
+					if (pt != null) {
+
+						for (BlockVector2 point : pt) {
+
+							lo = new Location(Bukkit.getWorld(config.getString("worlds.build")), point.getX()+0.5, Bukkit.getWorld(config.getString("worlds.build")).getHighestBlockYAt(point.getX(), point.getZ())+1, point.getZ()+0.5);
+							Particles.spawnParticles(u.player, lo);
+
+						}
+
+					}
+
+					//Spawn particles at all plots owned by the player, if they are in the buildWorld.
+					if (u.world.equals(Bukkit.getWorld(config.getString("worlds.build")))) {
+
+						pl = PlotData.getPlots(u.uuid);
+
+						for (Entry<Integer, String> i : pl.entrySet()) {
+
+							pt = WorldGuardFunctions.getPoints(i.getKey());
+
+							for (BlockVector2 point : pt) {
+
+								lo = new Location(Bukkit.getWorld(config.getString("worlds.build")), point.getX()+0.5, Bukkit.getWorld(config.getString("worlds.build")).getHighestBlockYAt(point.getX(), point.getZ())+1, point.getZ()+0.5);
+								Particles.spawnParticles(u.player, lo);
+
+							}
+
 						}
 					}
+
+					//If the player is reviewing a plot spawn particles in both the buildWorld and saveWorld.
+					if (u.reviewing != 0) {
+
+						pt = WorldGuardFunctions.getPoints(u.reviewing);
+
+						for (BlockVector2 point : pt) {
+
+							lo = new Location(Bukkit.getWorld(config.getString("worlds.build")), point.getX()+0.5, Bukkit.getWorld(config.getString("worlds.build")).getHighestBlockYAt(point.getX(), point.getZ())+1, point.getZ()+0.5);
+							Particles.spawnParticles(u.player, lo);
+							lo = new Location(Bukkit.getWorld(config.getString("worlds.save")), point.getX()+0.5, Bukkit.getWorld(config.getString("worlds.build")).getHighestBlockYAt(point.getX(), point.getZ())+1, point.getZ()+0.5);
+							Particles.spawnParticles(u.player, lo);
+
+						}
+
+					}
+
 
 					//Set the world of the player.
 					u.world = u.player.getWorld();
@@ -198,6 +245,8 @@ public class Main extends JavaPlugin {
 						}
 					}
 
+					//Send deny or accept message if a plot has been accepted or denied that they own.
+					//Will not send if they are afk.
 					if (!(ess.getUser(u.player).isAfk())) {
 						if (PlotMessage.hasAcceptMessage(u.uuid)) {
 							int plot = PlotMessage.getAccept(u.uuid);

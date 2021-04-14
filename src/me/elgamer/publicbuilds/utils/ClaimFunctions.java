@@ -63,13 +63,16 @@ public class ClaimFunctions {
 				return (ChatColor.RED + "You may not create a plot here!");
 			}
 			
-			if (set.testState(null, Main.CREATE_PLOT_JRBUILDER) && !(u.player.hasPermission("group.jrbuilder"))) {
-				return (ChatColor.RED + "You must be Jr.Builder or higher to create a plot here!");
+			if (set.testState(null, Main.CREATE_PLOT_GUEST)) {
+				continue;
 				
 			} else if (set.testState(null, Main.CREATE_PLOT_APPRENTICE) && !(u.player.hasPermission("group.apprentice"))) {
 				return (ChatColor.RED + "You must be Apprentice or higher to create a plot here!");
 				
-			}
+			} else if (set.testState(null, Main.CREATE_PLOT_JRBUILDER) && !(u.player.hasPermission("group.jrbuilder"))) {
+				return (ChatColor.RED + "You must be Jr.Builder or higher to create a plot here!");
+				
+			} 
 			
 		}
 

@@ -111,7 +111,7 @@ public class Tutorial {
 
 		//Checks whether the corners the player has set include all 4 corners of the minimum plot size.
 		FileConfiguration config = Main.getInstance().getConfig();
-		ProtectedPolygonalRegion region = new ProtectedPolygonalRegion(u.name, u.plots.vector, 1, 256);
+		ProtectedPolygonalRegion region = new ProtectedPolygonalRegion("testregion", u.plots.vector, 1, 256);
 
 		BlockVector2 pos1 = BlockVector2.at(config.getInt("plot_corners.1.x"), config.getInt("plot_corners.1.z"));
 		BlockVector2 pos2 = BlockVector2.at(config.getInt("plot_corners.2.x"), config.getInt("plot_corners.2.z"));
