@@ -11,6 +11,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.worldedit.math.BlockVector2;
+import com.sk89q.worldedit.math.BlockVector3;
 
 import me.elgamer.publicbuilds.Main;
 
@@ -283,6 +284,13 @@ public class Plots {
 		
 		return size;
 
+	}
+	
+	public static boolean inRegion(Block block) {
+		
+		BlockVector3 v = BlockVector3.at(block.getX(), block.getY(), block.getZ());
+		return WorldGuardFunctions.inRegion(v);
+		
 	}
 
 }

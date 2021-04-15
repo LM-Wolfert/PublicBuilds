@@ -39,6 +39,12 @@ public class PlayerInteract implements Listener {
 			if (e.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
 
 				e.setCancelled(true);
+				
+				if (Plots.inRegion(e.getClickedBlock())) {
+					u.player.sendMessage(Utils.chat("&cThis position already belongs to another plot"));
+					return;
+				}
+				
 				Plots.startSelection(u, e.getClickedBlock());
 				u.player.sendMessage(Utils.chat("&aStarted a new selection at " + e.getClickedBlock().getX() + ", " + e.getClickedBlock().getZ()));
 
@@ -46,6 +52,11 @@ public class PlayerInteract implements Listener {
 
 				e.setCancelled(true);
 
+				if (Plots.inRegion(e.getClickedBlock())) {
+					u.player.sendMessage(Utils.chat("&cThis position already belongs to another plot"));
+					return;
+				}
+				
 				if (u.plots.vector.size() > 20) {
 					u.player.sendMessage(Utils.chat("&cYou have reached the maximum number of points allowed!"));
 					return;

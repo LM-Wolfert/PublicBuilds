@@ -137,37 +137,38 @@ public class AcceptGui {
 			p.closeInventory();
 			ac.setAccuracy(5);
 			p.openInventory(GUI(u));
-		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Quality 1")) {
+		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Quality: 1")) {
 			p.closeInventory();
 			ac.setQuality(1);
 			p.openInventory(GUI(u));
-		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Quality 2")) {
+		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Quality: 2")) {
 			p.closeInventory();
 			ac.setQuality(2);
 			p.openInventory(GUI(u));
-		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Quality 3")) {
+		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Quality: 3")) {
 			p.closeInventory();
 			ac.setQuality(3);
 			p.openInventory(GUI(u));
-		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Quality 4")) {
+		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Quality: 4")) {
 			p.closeInventory();
 			ac.setQuality(4);
 			p.openInventory(GUI(u));
-		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Quality 5")) {
+		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Quality: 5")) {
 			p.closeInventory();
 			ac.setQuality(5);
 			p.openInventory(GUI(u));
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Submit")) {
 			
 			FileConfiguration config = Main.getInstance().getConfig();
+			String uuid = PlotData.getOwner(u.reviewing);
+			String name = PlayerData.getName(uuid);
 			
 			//Calculate building points and add them
 			int buildingPoints = ac.size()*config.getInt("size_multiplier") + ac.accuracy()*config.getInt("accuracy_multiplier") + ac.quality()*config.getInt("quality_multiplier");
-			PlayerData.addPoints(u.uuid, buildingPoints);
+			PlayerData.addPoints(uuid, buildingPoints);
 			
 			//Add points for building with multiplier
 			ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
-			String name = PlotData.getOwner(u.reviewing);
 			
 			String command = "addpoints " + name + " " + buildingPoints*config.getInt("points_multiplier");
 			Bukkit.dispatchCommand(console, command);
@@ -175,11 +176,11 @@ public class AcceptGui {
 			//Remove reviewing status
 			PlotData.setStatus(u.reviewing, "completed");
 			
-			PlotMessage.addAccept(u.reviewing, PlotData.getOwner(u.reviewing), buildingPoints);
+			PlotMessage.addAccept(u.reviewing, uuid, buildingPoints);
 			
 			//Add plot to saveWorld
 			List<BlockVector2> corners = WorldGuardFunctions.getPoints(u.reviewing);
-			WorldEditor.updateWorld(corners, Bukkit.getWorld(config.getString("buildWorld")), Bukkit.getWorld(config.getString("saveWorld")));
+			WorldEditor.updateWorld(corners, Bukkit.getWorld(config.getString("worlds.build")), Bukkit.getWorld(config.getString("worlds.save")));
 			
 			//Remove plot from worldguard
 			ClaimFunctions.removeClaim(u.reviewing);

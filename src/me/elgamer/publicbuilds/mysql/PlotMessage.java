@@ -96,7 +96,7 @@ public class PlotMessage {
 			
 			statement = instance.getConnection().prepareStatement
 					("DELETE FROM " + instance.acceptData + " WHERE ID=?");
-			statement.setString(1, uuid);
+			statement.setInt(1, id);
 			statement.executeUpdate();
 
 			return id;
@@ -113,7 +113,7 @@ public class PlotMessage {
 
 		try {
 			PreparedStatement statement = instance.getConnection().prepareStatement
-					("SELECT * FROM " + instance.acceptData + " WHERE OWNER=?");
+					("SELECT * FROM " + instance.denyData + " WHERE OWNER=?");
 			statement.setString(1, uuid);
 			ResultSet results = statement.executeQuery();
 
@@ -132,7 +132,7 @@ public class PlotMessage {
 
 		try {
 			PreparedStatement statement = instance.getConnection().prepareStatement
-					("SELECT * FROM " + instance.acceptData + " WHERE ID=?");
+					("SELECT * FROM " + instance.denyData + " WHERE ID=?");
 			statement.setInt(1, plot);
 			ResultSet results = statement.executeQuery();
 
@@ -151,7 +151,7 @@ public class PlotMessage {
 
 		try {
 			PreparedStatement statement = instance.getConnection().prepareStatement
-					("SELECT * FROM " + instance.acceptData + " WHERE ID=?");
+					("SELECT * FROM " + instance.denyData + " WHERE ID=?");
 			statement.setInt(1, plot);
 			ResultSet results = statement.executeQuery();
 
@@ -169,7 +169,7 @@ public class PlotMessage {
 
 		try {
 			PreparedStatement statement = instance.getConnection().prepareStatement
-					("DELETE FROM " + instance.acceptData + " WHERE ID=?");
+					("DELETE FROM " + instance.denyData + " WHERE ID=?");
 			statement.setInt(1, plot);
 			statement.executeUpdate();
 			

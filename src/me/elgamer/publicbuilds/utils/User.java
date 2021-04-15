@@ -21,6 +21,8 @@ public class User {
 	public int inPlot = 0;
 	public String plotOwner = null;
 	
+	public String role;
+	
 	public World world;
 	
 	public User(Player player) {
@@ -45,25 +47,26 @@ public class User {
 	}
 	
 	//Update playerdata or create a new instance if it's their first time joining the server.
-	private void updatePlayerData() {
+	public void updatePlayerData() {
+		
+
+		if (player.hasPermission("group.builder")) {
+			role = "builder";
+		} else if (player.hasPermission("group.jrbuilder")) {
+			role = "jrbuilder";
+		} else if (player.hasPermission("group.apprentice")) {
+			role = "apprentice";
+		} else {
+			role = "guest";
+		}
 		
 		if (PlayerData.playerExists(uuid)) {
 			
 			//If true then update their last online time and username.
-			PlayerData.updateTime(player.getUniqueId().toString());
-			PlayerData.updatePlayerName(player.getUniqueId().toString(), player.getName());
-			
+			PlayerData.updateTime(uuid);
+			PlayerData.updatePlayerName(uuid, player.getName());
+			PlayerData.updateRole(uuid, role);
 		} else {
-			
-			String role = "guest";
-			
-			if (player.hasPermission("group.builder")) {
-				role = "builder";
-			} else if (player.hasPermission("group.jrbuilder")) {
-				role = "jrbuilder";
-			} else if (player.hasPermission("group.apprentice")) {
-				role = "apprentice";
-			}
 			
 			PlayerData.createPlayerInstance(player.getUniqueId().toString(), player.getName(), role);
 			

@@ -9,7 +9,6 @@ import java.util.List;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import me.elgamer.publicbuilds.Main;
-import me.elgamer.publicbuilds.utils.Ranks;
 import me.elgamer.publicbuilds.utils.Time;
 
 public class PlayerData {
@@ -142,8 +141,6 @@ public class PlayerData {
 			statement.setString(1, uuid);
 			statement.executeUpdate();
 
-			Ranks.checkRankup(uuid);
-
 		} catch (SQLException sql) {
 			sql.printStackTrace();
 		}
@@ -191,36 +188,6 @@ public class PlayerData {
 			sql.printStackTrace();
 			return null;
 		}
-	}
-	
-	public static void promoteRole(String uuid, String role) {
-		
-		String newRole = null;
-		
-		if (role.equals("guest")) {
-			newRole = "apprentice";
-		} else if (role.equals("apprentice")) {
-			newRole = "jrbuilder";
-		} else if (role.equals("jrbuilder")) {
-			newRole = "builder";
-		} else {return;}
-		
-		Main instance = Main.getInstance();
-
-		try {
-			PreparedStatement statement = instance.getConnection().prepareStatement
-					("UPDATE " + instance.playerData + " SET BUILDER_ROLE=? WHERE ID=?");
-			
-			statement.setString(1, newRole);
-			statement.setString(2, uuid);
-			statement.executeUpdate();
-
-			Ranks.checkRankup(uuid);
-
-		} catch (SQLException sql) {
-			sql.printStackTrace();
-		}
-		
 	}
 
 	public static List<String> getInactivePlayers() {
@@ -315,6 +282,22 @@ public class PlayerData {
 		} catch (SQLException sql) {
 			sql.printStackTrace();
 			return null;
+		}
+	}
+	
+	public static void updateRole(String uuid, String role) {
+
+		Main instance = Main.getInstance();
+
+		try {
+			PreparedStatement statement = instance.getConnection().prepareStatement
+					("UPDATE " + instance.playerData + " SET BUILDER_ROLE=? WHERE ID=?");
+			statement.setString(1, role);
+			statement.setString(2, uuid);
+			statement.executeUpdate();
+
+		} catch (SQLException sql) {
+			sql.printStackTrace();
 		}
 	}
 

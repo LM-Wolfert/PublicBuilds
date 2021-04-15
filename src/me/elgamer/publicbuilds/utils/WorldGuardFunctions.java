@@ -11,6 +11,7 @@ import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector2;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedPolygonalRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
@@ -89,6 +90,33 @@ public class WorldGuardFunctions {
 		ProtectedPolygonalRegion region = (ProtectedPolygonalRegion) buildRegions.getRegion(String.valueOf(plot));
 
 		return region.getPoints();
+
+	}
+
+	public static boolean inRegion(BlockVector3 v) {
+
+		//Get instance of plugin and config
+		Main instance = Main.getInstance();
+		FileConfiguration config = instance.getConfig();
+
+		//Get worlds from config
+		World saveWorld = Bukkit.getServer().getWorld(config.getString("worlds.save"));
+
+		//Get worldguard instance
+		WorldGuard wg = WorldGuard.getInstance();
+
+		//Get worldguard region data
+		RegionContainer container = wg.getPlatform().getRegionContainer();
+		RegionManager saveRegions = container.get(BukkitAdapter.adapt(saveWorld));
+
+
+		//Check whether the region overlaps an existing plot, if true stop the process.
+		ApplicableRegionSet set = saveRegions.getApplicableRegions(v);
+		if (set.size() > 0) {
+			return true;
+		} else {
+			return false;
+		}
 
 	}
 
