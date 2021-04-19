@@ -37,8 +37,8 @@ public class JoinServer implements Listener {
 			if (!u.world.getName().equals(config.getString("worlds.tutorial.before"))) {
 				u.player.teleport(new Location(Bukkit.getWorld(config.getString("worlds.tutorial.before")), config.getDouble("starting_position.x"), config.getDouble("starting_position.y"), config.getDouble("starting_position.z")));
 			}
-			
-			Tutorial.continueTutorial(u);
+
+			Bukkit.getScheduler().runTaskLater (Main.getInstance(), () -> Tutorial.continueTutorial(u), 60);
 		}
 		
 		//If a player hasn't been online for more than 14 days their plot will cancelled.

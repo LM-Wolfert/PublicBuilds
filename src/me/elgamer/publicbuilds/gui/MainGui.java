@@ -99,17 +99,20 @@ public class MainGui {
 					}*/
 
 				if (u.plots.vector.size() < 3) {
-					p.sendMessage(Utils.chat("&9You must select a minimum of 3 points!"));
+					p.sendMessage(Utils.chat("&cYou must select a minimum of 3 points!"));
 					return;
 				}
 
 				if (Tutorial.containsCorners(u)) {
-					p.sendMessage(Utils.chat("&9Plot was correctly created, well done!"));
+					
+					u.player.sendMessage(ChatColor.GREEN + "Stage 3 complete! The tutorial will continue shortly.");
+					Utils.spawnFireWork(u.player);
+					
 					u.tutorialStage = 4;
-					Tutorial.continueTutorial(u);
+					Bukkit.getScheduler().runTaskLater (Main.getInstance(), () -> Tutorial.continueTutorial(u), 60);
 					return;
 				} else {
-					p.sendMessage(Utils.chat("&9Your selection does not include all of the building and garden, please try again!"));
+					p.sendMessage(Utils.chat("&cYour selection does not include all of the building and garden, please try again!"));
 					return;
 				}
 			}

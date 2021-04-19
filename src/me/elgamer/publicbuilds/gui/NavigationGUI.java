@@ -1,6 +1,7 @@
 package me.elgamer.publicbuilds.gui;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -10,7 +11,6 @@ import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.utils.Tutorial;
 import me.elgamer.publicbuilds.utils.User;
 import me.elgamer.publicbuilds.utils.Utils;
-import net.md_5.bungee.api.ChatColor;
 
 public class NavigationGUI {
 	

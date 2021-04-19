@@ -1,6 +1,7 @@
 package me.elgamer.publicbuilds.gui;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -12,7 +13,6 @@ import com.google.common.io.ByteStreams;
 import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.utils.User;
 import me.elgamer.publicbuilds.utils.Utils;
-import net.md_5.bungee.api.ChatColor;
 
 public class SwitchServerGUI {
 
@@ -37,12 +37,15 @@ public class SwitchServerGUI {
 				Utils.chat("&fTeleports you back to the lobby server."));
 
 		Utils.createItem(inv, Material.DIAMOND_BLOCK, 1, 14, ChatColor.AQUA + "" + ChatColor.BOLD + "Earth Server",
-				Utils.chat("&fTeleports you back to the Earth server."),
-				Utils.chat("&fTo build here you need Jr.Builder or higher."),
-				Utils.chat("&fBTE Modpack is recommended for building."));
+				ChatColor.WHITE + "Teleport to the earth server.",
+				ChatColor.WHITE + "If you wish to build you must be Jr.Builder+",
+				ChatColor.WHITE + "It is recommended to use the modpack for building.",
+				ChatColor.WHITE + "Supports 1.12.2 - 1.16.5 without the modpack.");
 
 		Utils.createItem(inv, Material.CARVED_PUMPKIN, 1, 16, ChatColor.AQUA + "" + ChatColor.BOLD + "Minigames Server",
-				Utils.chat("&fTeleports you to the minigames server."));
+				ChatColor.WHITE + "Teleport to the minigames server.",
+				ChatColor.WHITE + "Current minigames: Hide'n'Seek.",
+				ChatColor.WHITE + "Supports 1.12.2 - 1.16.5.");	
 
 		Utils.createItem(inv, Material.SPRUCE_DOOR, 1, 27, ChatColor.AQUA + "" + ChatColor.BOLD + "Return", 
 				Utils.chat("&fGo back to the navigation menu."));	

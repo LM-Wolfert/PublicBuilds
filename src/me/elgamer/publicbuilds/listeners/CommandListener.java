@@ -6,11 +6,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
+
 import me.elgamer.UKnetUtilities.projections.ModifiedAirocean;
 import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.utils.Tutorial;
 import me.elgamer.publicbuilds.utils.User;
 import me.elgamer.publicbuilds.utils.Utils;
+import net.md_5.bungee.api.ChatColor;
 
 public class CommandListener implements Listener {
 
@@ -29,8 +31,11 @@ public class CommandListener implements Listener {
 		if (e.getMessage().startsWith("/ll")) {
 
 			if (u.tutorialStage == 1) {
+				u.player.sendMessage(ChatColor.GREEN + "Stage 1 complete! The tutorial will continue shortly.");
+				Utils.spawnFireWork(u.player);
+				
 				u.tutorialStage = 2;
-				Tutorial.continueTutorial(u);;
+				Bukkit.getScheduler().runTaskLater (Main.getInstance(), () -> Tutorial.continueTutorial(u), 60);
 			}
 
 			//If someone uses /tpll and are in stage 2 or 4 of the tutorial check if they input is correct and continue/redo the tutorial stage.
@@ -45,9 +50,12 @@ public class CommandListener implements Listener {
 					}
 					catch(NumberFormatException ne)
 					{return;}
+					
+					u.player.sendMessage(ChatColor.GREEN + "Stage 2 complete! The tutorial will continue shortly.");
+					Utils.spawnFireWork(u.player);
 
 					u.tutorialStage = 3;
-					Tutorial.continueTutorial(u);
+					Bukkit.getScheduler().runTaskLater (Main.getInstance(), () -> Tutorial.continueTutorial(u), 60);
 				}
 			} else if (u.tutorialStage == 4) {
 
@@ -110,10 +118,14 @@ public class CommandListener implements Listener {
 				p.sendMessage("x: " + coords[0] + " z: " + coords[1]);
 
 				if (Tutorial.nearCorners(coords)) {
+					
+					u.player.sendMessage(ChatColor.GREEN + "Stage 4 complete! The tutorial will continue shortly.");
+					Utils.spawnFireWork(u.player);
+					
 					u.tutorialStage = 5;
-					Tutorial.continueTutorial(u);
+					Bukkit.getScheduler().runTaskLater (Main.getInstance(), () -> Tutorial.continueTutorial(u), 60);
 				} else {
-					p.sendMessage(Utils.chat("&9This is not close enough to the corner of the building, please try again!"));
+					p.sendMessage(Utils.chat("&cThis is not close enough to the corner of the building, please try again!"));
 					return;
 				}
 

@@ -89,6 +89,7 @@ public class Main extends JavaPlugin {
 	public static Location spawn;
 	public static Location cranham;
 
+	//Essentials
 	public static Essentials ess;
 
 	@Override
@@ -150,8 +151,8 @@ public class Main extends JavaPlugin {
 		getCommand("skiptutorial").setExecutor(new SkipTutorial());
 
 		//Get essentials
-		ess = (Essentials) Bukkit.getServer().getPluginManager().getPlugin("Essentials");
-
+		ess = (Essentials) Bukkit.getServer().getPluginManager().getPlugin("Essentials");	
+		
 		//GUIs
 		MainGui.initialize();
 		ReviewGui.initialize();
@@ -172,7 +173,8 @@ public class Main extends JavaPlugin {
 		cranham = new Location(Bukkit.getWorld(config.getString("worlds.build")), 
 				config.getDouble("location.cranham.map.x"),
 				config.getDouble("location.cranham.map.y"),
-				config.getDouble("location.cranham.map.z"));
+				config.getDouble("location.cranham.map.z"),
+				180f, 45f);
 
 		//1 second timer.
 		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
@@ -181,7 +183,8 @@ public class Main extends JavaPlugin {
 				for (User u : users) {
 
 					if (u.tutorialStage == 6) {
-						Tutorial.continueTutorial(u);
+						Utils.spawnFireWork(u.player);
+						Bukkit.getScheduler().runTaskLater (instance, () -> Tutorial.continueTutorial(u), 60); //20 ticks equal 1 second
 					}
 
 					//Spawn particles at plot markers so they are visible.
@@ -236,13 +239,13 @@ public class Main extends JavaPlugin {
 
 					//Set the world of the player.
 					u.world = u.player.getWorld();
-					if (u.world.getName().equals(config.getString("worlds.build")) && u.tutorialStage < 6) {
+					if ((u.world.getName().equals(config.getString("worlds.build")) && u.tutorialStage < 6)) {
 						if (u.tutorialStage == 0) {
 							u.tutorialStage = 1;
-							Tutorial.continueTutorial(u);
+							Bukkit.getScheduler().runTaskLater (instance, () -> Tutorial.continueTutorial(u), 60); //20 ticks equal 1 second
 						} else {
 							u.player.teleport(new Location(Bukkit.getWorld(config.getString("worlds.tutorial.before")), config.getDouble("starting_position.x"), config.getDouble("starting_position.y"), config.getDouble("starting_position.z")));
-							Tutorial.continueTutorial(u);
+							Bukkit.getScheduler().runTaskLater (instance, () -> Tutorial.continueTutorial(u), 60);
 						}
 					}
 

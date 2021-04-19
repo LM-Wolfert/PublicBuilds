@@ -38,12 +38,15 @@ public class ChatListener implements Listener {
 			try {
 				Double h = Double.parseDouble(e.getMessage());
 				if (Tutorial.getHeight(h)) {
+					
+					p.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Tutorial Complete!", null, 10, 200, 50);
+					
 					u.tutorialStage = 6;
 				} else {
 					p.sendMessage(Utils.chat("&cThis is not close enough, place try again!"));
 				}
 			} catch (NumberFormatException ex) {
-				p.sendMessage("&cThis is not a valid number, please try again!");
+				p.sendMessage(Utils.chat("&cThis is not a valid number, please try again!"));
 			}
 		}
 

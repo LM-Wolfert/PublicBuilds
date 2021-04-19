@@ -1,6 +1,7 @@
 package me.elgamer.publicbuilds.utils;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -54,55 +55,70 @@ public class Tutorial {
 
 		Player p = u.player;
 		FileConfiguration config = Main.getInstance().getConfig();
+		p.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Tutorial Stage 1/5", "/ll", 10, 100, 50);
 		p.teleport(new Location(Bukkit.getWorld(config.getString("worlds.tutorial.before")), config.getDouble("starting_position.x"), config.getDouble("starting_position.y"), config.getDouble("starting_position.z")));
-		p.sendMessage(Utils.chat("&9Before you can create a plot you must know where you are."));
-		p.sendMessage(Utils.chat("&9Using &7/ll &9your coordinates will show in chat with a link to google maps."));
+		
+		p.sendMessage(Utils.chat("&fThe first thing you'll be wondering, where am I?"));
+		p.sendMessage(Utils.chat("&fFor this we have the command /ll"));
+		p.sendMessage(Utils.chat("&fThis will return your current coordinates in chat with a link to google maps."));
+		p.sendMessage(Utils.chat("&fTry it out and continue the tutorial."));
 
 	}
 
 	public static void stage2(User u) {
 
 		Player p = u.player;
-		p.sendMessage(Utils.chat("&9In google maps you'll be able to see the area you are currently in."));
-		p.sendMessage(Utils.chat("&9If you right click on the map you can copy the the coordinates where you cursor is."));
-		p.sendMessage(Utils.chat("&9Try copying the coordinates and then on the server do &7/tpll <coordinates> &9."));
+		p.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Tutorial Stage 2/5", "/tpll", 10, 100, 50);
+		p.sendMessage(Utils.chat("&fIn google maps you'll be able to see the area you are currently in."));
+		p.sendMessage(Utils.chat("&fIf you right click on the map you can copy the the coordinates where you cursor is."));
+		p.sendMessage(Utils.chat("&fTry copying the coordinates and then on the server do &7/tpll <coordinates> &f."));
+		p.sendMessage(Utils.chat("&fIf you're having problems don't hesitate to ask in chat or on our discord."));
 
 	}
 
 	public static void stage3(User u) {
-
+		
 		Player p = u.player;
-		p.sendMessage(Utils.chat("&9Now that you know where you are you can pick out a building to build."));
-		p.sendMessage(Utils.chat("&9For this tutorial you should make a plot for 134+136 Marlborough Gardens, don't forget the garden."));
-		p.sendMessage(Utils.chat("&9To create a plot you need to mark all 4 corners with the command &7/corner."));
-		p.sendMessage(Utils.chat("&9It is recommended to keep a few blocks between the edge of the building and the edge of you selection."));
-		p.sendMessage(Utils.chat("&9When you have all the corners set you can open the gui with &7/gui &9 and there is a button to create a plot."));
+		p.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Tutorial Stage 3/5", "Creating a plot", 10, 100, 50);
+		p.sendMessage(Utils.chat("&fNow that you know where you are you can pick out a building to build."));
+		p.sendMessage(Utils.chat("&fFor this tutorial you should make a plot for 134+136 Marlborough Gardens."));
+		p.sendMessage(Utils.chat("&fTo create a plot you need to mark out the corners with the selection tool."));
+		p.sendMessage(Utils.chat("&fThe selection tool can be found in the gui, it's the blaze rod."));
+		p.sendMessage(Utils.chat("&fIt is recommended to make your plot larger than the house and garden need."));
+		p.sendMessage(Utils.chat("&fWhen you have selected the corners open the gui and click the emerald."));
 
 	}
 	
 	public static void stage4(User u) {
-		
+				
 		Player p = u.player;
-		p.sendMessage(Utils.chat("&9Now that you have created a plot you can start to build, the first step is creating the outlines of the building."));
-		p.sendMessage(Utils.chat("&9This is again done with &7/tpll &9, right click on one of the corners of the building and teleport to that position."));
-		p.sendMessage(Utils.chat("&9Try to right click slightly inside the corner of the building, this is due to the roof sticking out more than the walls of the building."));
+		p.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Tutorial Stage 4/5", "Creating outlines", 10, 100, 50);
+		p.sendMessage(Utils.chat("&fOnce you have created a plot you can start to build."));
+		p.sendMessage(Utils.chat("&fThe first step is to create the outlines of the building."));
+		p.sendMessage(Utils.chat("&fIn google maps right click on one of the corners of the building and copy the coordinates."));
+		p.sendMessage(Utils.chat("&fKeep in mind that the roof often sticks out a bit so you may want to move inward a little."));
+		p.sendMessage(Utils.chat("&fWith the coordinates again use /tpll to teleport to the corner of the building."));
 	}
 	
 	public static void stage5(User u) {
 		
 		Player p = u.player;
-		p.sendMessage(Utils.chat("&9The final step is to make the walls the right height, usually a door is around 2 meters/blocks tall, this is a useful reference."));
-		p.sendMessage(Utils.chat("&9Google earth pro also has elevations in the bottom right corner, this can also be used."));
-		p.sendMessage(Utils.chat("&9Please type in chat your estimated height for the front wall of the building."));
+		p.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Tutorial Stage 5/5", "Estimating the height of the building.", 10, 100, 50);
+		p.sendMessage(Utils.chat("&fThe final step is to make the walls the right height."));
+		p.sendMessage(Utils.chat("&fGoogle earth pro has elevations (elev) in the bottom right corner."));
+		p.sendMessage(Utils.chat("&fThis can be used to get the height, or you can estimate it."));
+		p.sendMessage(Utils.chat("&fIf you choose to guess the height a good reference is the door, which is usually around 2 meters."));
+		p.sendMessage(Utils.chat("&fPlease type in chat your estimated height for the front wall of the building."));
 	}
 	
 	public static void stage6(User u) {
-		
+				
 		Player p = u.player;
 		FileConfiguration config = Main.getInstance().getConfig();
 		p.teleport(new Location(Bukkit.getWorld(config.getString("worlds.tutorial.after")), config.getDouble("starting_position.x"), config.getDouble("starting_position.y"), config.getDouble("starting_position.z")));
-		p.sendMessage(Utils.chat("&9You have completed the tutorial, here is the building built by one of our builders."));
-		p.sendMessage(Utils.chat("&6To leave this area just enter the portal to the right of the building."));
+		p.sendMessage(Utils.chat("&aYou have completed the tutorial!"));
+		p.sendMessage(Utils.chat("&fHere is the building built by one of our builders."));
+		p.sendMessage(Utils.chat("&fUse the gui to leave this area and go back to whereever you want to go."));
 		u.tutorialStage = 7;
 		
 	}

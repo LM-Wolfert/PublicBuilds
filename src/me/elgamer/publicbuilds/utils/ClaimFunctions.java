@@ -86,6 +86,9 @@ public class ClaimFunctions {
 		owners.addPlayer(UUID.fromString(u.uuid));
 		region.setOwners(owners);
 
+		//Set the region priority to 1
+		region.setPriority(1);
+		
 		//Add the regions to the worlds
 		saveRegions.addRegion(region);
 		buildRegions.addRegion(region);

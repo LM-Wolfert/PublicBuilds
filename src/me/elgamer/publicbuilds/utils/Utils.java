@@ -4,10 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Color;
+import org.bukkit.FireworkEffect;
 import org.bukkit.Material;
+import org.bukkit.FireworkEffect.Type;
+import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
@@ -64,5 +69,16 @@ public class Utils {
 
 	public static boolean isPlayerInGroup(Player player, String group) {
 		return player.hasPermission("group." + group);
+	}
+	
+	public static void spawnFireWork(Player p) {
+		
+		Firework f = p.getWorld().spawn(p.getLocation(), Firework.class);
+		FireworkMeta fm = f.getFireworkMeta();
+		fm.addEffect(FireworkEffect.builder().flicker(true).trail(true).with(Type.BALL_LARGE).withColor(Color.RED).withColor(Color.BLUE).withColor(Color.WHITE).build());
+		fm.setPower(1);
+		f.setFireworkMeta(fm);
+		
+		
 	}
 }

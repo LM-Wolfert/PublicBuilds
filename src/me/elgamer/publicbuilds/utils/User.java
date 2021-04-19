@@ -10,7 +10,9 @@ public class User {
 	public Player player;
 	public String uuid;
 	public String name;
+	
 	public int tutorialStage;
+	
 	public Plots plots;
 	public Accept accept;
 	public int reviewing = 0;
