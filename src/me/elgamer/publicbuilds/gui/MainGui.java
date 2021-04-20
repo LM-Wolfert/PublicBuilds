@@ -109,6 +109,7 @@ public class MainGui {
 					Utils.spawnFireWork(u.player);
 					
 					u.tutorialStage = 4;
+					u.plots = new Plots();
 					Bukkit.getScheduler().runTaskLater (Main.getInstance(), () -> Tutorial.continueTutorial(u), 60);
 					return;
 				} else {

@@ -56,7 +56,7 @@ public class Tutorial {
 		Player p = u.player;
 		FileConfiguration config = Main.getInstance().getConfig();
 		p.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Tutorial Stage 1/5", "/ll", 10, 100, 50);
-		p.teleport(new Location(Bukkit.getWorld(config.getString("worlds.tutorial.before")), config.getDouble("starting_position.x"), config.getDouble("starting_position.y"), config.getDouble("starting_position.z")));
+		p.teleport(new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), config.getDouble("starting_position.x"), config.getDouble("starting_position.y"), config.getDouble("starting_position.z")));
 		
 		p.sendMessage(Utils.chat("&fThe first thing you'll be wondering, where am I?"));
 		p.sendMessage(Utils.chat("&fFor this we have the command /ll"));
@@ -115,10 +115,10 @@ public class Tutorial {
 				
 		Player p = u.player;
 		FileConfiguration config = Main.getInstance().getConfig();
-		p.teleport(new Location(Bukkit.getWorld(config.getString("worlds.tutorial.after")), config.getDouble("starting_position.x"), config.getDouble("starting_position.y"), config.getDouble("starting_position.z")));
+		p.teleport(new Location(Bukkit.getWorld(config.getString("worlds.build")), config.getDouble("starting_position.x"), config.getDouble("starting_position.y"), config.getDouble("starting_position.z")));
 		p.sendMessage(Utils.chat("&aYou have completed the tutorial!"));
 		p.sendMessage(Utils.chat("&fHere is the building built by one of our builders."));
-		p.sendMessage(Utils.chat("&fUse the gui to leave this area and go back to whereever you want to go."));
+		p.sendMessage(Utils.chat("&fUse the gui or tpll to leave this area and go back to whereever you want to go."));
 		u.tutorialStage = 7;
 		
 	}

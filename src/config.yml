@@ -42,9 +42,7 @@ plot_maximum: 15
 worlds:
     save: saveWorld
     build: buildWorld
-    tutorial:
-        before: tutorialBefore
-        after: tutorialAfter
+    tutorial: tutorialWorld
 
 #Tutorial
 starting_position:

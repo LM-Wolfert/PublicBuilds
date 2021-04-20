@@ -71,8 +71,7 @@ public class CommandListener implements Listener {
 				}
 
 				Player p = e.getPlayer();
-				p.sendMessage("args: " + args.length);
-				p.sendMessage(args[0] + " " + args[1]);
+				
 				if(args.length==0) {
 					return;
 				}

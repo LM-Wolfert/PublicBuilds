@@ -194,7 +194,11 @@ public class Main extends JavaPlugin {
 
 						for (BlockVector2 point : pt) {
 
-							lo = new Location(Bukkit.getWorld(config.getString("worlds.build")), point.getX()+0.5, Bukkit.getWorld(config.getString("worlds.build")).getHighestBlockYAt(point.getX(), point.getZ())+1, point.getZ()+0.5);
+							if (u.world.getName().equals(config.getString("worlds.tutorial"))) {
+								lo = new Location(Bukkit.getWorld(config.getString("worlds.build")), point.getX()+0.5, Bukkit.getWorld(config.getString("worlds.tutorial")).getHighestBlockYAt(point.getX(), point.getZ())+1.5, point.getZ()+0.5);
+							} else {
+								lo = new Location(Bukkit.getWorld(config.getString("worlds.build")), point.getX()+0.5, Bukkit.getWorld(config.getString("worlds.build")).getHighestBlockYAt(point.getX(), point.getZ())+1.5, point.getZ()+0.5);
+							}
 							Particles.spawnParticles(u.player, lo);
 
 						}
@@ -212,7 +216,7 @@ public class Main extends JavaPlugin {
 
 							for (BlockVector2 point : pt) {
 
-								lo = new Location(Bukkit.getWorld(config.getString("worlds.build")), point.getX()+0.5, Bukkit.getWorld(config.getString("worlds.build")).getHighestBlockYAt(point.getX(), point.getZ())+1, point.getZ()+0.5);
+								lo = new Location(Bukkit.getWorld(config.getString("worlds.build")), point.getX()+0.5, Bukkit.getWorld(config.getString("worlds.build")).getHighestBlockYAt(point.getX(), point.getZ())+1.5, point.getZ()+0.5);
 								Particles.spawnParticles(u.player, lo);
 
 							}
@@ -227,9 +231,9 @@ public class Main extends JavaPlugin {
 
 						for (BlockVector2 point : pt) {
 
-							lo = new Location(Bukkit.getWorld(config.getString("worlds.build")), point.getX()+0.5, Bukkit.getWorld(config.getString("worlds.build")).getHighestBlockYAt(point.getX(), point.getZ())+1, point.getZ()+0.5);
+							lo = new Location(Bukkit.getWorld(config.getString("worlds.build")), point.getX()+0.5, Bukkit.getWorld(config.getString("worlds.build")).getHighestBlockYAt(point.getX(), point.getZ())+1.5, point.getZ()+0.5);
 							Particles.spawnParticles(u.player, lo);
-							lo = new Location(Bukkit.getWorld(config.getString("worlds.save")), point.getX()+0.5, Bukkit.getWorld(config.getString("worlds.build")).getHighestBlockYAt(point.getX(), point.getZ())+1, point.getZ()+0.5);
+							lo = new Location(Bukkit.getWorld(config.getString("worlds.save")), point.getX()+0.5, Bukkit.getWorld(config.getString("worlds.build")).getHighestBlockYAt(point.getX(), point.getZ())+1.5, point.getZ()+0.5);
 							Particles.spawnParticles(u.player, lo);
 
 						}
@@ -244,7 +248,7 @@ public class Main extends JavaPlugin {
 							u.tutorialStage = 1;
 							Bukkit.getScheduler().runTaskLater (instance, () -> Tutorial.continueTutorial(u), 60); //20 ticks equal 1 second
 						} else {
-							u.player.teleport(new Location(Bukkit.getWorld(config.getString("worlds.tutorial.before")), config.getDouble("starting_position.x"), config.getDouble("starting_position.y"), config.getDouble("starting_position.z")));
+							u.player.teleport(new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), config.getDouble("starting_position.x"), config.getDouble("starting_position.y"), config.getDouble("starting_position.z")));
 							Bukkit.getScheduler().runTaskLater (instance, () -> Tutorial.continueTutorial(u), 60);
 						}
 					}
