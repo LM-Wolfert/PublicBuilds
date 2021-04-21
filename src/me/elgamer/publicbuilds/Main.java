@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -20,6 +21,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.earth2me.essentials.Essentials;
+import com.gmail.filoghost.holographicdisplays.api.Hologram;
+import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import com.sk89q.worldedit.math.BlockVector2;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.flags.Flag;
@@ -27,6 +30,7 @@ import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.flags.registry.FlagConflictException;
 import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 
+import me.elgamer.publicbuilds.commands.BuildingPoints;
 //import me.elgamer.publicbuilds.commands.Corner;
 import me.elgamer.publicbuilds.commands.CreateArea;
 import me.elgamer.publicbuilds.commands.OpenGui;
@@ -89,6 +93,9 @@ public class Main extends JavaPlugin {
 	public static Location spawn;
 	public static Location cranham;
 
+	//Building Poins Hologram
+	Hologram hologram;
+
 	//Essentials
 	public static Essentials ess;
 
@@ -149,10 +156,11 @@ public class Main extends JavaPlugin {
 		//getCommand("corner").setExecutor(new Corner());
 		getCommand("createarea").setExecutor(new CreateArea());
 		getCommand("skiptutorial").setExecutor(new SkipTutorial());
+		getCommand("buildingpoints").setExecutor(new BuildingPoints());
 
 		//Get essentials
 		ess = (Essentials) Bukkit.getServer().getPluginManager().getPlugin("Essentials");	
-		
+
 		//GUIs
 		MainGui.initialize();
 		ReviewGui.initialize();
@@ -175,6 +183,12 @@ public class Main extends JavaPlugin {
 				config.getDouble("location.cranham.map.y"),
 				config.getDouble("location.cranham.map.z"),
 				180f, 45f);
+		
+		//Holograms
+		hologram = HologramsAPI.createHologram(this, new Location(Bukkit.getWorld("Lobby"),
+				config.getDouble("location.hologram.x"),
+				config.getDouble("location.hologram.y"),
+				config.getDouble("location.hologram.z")));
 
 		//1 second timer.
 		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
@@ -284,6 +298,15 @@ public class Main extends JavaPlugin {
 
 			}
 		}, 0L, 20L);
+
+		//1 minute timer.
+		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+			public void run() {
+				
+				updateHologram();
+
+			}
+		}, 0L, 1200L);
 	}
 
 	public void onDisable() {
@@ -515,8 +538,26 @@ public class Main extends JavaPlugin {
 
 		}
 
+	}
+
+	public void updateHologram() {
+
+		hologram.clearLines();
+
+		LinkedHashMap<String, Integer> lead = PlayerData.pointsTop();
+
+		if (lead == null || lead.size() == 0) {
+			return;
+		}
+
+		hologram.appendTextLine(ChatColor.AQUA + "" + ChatColor.BOLD + "Building Points Leaderboard");
+
+		for (Entry<String, Integer> e : lead.entrySet()) {
+
+			hologram.appendTextLine(e.getKey() + ": " + e.getValue());
+
+		}
 
 
 	}
-
 }

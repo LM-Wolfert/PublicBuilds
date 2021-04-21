@@ -106,6 +106,10 @@ location:
         x:
         y:
         z:
+    hologram:
+        x:
+        y:
+        z:
     cranham:
         map:
             x:

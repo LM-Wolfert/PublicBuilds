@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.bukkit.configuration.file.FileConfiguration;
@@ -229,7 +230,7 @@ public class PlayerData {
 
 
 	}
-	
+
 	public static void newSubmit(String uuid) {
 
 		Main instance = Main.getInstance();
@@ -245,16 +246,16 @@ public class PlayerData {
 			sql.printStackTrace();
 		}
 	}
-	
+
 	public static long getSubmit(String uuid) {
-		
+
 		Main instance = Main.getInstance();
 
 		try {
 			PreparedStatement statement = instance.getConnection().prepareStatement
 					("SELECT * FROM " + instance.playerData + " WHERE ID=?");
 			statement.setString(1, uuid);
-			
+
 			ResultSet results = statement.executeQuery();
 			results.next();
 			return (results.getLong("LAST_SUBMIT"));
@@ -263,18 +264,18 @@ public class PlayerData {
 			sql.printStackTrace();
 			return 0;
 		}
-		
+
 	}
-	
+
 	public static String getName(String uuid) {
-		
+
 		Main instance = Main.getInstance();
 
 		try {
 			PreparedStatement statement = instance.getConnection().prepareStatement
 					("SELECT * FROM " + instance.playerData + " WHERE ID=?");
 			statement.setString(1, uuid);
-			
+
 			ResultSet results = statement.executeQuery();
 			results.next();
 			return (results.getString("NAME"));
@@ -284,7 +285,7 @@ public class PlayerData {
 			return null;
 		}
 	}
-	
+
 	public static void updateRole(String uuid, String role) {
 
 		Main instance = Main.getInstance();
@@ -298,6 +299,123 @@ public class PlayerData {
 
 		} catch (SQLException sql) {
 			sql.printStackTrace();
+		}
+	}
+
+	public static LinkedHashMap<String,Integer> pointsAboveBelow(String uuid, String name) {
+
+		LinkedHashMap<String,Integer> lead = new LinkedHashMap<String,Integer>();
+
+		Main instance = Main.getInstance();
+
+		try {
+			PreparedStatement statement = instance.getConnection().prepareStatement
+					("SELECT * FROM " + instance.playerData + " WHERE ID=?");
+			statement.setString(1, uuid);
+			ResultSet results = statement.executeQuery();
+			results.next();
+
+			int points = results.getInt("BUILDING_POINTS");
+
+			statement = instance.getConnection().prepareStatement
+					("SELECT * FROM " + instance.playerData + " WHERE BUILDING_POINTS>? ORDER BY BUILDING_POINTS DESC");
+			statement.setInt(1, points);
+			results = statement.executeQuery();
+
+			int i = 1;
+
+			while (results.next()) {
+				if (i > 4) { break; }
+				
+				if (results.getString("ID").equals(uuid)) {
+					break;
+				}
+
+				lead.put(results.getString("NAME"), results.getInt("BUILDING_POINTS"));
+				i += 1;
+			}
+
+			lead.put(name, points);
+
+			statement = instance.getConnection().prepareStatement
+					("SELECT * FROM " + instance.playerData + " WHERE BUILDING_POINTS<=? ORDER BY BUILDING_POINTS DESC");
+			statement.setInt(1, points);
+			results = statement.executeQuery();
+
+			i = 1;
+
+			while (results.next()) {
+
+				if (i > 4) { break; }
+
+				if (results.getString("ID").equals(uuid)) {
+					continue;
+				}
+
+				lead.put(results.getString("NAME"), results.getInt("BUILDING_POINTS"));
+				i += 1;
+
+			}
+
+			return lead;
+
+		} catch (SQLException sql) {
+			sql.printStackTrace();
+			return null;
+		}
+
+	}
+
+	public static LinkedHashMap<String,Integer> pointsTop() {
+
+		LinkedHashMap<String,Integer> lead = new LinkedHashMap<String,Integer>();
+
+		Main instance = Main.getInstance();
+
+		try {
+			PreparedStatement statement = instance.getConnection().prepareStatement
+					("SELECT * FROM " + instance.playerData + " ORDER BY BUILDING_POINTS DESC");
+			ResultSet results = statement.executeQuery();
+
+			int i = 1;
+
+			while (results.next()) {
+
+				if (i > 9) { break; }
+
+				lead.put(results.getString("NAME"), results.getInt("BUILDING_POINTS"));
+				i += 1;
+			}
+
+			return lead;
+
+		} catch (SQLException sql) {
+			sql.printStackTrace();
+			return null;
+		}
+
+	}
+	
+	public static String getUUID(String name) {
+		
+		Main instance = Main.getInstance();
+
+		try {
+			PreparedStatement statement = instance.getConnection().prepareStatement
+					("SELECT * FROM " + instance.playerData + " WHERE NAME=?");
+			statement.setString(1, name);
+			ResultSet results = statement.executeQuery();
+
+			if (results.next()) {
+				return (results.getString("ID"));
+				
+			} else {
+				return null;
+			}
+
+		} catch (SQLException sql) {
+			sql.printStackTrace();
+			return null;
 		}
 	}
 
