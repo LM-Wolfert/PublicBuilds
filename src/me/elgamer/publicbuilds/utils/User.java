@@ -2,6 +2,7 @@ package me.elgamer.publicbuilds.utils;
 
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import me.elgamer.publicbuilds.mysql.PlayerData;
 
@@ -26,6 +27,8 @@ public class User {
 	public String role;
 	
 	public World world;
+	
+	public ItemStack slot9;
 	
 	public User(Player player) {
 		

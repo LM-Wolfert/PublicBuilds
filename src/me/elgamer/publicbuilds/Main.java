@@ -183,7 +183,7 @@ public class Main extends JavaPlugin {
 				config.getDouble("location.cranham.map.y"),
 				config.getDouble("location.cranham.map.z"),
 				180f, 45f);
-		
+
 		//Holograms
 		hologram = HologramsAPI.createHologram(this, new Location(Bukkit.getWorld("Lobby"),
 				config.getDouble("location.hologram.x"),
@@ -292,8 +292,18 @@ public class Main extends JavaPlugin {
 					}
 
 					Ranks.checkRankup(u);
-					u.player.getInventory().setItem(8, gui);
 
+					u.slot9 = u.player.getInventory().getItem(8);
+					
+					if (!(u.slot9 == null)) {
+						if (u.slot9.equals(gui)) {
+
+						} else {
+							u.player.getInventory().setItem(8, gui);
+						}
+					} else {
+						u.player.getInventory().setItem(8, gui);
+					}
 				}
 
 			}
@@ -302,8 +312,9 @@ public class Main extends JavaPlugin {
 		//1 minute timer.
 		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
 			public void run() {
-				
+
 				updateHologram();
+				getConnection();
 
 			}
 		}, 0L, 1200L);
