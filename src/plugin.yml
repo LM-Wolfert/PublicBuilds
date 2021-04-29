@@ -18,3 +18,6 @@ commands:
     buildingpoints:
         usage: /<command>
         description: Lists building points of 9 players.
+    spawn:
+        usage: /<command>
+        description: Teleports the player to spawn.

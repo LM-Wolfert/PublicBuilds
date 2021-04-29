@@ -35,6 +35,7 @@ import me.elgamer.publicbuilds.commands.BuildingPoints;
 import me.elgamer.publicbuilds.commands.CreateArea;
 import me.elgamer.publicbuilds.commands.OpenGui;
 import me.elgamer.publicbuilds.commands.SkipTutorial;
+import me.elgamer.publicbuilds.commands.Spawn;
 import me.elgamer.publicbuilds.gui.AcceptGui;
 import me.elgamer.publicbuilds.gui.ConfirmCancel;
 import me.elgamer.publicbuilds.gui.DenyGui;
@@ -157,7 +158,8 @@ public class Main extends JavaPlugin {
 		getCommand("createarea").setExecutor(new CreateArea());
 		getCommand("skiptutorial").setExecutor(new SkipTutorial());
 		getCommand("buildingpoints").setExecutor(new BuildingPoints());
-
+		getCommand("spawn").setExecutor(new Spawn());
+		
 		//Get essentials
 		ess = (Essentials) Bukkit.getServer().getPluginManager().getPlugin("Essentials");	
 
