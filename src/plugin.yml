@@ -21,3 +21,6 @@ commands:
     spawn:
         usage: /<command>
         description: Teleports the player to spawn.
+    tutorial:
+        usage: /<command>
+        description: Sets the tutorial stage to that specific in the command.

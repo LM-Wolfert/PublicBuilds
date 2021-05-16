@@ -43,7 +43,7 @@ public class ChatListener implements Listener {
 					
 					u.tutorialStage = 6;
 				} else {
-					p.sendMessage(Utils.chat("&cThis is not close enough, place try again!"));
+					p.sendMessage(Utils.chat("&cThis is not close enough, please try again!"));
 				}
 			} catch (NumberFormatException ex) {
 				p.sendMessage(Utils.chat("&cThis is not a valid number, please try again!"));

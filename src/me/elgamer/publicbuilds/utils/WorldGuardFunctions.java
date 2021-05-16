@@ -1,6 +1,8 @@
 package me.elgamer.publicbuilds.utils;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -13,7 +15,9 @@ import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.managers.RegionManager;
+import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedPolygonalRegion;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 
 import me.elgamer.publicbuilds.Main;
@@ -118,6 +122,47 @@ public class WorldGuardFunctions {
 			return false;
 		}
 
+	}
+
+	public static ArrayList<Integer> getNearbyPlots(User u) {
+
+		//Get plugin instance and config.
+		Main instance = Main.getInstance();
+		FileConfiguration config = instance.getConfig();
+
+		//Get worlds.
+		World saveWorld = Bukkit.getWorld(config.getString("worlds.save"));
+
+		//Get instance of WorldGuard.
+		WorldGuard wg = WorldGuard.getInstance();
+
+		//Get regions.
+		RegionContainer container = wg.getPlatform().getRegionContainer();
+		RegionManager saveRegions = container.get(BukkitAdapter.adapt(saveWorld));
+
+		//Create HashMap
+		ArrayList<Integer> list = new ArrayList<Integer>();
+		
+		//Create region
+		ProtectedCuboidRegion region = new ProtectedCuboidRegion(u.name, 
+				BlockVector3.at(u.player.getLocation().getX()-100, 1, u.player.getLocation().getZ()-100),
+				BlockVector3.at(u.player.getLocation().getX()+100, 256, u.player.getLocation().getZ()+100));
+
+		//Check whether the region overlaps an existing plot, if true stop the process.
+		ApplicableRegionSet set = saveRegions.getApplicableRegions(region);
+		
+		if (set.size() == 0) {
+			return null;
+		}
+		
+		for (ProtectedRegion entry : set) {
+			if (!(entry.getOwners().contains(UUID.fromString(u.uuid)))) {
+				list.add(Integer.parseInt(entry.getId()));
+			}
+		}
+
+
+		return list;
 	}
 
 }

@@ -78,9 +78,4 @@ public class User {
 		}
 		
 	}
-	
-	//Create accept
-	public void createAccept() {
-		accept = new Accept();
-	}
 }

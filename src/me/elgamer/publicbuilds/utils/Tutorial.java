@@ -107,7 +107,7 @@ public class Tutorial {
 		p.sendMessage(Utils.chat("&fThe final step is to make the walls the right height."));
 		p.sendMessage(Utils.chat("&fGoogle earth pro has elevations (elev) in the bottom right corner."));
 		p.sendMessage(Utils.chat("&fThis can be used to get the height, or you can estimate it."));
-		p.sendMessage(Utils.chat("&fIf you choose to guess the height a good reference is the door, which is usually around 2 meters."));
+		p.sendMessage(Utils.chat("&fIf you choose to guess the height a good reference is the door, which is usually around 2 metres."));
 		p.sendMessage(Utils.chat("&fPlease type in chat your estimated height for the front wall of the building."));
 	}
 	
@@ -118,7 +118,7 @@ public class Tutorial {
 		p.teleport(new Location(Bukkit.getWorld(config.getString("worlds.build")), config.getDouble("starting_position.x"), config.getDouble("starting_position.y"), config.getDouble("starting_position.z")));
 		p.sendMessage(Utils.chat("&aYou have completed the tutorial!"));
 		p.sendMessage(Utils.chat("&fHere is the building built by one of our builders."));
-		p.sendMessage(Utils.chat("&fUse the gui or tpll to leave this area and go back to whereever you want to go."));
+		p.sendMessage(Utils.chat("&fUse the gui or tpll to leave this area and go back to wherever you want to go."));
 		u.tutorialStage = 7;
 		
 	}

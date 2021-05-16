@@ -36,6 +36,7 @@ import me.elgamer.publicbuilds.commands.CreateArea;
 import me.elgamer.publicbuilds.commands.OpenGui;
 import me.elgamer.publicbuilds.commands.SkipTutorial;
 import me.elgamer.publicbuilds.commands.Spawn;
+import me.elgamer.publicbuilds.commands.TutorialCommand;
 import me.elgamer.publicbuilds.gui.AcceptGui;
 import me.elgamer.publicbuilds.gui.ConfirmCancel;
 import me.elgamer.publicbuilds.gui.DenyGui;
@@ -83,6 +84,7 @@ public class Main extends JavaPlugin {
 	HashMap<Integer, String> pl;
 	List<BlockVector2> pt;
 	Location lo;
+	ArrayList<Integer> pls;
 
 	public static StateFlag CREATE_PLOT_GUEST;
 	public static StateFlag CREATE_PLOT_APPRENTICE;
@@ -159,7 +161,8 @@ public class Main extends JavaPlugin {
 		getCommand("skiptutorial").setExecutor(new SkipTutorial());
 		getCommand("buildingpoints").setExecutor(new BuildingPoints());
 		getCommand("spawn").setExecutor(new Spawn());
-		
+		getCommand("tutorial").setExecutor(new TutorialCommand());
+
 		//Get essentials
 		ess = (Essentials) Bukkit.getServer().getPluginManager().getPlugin("Essentials");	
 
@@ -215,7 +218,7 @@ public class Main extends JavaPlugin {
 							} else {
 								lo = new Location(Bukkit.getWorld(config.getString("worlds.build")), point.getX()+0.5, Bukkit.getWorld(config.getString("worlds.build")).getHighestBlockYAt(point.getX(), point.getZ())+1.5, point.getZ()+0.5);
 							}
-							Particles.spawnParticles(u.player, lo);
+							Particles.spawnRedParticles(u.player, lo);
 
 						}
 
@@ -233,10 +236,34 @@ public class Main extends JavaPlugin {
 							for (BlockVector2 point : pt) {
 
 								lo = new Location(Bukkit.getWorld(config.getString("worlds.build")), point.getX()+0.5, Bukkit.getWorld(config.getString("worlds.build")).getHighestBlockYAt(point.getX(), point.getZ())+1.5, point.getZ()+0.5);
-								Particles.spawnParticles(u.player, lo);
+								Particles.spawnBlueParticles(u.player, lo);
 
 							}
 
+						}
+					}
+
+					//Spawn particles at all plots owned by other players near you.
+					if (u.world.equals(Bukkit.getWorld(config.getString("worlds.build")))) {
+
+						pls = WorldGuardFunctions.getNearbyPlots(u);
+
+						if (pls == null) {
+
+						} else {
+
+							for (int i : pls) {
+
+								pt = WorldGuardFunctions.getPoints(i);
+
+								for (BlockVector2 point : pt) {
+
+									lo = new Location(Bukkit.getWorld(config.getString("worlds.build")), point.getX()+0.5, Bukkit.getWorld(config.getString("worlds.build")).getHighestBlockYAt(point.getX(), point.getZ())+1.5, point.getZ()+0.5);
+									Particles.spawnGreenParticles(u.player, lo);
+
+								}
+
+							}
 						}
 					}
 
@@ -248,9 +275,9 @@ public class Main extends JavaPlugin {
 						for (BlockVector2 point : pt) {
 
 							lo = new Location(Bukkit.getWorld(config.getString("worlds.build")), point.getX()+0.5, Bukkit.getWorld(config.getString("worlds.build")).getHighestBlockYAt(point.getX(), point.getZ())+1.5, point.getZ()+0.5);
-							Particles.spawnParticles(u.player, lo);
+							Particles.spawnRedParticles(u.player, lo);
 							lo = new Location(Bukkit.getWorld(config.getString("worlds.save")), point.getX()+0.5, Bukkit.getWorld(config.getString("worlds.build")).getHighestBlockYAt(point.getX(), point.getZ())+1.5, point.getZ()+0.5);
-							Particles.spawnParticles(u.player, lo);
+							Particles.spawnRedParticles(u.player, lo);
 
 						}
 
@@ -296,7 +323,7 @@ public class Main extends JavaPlugin {
 					Ranks.checkRankup(u);
 
 					u.slot9 = u.player.getInventory().getItem(8);
-					
+
 					if (!(u.slot9 == null)) {
 						if (u.slot9.equals(gui)) {
 

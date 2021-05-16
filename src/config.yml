@@ -88,6 +88,7 @@ tutorial_final_stage: 6
 size_multiplier: 1
 accuracy_multiplier: 1
 quality_multiplier: 1
+points_base: 5
 
 #Points multiplier
 #Calculated by building points multiplied by points_multiplier

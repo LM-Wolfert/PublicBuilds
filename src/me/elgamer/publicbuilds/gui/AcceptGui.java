@@ -164,7 +164,7 @@ public class AcceptGui {
 			String name = PlayerData.getName(uuid);
 			
 			//Calculate building points and add them
-			int buildingPoints = ac.size()*config.getInt("size_multiplier") + ac.accuracy()*config.getInt("accuracy_multiplier") + ac.quality()*config.getInt("quality_multiplier");
+			int buildingPoints = config.getInt("points_base") + ac.size()*config.getInt("size_multiplier") + ac.accuracy()*config.getInt("accuracy_multiplier") + ac.quality()*config.getInt("quality_multiplier");
 			PlayerData.addPoints(uuid, buildingPoints);
 			
 			//Add points for building with multiplier
@@ -185,6 +185,7 @@ public class AcceptGui {
 			//Remove plot from worldguard
 			ClaimFunctions.removeClaim(u.reviewing);
 			u.reviewing = 0;
+			p.closeInventory();
 			
 		} else {}
 		

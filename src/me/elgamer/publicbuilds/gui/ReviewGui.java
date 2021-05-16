@@ -8,6 +8,7 @@ import org.bukkit.inventory.ItemStack;
 
 import me.elgamer.publicbuilds.mysql.PlayerData;
 import me.elgamer.publicbuilds.mysql.PlotData;
+import me.elgamer.publicbuilds.utils.Accept;
 import me.elgamer.publicbuilds.utils.User;
 import me.elgamer.publicbuilds.utils.Utils;
 import me.elgamer.publicbuilds.utils.WorldGuardFunctions;
@@ -67,7 +68,7 @@ public class ReviewGui {
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Accept Plot")) {
 			//Open the acceptgui with default values.
 			p.closeInventory();
-			u.createAccept();
+			u.accept = new Accept();
 			p.openInventory(AcceptGui.GUI(u));
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Deny Plot")) {
 			//Open the denygui.

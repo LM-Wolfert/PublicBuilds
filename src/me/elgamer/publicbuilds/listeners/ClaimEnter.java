@@ -20,6 +20,8 @@ import me.elgamer.publicbuilds.mysql.PlayerData;
 import me.elgamer.publicbuilds.mysql.PlotData;
 import me.elgamer.publicbuilds.utils.User;
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 
 public class ClaimEnter implements Listener{
 
@@ -71,7 +73,7 @@ public class ClaimEnter implements Listener{
 
 						u.inPlot = plot;
 						u.plotOwner = owners;
-						u.player.sendMessage(ChatColor.GREEN + "You have entered " + PlayerData.getName(u.plotOwner) + "'s plot!");
+						u.player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.GREEN + "You have entered " + PlayerData.getName(u.plotOwner) + "'s plot!"));
 					}
 
 					if (u.uuid.equals(owners)) {
@@ -90,7 +92,7 @@ public class ClaimEnter implements Listener{
 
 		if (applicableRegionSet.size() < 2 && u.inPlot != 0) {
 
-			u.player.sendMessage(ChatColor.GREEN + "You have left " + PlayerData.getName(u.plotOwner) + "'s plot!");
+			u.player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.GREEN + "You have left " + PlayerData.getName(u.plotOwner) + "'s plot!"));
 			u.inPlot = 0;
 
 		}
