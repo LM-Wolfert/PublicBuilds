@@ -14,6 +14,7 @@ MySQL_plotData: plot_data
 MySQL_denyData: deny_data
 MySQL_acceptData: accept_data
 MySQL_areaData: area_data
+MySQL_submitData: submit_data
 
 #Plot Limits
 #Limit on maximum distance between 2 points of a plot

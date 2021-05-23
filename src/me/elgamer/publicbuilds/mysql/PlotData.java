@@ -340,4 +340,38 @@ public static void setLastVisit(String uuid, int plot) {
 
 }
 
+public static void newSubmit(int id) {
+	
+	Main instance = Main.getInstance();
+
+	try {
+		PreparedStatement insert = instance.getConnection().prepareStatement
+				("INSERT INTO " + instance.submitData + " (ID) VALUE (?)");
+
+		insert.setInt(1, id);
+		insert.executeUpdate();
+
+	} catch (SQLException sql) {
+		sql.printStackTrace();			
+	}
+	
+}
+
+public static void removeSubmit(int id) {
+	
+	Main instance = Main.getInstance();
+
+	try {
+		PreparedStatement insert = instance.getConnection().prepareStatement
+				("DELETE FROM " + instance.submitData + " WHERE ID=?");
+
+		insert.setInt(1, id);
+		insert.executeUpdate();
+
+	} catch (SQLException sql) {
+		sql.printStackTrace();			
+	}
+	
+}
+
 }

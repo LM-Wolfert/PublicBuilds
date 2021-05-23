@@ -69,7 +69,7 @@ public class Main extends JavaPlugin {
 
 	//MySQL
 	private Connection connection;
-	public String host, database, username, password, playerData, plotData, areaData, denyData, acceptData;
+	public String host, database, username, password, playerData, plotData, areaData, denyData, acceptData, submitData;
 	public int port;
 
 	//Other
@@ -125,6 +125,7 @@ public class Main extends JavaPlugin {
 		createDenyData();
 		createAcceptData();
 		createAreaData();
+		createSubmit();
 		PlotData.clearReview();
 
 		//Bungeecord
@@ -392,6 +393,7 @@ public class Main extends JavaPlugin {
 		areaData = config.getString("MySQL_areaData");
 		denyData = config.getString("MySQL_denyData");
 		acceptData = config.getString("MySQL_acceptData");
+		submitData = config.getString("MySQL_submitData");
 
 		try {
 
@@ -497,6 +499,19 @@ public class Main extends JavaPlugin {
 			PreparedStatement statement = instance.getConnection().prepareStatement
 					("CREATE TABLE IF NOT EXISTS " + areaData
 							+ " ( ID INT NOT NULL , NAME TEXT NOT NULL , TYPE TEXT NOT NULL , STATUS TEXT NOT NULL , UNIQUE (ID))");
+			statement.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	//Setup area_data table for mysql database if it doesn't exist.
+	public void createSubmit() {
+		try {
+			PreparedStatement statement = instance.getConnection().prepareStatement
+					("CREATE TABLE IF NOT EXISTS " + submitData
+							+ " ( ID INT NOT NULL , UNIQUE (ID))");
 			statement.executeUpdate();
 
 		} catch (SQLException e) {

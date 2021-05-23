@@ -106,6 +106,7 @@ public class PlotInfo {
 
 			//Submits the plot.
 			PlotData.setStatus(u.currentPlot, "submitted");
+			PlotData.newSubmit(u.currentPlot);
 			PlayerData.newSubmit(u.uuid);
 			p.sendMessage(ChatColor.GREEN + "Plot " + u.currentPlot + " has been submitted.");
 
@@ -116,6 +117,7 @@ public class PlotInfo {
 
 			//Retracts a plot submission.
 			PlotData.setStatus(u.currentPlot, "claimed");
+			PlotData.removeSubmit(u.currentPlot);
 			p.sendMessage(ChatColor.RED + "The submission for plot " + u.currentPlot + " has been retracted.");
 
 			p.closeInventory();

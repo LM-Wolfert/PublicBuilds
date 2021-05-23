@@ -3,6 +3,7 @@ package me.elgamer.publicbuilds.gui;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -185,6 +186,11 @@ public class AcceptGui {
 			//Remove plot from worldguard
 			ClaimFunctions.removeClaim(u.reviewing);
 			u.reviewing = 0;
+			if (p.getWorld().equals(Bukkit.getWorld(config.getString("worlds.save")))) {
+				Location l = p.getLocation();
+				l.setWorld(Bukkit.getWorld(config.getString("worlds.build")));
+				p.teleport(l);
+			}
 			p.closeInventory();
 			
 		} else {}

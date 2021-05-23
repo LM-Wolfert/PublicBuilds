@@ -1,6 +1,7 @@
 package me.elgamer.publicbuilds.listeners;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -75,6 +76,13 @@ public class ChatListener implements Listener {
 				//Set the reasonType and reviewing back to default values.
 				u.reasonType = null;
 				u.reviewing = 0;
+				
+				if (p.getWorld().equals(Bukkit.getWorld(config.getString("worlds.save")))) {
+					Location l = p.getLocation();
+					l.setWorld(Bukkit.getWorld(config.getString("worlds.build")));
+					p.teleport(l);
+				}
+				
 			}
 		}
 
