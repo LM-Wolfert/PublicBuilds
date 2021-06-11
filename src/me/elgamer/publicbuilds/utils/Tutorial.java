@@ -115,6 +115,7 @@ public class Tutorial {
 				
 		Player p = u.player;
 		FileConfiguration config = Main.getInstance().getConfig();
+		u.plots = new Plots();
 		p.teleport(new Location(Bukkit.getWorld(config.getString("worlds.build")), config.getDouble("starting_position.x"), config.getDouble("starting_position.y"), config.getDouble("starting_position.z")));
 		p.sendMessage(Utils.chat("&aYou have completed the tutorial!"));
 		p.sendMessage(Utils.chat("&fHere is the building built by one of our builders."));

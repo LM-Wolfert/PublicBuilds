@@ -40,7 +40,7 @@ public class PlayerInteract implements Listener {
 
 				e.setCancelled(true);
 				
-				if (Plots.inRegion(e.getClickedBlock())) {
+				if (Plots.inRegion(e.getClickedBlock()) && u.tutorialStage == 7) {
 					u.player.sendMessage(Utils.chat("&cThis position already belongs to another plot"));
 					return;
 				}
@@ -52,7 +52,7 @@ public class PlayerInteract implements Listener {
 
 				e.setCancelled(true);
 
-				if (Plots.inRegion(e.getClickedBlock())) {
+				if (Plots.inRegion(e.getClickedBlock()) && u.tutorialStage == 7) {
 					u.player.sendMessage(Utils.chat("&cThis position already belongs to another plot"));
 					return;
 				}
