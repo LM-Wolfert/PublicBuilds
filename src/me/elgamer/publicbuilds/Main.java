@@ -30,6 +30,7 @@ import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.flags.registry.FlagConflictException;
 import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 
+import me.elgamer.publicbuilds.commands.Apply;
 import me.elgamer.publicbuilds.commands.BuildingPoints;
 //import me.elgamer.publicbuilds.commands.Corner;
 import me.elgamer.publicbuilds.commands.CreateArea;
@@ -163,6 +164,7 @@ public class Main extends JavaPlugin {
 		getCommand("buildingpoints").setExecutor(new BuildingPoints());
 		getCommand("spawn").setExecutor(new Spawn());
 		getCommand("tutorial").setExecutor(new TutorialCommand());
+		getCommand("apply").setExecutor(new Apply());
 
 		//Get essentials
 		ess = (Essentials) Bukkit.getServer().getPluginManager().getPlugin("Essentials");	

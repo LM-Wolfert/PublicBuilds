@@ -24,3 +24,6 @@ commands:
     tutorial:
         usage: /<command>
         description: Sets the tutorial stage to that specific in the command.
+    apply:
+        usage: /<command>
+        description: Links to the website for applications.

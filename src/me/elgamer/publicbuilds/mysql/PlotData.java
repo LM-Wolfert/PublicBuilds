@@ -99,7 +99,7 @@ public class PlotData {
 					return true;
 				}
 			}
-			
+
 			return false;
 
 		} catch (SQLException sql) {
@@ -170,7 +170,7 @@ public class PlotData {
 					return(plot);
 				}
 			}
-			
+
 			return 0;
 
 		} catch (SQLException sql) {
@@ -314,64 +314,81 @@ public class PlotData {
 				plots.add(results.getInt("ID"));
 			}
 
-		return plots;
+			return plots;
 
-	} catch (SQLException sql) {
-		sql.printStackTrace();
-		return null;
+		} catch (SQLException sql) {
+			sql.printStackTrace();
+			return null;
+		}
+
 	}
 
-}
+	public static void setLastVisit(String uuid, int plot) {
 
-public static void setLastVisit(String uuid, int plot) {
+		Main instance = Main.getInstance();
 
-	Main instance = Main.getInstance();
+		try {
+			PreparedStatement update = instance.getConnection().prepareStatement
+					("UPDATE " + instance.plotData + " SET LAST_VISIT=? WHERE ID=?");
+			update.setLong(1, Time.currentTime());
+			update.setInt(2, plot);
+			update.executeUpdate();
 
-	try {
-		PreparedStatement update = instance.getConnection().prepareStatement
-				("UPDATE " + instance.plotData + " SET LAST_VISIT=? WHERE ID=?");
-		update.setLong(1, Time.currentTime());
-		update.setInt(2, plot);
-		update.executeUpdate();
+		} catch (SQLException sql) {
+			sql.printStackTrace();
+		}
 
-	} catch (SQLException sql) {
-		sql.printStackTrace();
 	}
 
-}
+	public static void setLastVisit(int plot) {
 
-public static void newSubmit(int id) {
-	
-	Main instance = Main.getInstance();
+		Main instance = Main.getInstance();
 
-	try {
-		PreparedStatement insert = instance.getConnection().prepareStatement
-				("INSERT INTO " + instance.submitData + " (ID) VALUE (?)");
+		try {
+			PreparedStatement update = instance.getConnection().prepareStatement
+					("UPDATE " + instance.plotData + " SET LAST_VISIT=? WHERE ID=?");
+			update.setLong(1, Time.currentTime());
+			update.setInt(2, plot);
+			update.executeUpdate();
 
-		insert.setInt(1, id);
-		insert.executeUpdate();
+		} catch (SQLException sql) {
+			sql.printStackTrace();
+		}
 
-	} catch (SQLException sql) {
-		sql.printStackTrace();			
 	}
-	
-}
 
-public static void removeSubmit(int id) {
-	
-	Main instance = Main.getInstance();
+	public static void newSubmit(int id) {
 
-	try {
-		PreparedStatement insert = instance.getConnection().prepareStatement
-				("DELETE FROM " + instance.submitData + " WHERE ID=?");
+		Main instance = Main.getInstance();
 
-		insert.setInt(1, id);
-		insert.executeUpdate();
+		try {
+			PreparedStatement insert = instance.getConnection().prepareStatement
+					("INSERT INTO " + instance.submitData + " (ID) VALUE (?)");
 
-	} catch (SQLException sql) {
-		sql.printStackTrace();			
+			insert.setInt(1, id);
+			insert.executeUpdate();
+
+		} catch (SQLException sql) {
+			sql.printStackTrace();			
+		}
+
 	}
-	
-}
+
+	public static void removeSubmit(int id) {
+
+		Main instance = Main.getInstance();
+
+		try {
+			PreparedStatement insert = instance.getConnection().prepareStatement
+					("DELETE FROM " + instance.submitData + " WHERE ID=?");
+
+			insert.setInt(1, id);
+			insert.executeUpdate();
+
+		} catch (SQLException sql) {
+			sql.printStackTrace();			
+		}
+
+	}
 
 }

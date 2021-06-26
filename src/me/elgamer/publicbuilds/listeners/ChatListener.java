@@ -73,6 +73,7 @@ public class ChatListener implements Listener {
 				PlotData.setStatus(u.reviewing, u.reasonType);
 
 				p.sendMessage(ChatColor.GREEN + "Plot " + u.reviewing + " denied with reason: " + e.getMessage());
+				PlotData.setLastVisit(u.reviewing);
 				//Set the reasonType and reviewing back to default values.
 				u.reasonType = null;
 				u.reviewing = 0;
