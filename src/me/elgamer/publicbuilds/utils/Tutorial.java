@@ -97,7 +97,7 @@ public class Tutorial {
 		p.sendMessage(Utils.chat("&fThe first step is to create the outlines of the building."));
 		p.sendMessage(Utils.chat("&fIn google maps right click on one of the corners of the building and copy the coordinates."));
 		p.sendMessage(Utils.chat("&fKeep in mind that the roof often sticks out a bit so you may want to move inward a little."));
-		p.sendMessage(Utils.chat("&fWith the coordinates again use /tpll to teleport to the corner of the building."));
+		p.sendMessage(Utils.chat("&fWith the coordinates again use /tpll to teleport to the corner of 134+136 Marlborough Gardens."));
 	}
 	
 	public static void stage5(User u) {
@@ -108,7 +108,7 @@ public class Tutorial {
 		p.sendMessage(Utils.chat("&fGoogle earth pro has elevations (elev) in the bottom right corner."));
 		p.sendMessage(Utils.chat("&fThis can be used to get the height, or you can estimate it."));
 		p.sendMessage(Utils.chat("&fIf you choose to guess the height a good reference is the door, which is usually around 2 metres."));
-		p.sendMessage(Utils.chat("&fPlease type in chat your estimated height for the front wall of the building."));
+		p.sendMessage(Utils.chat("&fPlease type in chat your estimated height for the front wall of 134+136 Marlborough Gardens."));
 	}
 	
 	public static void stage6(User u) {
