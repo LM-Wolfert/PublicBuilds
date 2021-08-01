@@ -354,16 +354,6 @@ public class Main extends JavaPlugin {
 
 	public void onDisable() {
 
-		//MySQL
-		try {
-			if (connection != null && !connection.isClosed()) {
-				Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "MySQL disconnected from " + config.getString("MySQL_database"));
-				connection.close();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
 		//Remove all players who are in review.
 		for (User u: users) {
 
@@ -379,6 +369,16 @@ public class Main extends JavaPlugin {
 				PlotData.setStatus(u.reviewing, "submitted");
 
 			}
+		}
+
+		//MySQL
+		try {
+			if (connection != null && !connection.isClosed()) {
+				Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "MySQL disconnected from " + config.getString("MySQL_database"));
+				connection.close();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -406,7 +406,7 @@ public class Main extends JavaPlugin {
 
 				Class.forName("com.mysql.jdbc.Driver");
 				setConnection(DriverManager.getConnection("jdbc:mysql://" + this.host + ":" 
-						+ this.port + "/" + this.database, this.username, this.password));
+						+ this.port + "/" + this.database + "?&useSSL=false&", this.username, this.password));
 
 				Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "MySQL connected to " + config.getString("MySQL_database"));
 			}

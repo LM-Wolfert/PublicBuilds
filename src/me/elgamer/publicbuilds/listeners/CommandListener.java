@@ -114,7 +114,6 @@ public class CommandListener implements Listener {
 				ModifiedAirocean projection = new ModifiedAirocean();
 
 				double[] coords = projection.fromGeo(lon, lat);
-				p.sendMessage("x: " + coords[0] + " z: " + coords[1]);
 
 				if (Tutorial.nearCorners(coords)) {
 					

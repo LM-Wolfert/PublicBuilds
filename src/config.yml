@@ -16,6 +16,12 @@ MySQL_acceptData: accept_data
 MySQL_areaData: area_data
 MySQL_submitData: submit_data
 
+#Promotion Point Values
+rankup:
+    apprentice: 10
+    jrbuilder: 30
+    builder: 100
+
 #Plot Limits
 #Limit on maximum distance between 2 points of a plot
 plot_distance:

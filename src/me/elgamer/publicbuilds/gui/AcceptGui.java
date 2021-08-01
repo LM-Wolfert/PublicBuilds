@@ -185,12 +185,14 @@ public class AcceptGui {
 			
 			//Remove plot from worldguard
 			ClaimFunctions.removeClaim(u.reviewing);
+			p.sendMessage(ChatColor.GREEN + "Plot " + u.reviewing + " accepted!");
 			u.reviewing = 0;
 			if (p.getWorld().equals(Bukkit.getWorld(config.getString("worlds.save")))) {
 				Location l = p.getLocation();
 				l.setWorld(Bukkit.getWorld(config.getString("worlds.build")));
 				p.teleport(l);
 			}
+
 			p.closeInventory();
 			
 		} else {}
