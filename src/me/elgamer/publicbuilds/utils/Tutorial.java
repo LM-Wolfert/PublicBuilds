@@ -94,7 +94,7 @@ public class Tutorial {
 		Player p = u.player;
 		p.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Tutorial Stage 4/5", "Creating outlines", 10, 100, 50);
 		p.sendMessage(Utils.chat("&fOnce you have created a plot you can start to build."));
-		p.sendMessage(Utils.chat("&fThe first step is to create the outlines of the building."));
+		p.sendMessage(Utils.chat("&fBut before you can build you need to find the outlines of the building."));
 		p.sendMessage(Utils.chat("&fIn google maps right click on one of the corners of the building and copy the coordinates."));
 		p.sendMessage(Utils.chat("&fKeep in mind that the roof often sticks out a bit so you may want to move inward a little."));
 		p.sendMessage(Utils.chat("&fWith the coordinates again use /tpll to teleport to the corner of 134+136 Marlborough Gardens."));

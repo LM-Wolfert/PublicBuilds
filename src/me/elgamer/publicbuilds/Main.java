@@ -92,6 +92,8 @@ public class Main extends JavaPlugin {
 	public static StateFlag CREATE_PLOT_JRBUILDER;
 	public static ItemStack selectionTool;
 	public static ItemStack gui;
+	
+	int interval;
 
 	//Locations
 	public static Location spawn;
@@ -119,6 +121,8 @@ public class Main extends JavaPlugin {
 
 		saveDefaultConfig();
 
+		interval = 10*60;
+		
 		//MySQL		
 		mysqlSetup();
 		createPlayerData();
@@ -208,6 +212,21 @@ public class Main extends JavaPlugin {
 						Utils.spawnFireWork(u.player);
 						Bukkit.getScheduler().runTaskLater (instance, () -> Tutorial.continueTutorial(u), 60); //20 ticks equal 1 second
 					}
+
+					//Increase buildingTime for each second the player is in a buildable claim and is not AFK
+					if (ess.getUser(u.player).isAfk() == false && u.plotOwner.equals(u.uuid)) {
+
+						u.buildingTime += 1;
+
+						if (u.buildingTime >= interval) {
+							u.buildingTime -= interval;
+
+							me.elgamer.btepoints.utils.Points.addPoints(u.uuid, 1);
+						}
+
+
+					}
+
 
 					//Spawn particles at plot markers so they are visible.
 					pt = u.plots.vector;

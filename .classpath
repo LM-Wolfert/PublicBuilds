@@ -39,5 +39,6 @@
 	<classpathentry kind="lib" path="C:/Users/Laurens/Downloads/FastAsyncWorldEdit-1.16-603.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Laurens/Downloads/EssentialsX.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Laurens/Downloads/HolographicDisplays.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Laurens/Desktop/BTEPoints.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

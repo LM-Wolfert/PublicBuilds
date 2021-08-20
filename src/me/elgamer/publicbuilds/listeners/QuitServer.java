@@ -33,6 +33,9 @@ public class QuitServer implements Listener {
 		if (u == null) {
 			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Error: User " + e.getPlayer().getName() + " not found in the list of online users!" );
 		}
+		
+		//Set building time
+		me.elgamer.btepoints.utils.PlayerData.setBuildTime(u.uuid, u.buildingTime);
 
 		//Get player instance.
 		Player p = e.getPlayer();

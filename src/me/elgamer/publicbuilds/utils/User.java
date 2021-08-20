@@ -12,6 +12,8 @@ public class User {
 	public String uuid;
 	public String name;
 	
+	public int buildingTime;
+	
 	public int tutorialStage;
 	
 	public Plots plots;
@@ -39,6 +41,9 @@ public class User {
 		
 		//Update player data.
 		updatePlayerData();
+		
+		//Get building time
+		buildingTime = me.elgamer.btepoints.utils.PlayerData.getBuildTime(uuid);
 			
 		//Continue the tutorial from where they last were.
 		tutorialStage = PlayerData.getTutorialStage(uuid);
