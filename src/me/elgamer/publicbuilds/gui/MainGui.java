@@ -117,7 +117,7 @@ public class MainGui {
 					return;
 				}
 			}
-
+			
 			//Check whether the player has a plot.
 			if (PlotData.hasPlot(p.getUniqueId().toString())) {
 				//Count all active plots, if they exceed the limit then end the method.

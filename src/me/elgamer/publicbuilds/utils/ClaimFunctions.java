@@ -59,8 +59,16 @@ public class ClaimFunctions {
 		for (BlockVector2 bv : vector) {
 			
 			set = buildRegions.getApplicableRegions(BlockVector3.at(bv.getX(), 64, bv.getZ()));
-			if ((!set.testState(null, Main.CREATE_PLOT_GUEST)) && (!set.testState(null, Main.CREATE_PLOT_APPRENTICE)) && (!set.testState(null, Main.CREATE_PLOT_JRBUILDER))) {
+			if (set.testState(null, Main.NO_PLOT)) {
 				return (ChatColor.RED + "You may not create a plot here!");
+			}
+			
+			if (!(set.testState(null, Main.CREATE_PLOT_GUEST))) {
+				if (!(set.testState(null, Main.CREATE_PLOT_APPRENTICE))) {
+					if (!(set.testState(null, Main.CREATE_PLOT_JRBUILDER))) {
+						return (ChatColor.RED + "You may not create a plot here!");
+					}
+				}
 			}
 			
 			if (set.testState(null, Main.CREATE_PLOT_GUEST)) {
