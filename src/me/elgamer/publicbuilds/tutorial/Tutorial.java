@@ -3,17 +3,15 @@ package me.elgamer.publicbuilds.tutorial;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 
 import com.sk89q.worldedit.math.BlockVector2;
 import com.sk89q.worldguard.protection.regions.ProtectedPolygonalRegion;
 
 import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.mysql.TutorialData;
-import me.elgamer.publicbuilds.utils.Plots;
 import me.elgamer.publicbuilds.utils.User;
-import me.elgamer.publicbuilds.utils.Utils;
 
 public class Tutorial {
 
@@ -22,6 +20,12 @@ public class Tutorial {
 
 	public boolean first_time;
 	public boolean complete;
+	
+	public boolean corner_1;
+	public boolean corner_2;
+	public boolean corner_3;
+	public boolean corner_4;
+	public int corner_sum;
 
 	public Tutorial(User u) {
 
@@ -48,8 +52,12 @@ public class Tutorial {
 
 	public void continueTutorial(User u) {
 
-		if (u.tutorial.tutorial_stage == 1) {
+		if (u.tutorial.tutorial_type == 1) {
 			u.player.teleport(Main.TUTORIAL_1_START);
+		}
+		
+		if (u.tutorial.tutorial_type == 2) {
+			Bukkit.getScheduler().runTaskLater (Main.getInstance(), () -> startStage2(u), 60);
 		}
 		
 
@@ -69,18 +77,64 @@ public class Tutorial {
 		p.sendMessage(Utils.chat("&fTry it out and continue the tutorial."));
 
 	}
+*/
+	public void startStage2(User u) {
 
-	public static void stage2(User u) {
-
-		Player p = u.player;
-		p.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Tutorial Stage 2/5", "/tpll", 10, 100, 50);
-		p.sendMessage(Utils.chat("&fIn google maps you'll be able to see the area you are currently in."));
-		p.sendMessage(Utils.chat("&fIf you right click on the map you can copy the the coordinates where you cursor is."));
-		p.sendMessage(Utils.chat("&fTry copying the coordinates and then on the server do &7/tpll <coordinates> &f."));
-		p.sendMessage(Utils.chat("&fIf you're having problems don't hesitate to ask in chat or on our discord."));
-
+		u.player.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Tpll Tutorial", "/tpll is the most important command in this project", 10, 200, 50);
+		corner_1 = false;
+		corner_2 = false;
+		corner_3 = false;
+		corner_4 = false;
+		corner_sum = 0;
+		
+		
 	}
-
+	
+	public String stage2Corner(double[] coords, World world) {
+		
+		double y = world.getHighestBlockYAt((int) Math.floor(coords[0]), (int) Math.floor(coords[1]));
+		y += 1;
+		Location l = new Location(world, coords[0], y, coords[1]);
+		
+		if (l.distance(Main.TUTORIAL_2_CORNER_1) <= 1) {
+			if (corner_1) {
+				return (ChatColor.RED + "You have already teleported to this corner, you have " + (4-corner_sum) + " corners left.");
+			} else {
+				corner_1 = true;
+				corner_sum += 1;
+				return (ChatColor.GREEN + "Correct, you now have " + (4-corner_sum) + " corners left.");
+			}
+		} else if (l.distance(Main.TUTORIAL_2_CORNER_1) <= 1) {
+			if (corner_2) {
+				return (ChatColor.RED + "You have already teleported to this corner, you have " + (4-corner_sum) + " corners left.");
+			} else {
+				corner_2 = true;
+				corner_sum += 1;
+				return (ChatColor.GREEN + "Correct, you now have " + (4-corner_sum) + " corners left.");
+			}
+		} else if (l.distance(Main.TUTORIAL_2_CORNER_1) <= 1) {
+			if (corner_3) {
+				return (ChatColor.RED + "You have already teleported to this corner, you have " + (4-corner_sum) + " corners left.");
+			} else {
+				corner_3 = true;
+				corner_sum += 1;
+				return (ChatColor.GREEN + "Correct, you now have " + (4-corner_sum) + " corners left.");
+			}
+		} else if (l.distance(Main.TUTORIAL_2_CORNER_1) <= 1) {
+			if (corner_4) {
+				return (ChatColor.RED + "You have already teleported to this corner, you have " + (4-corner_sum) + " corners left.");
+			} else {
+				corner_4 = true;
+				corner_sum += 1;
+				return (ChatColor.GREEN + "Correct, you now have " + (4-corner_sum) + " corners left.");
+			}
+		}
+		
+		return null;
+		
+		
+	}
+/*
 	public static void stage3(User u) {
 
 		Player p = u.player;

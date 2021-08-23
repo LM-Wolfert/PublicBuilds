@@ -77,6 +77,29 @@ teleport:
             z:
             yaw:
             pitch:
+    stage_2:
+        start:
+            x: 2870614.5
+            y: 143.0
+            z: -5430305.5
+            yaw: -90.0
+            pitch: 0.0
+        corner_1:
+            x: 2870584.23
+            y: 143.0
+            z: -5430323.02
+        corner_2:
+            x: 2870600.15
+            y: 143.0
+            z: -5430302.43
+        corner_3:
+            x: 2870619.02
+            y: 143.0
+            z: -5430317.09
+        corner_4
+            x: 2870603.15
+            y: 144.0
+            z: -5430337.79
 
     
 #The user has to create a plot that includes these points

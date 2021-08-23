@@ -23,14 +23,17 @@ public class MoveEvent implements Listener {
 		
 		User u = Main.getInstance().getUser(e.getPlayer());
 		
-		if (u.tutorial.tutorial_stage == 1) {
+		if (u.tutorial.tutorial_type == 1) {
 			
 			if (nearYes(e.getTo())) {
-				u.player.teleport();
-				u.tutorial.tutorial_stage = 8;
+				u.player.teleport(Main.TUTORIAL_8_START);
+				u.tutorial.tutorial_type = 8;
+				u.tutorial.tutorial_stage = 1;
 			} else if (nearNo(e.getTo())) {
-				u.player.teleport();
-				u.tutorial.tutorial_stage = 2;
+				u.player.teleport(Main.TUTORIAL_2_START);
+				u.tutorial.tutorial_type = 2;
+				u.tutorial.tutorial_stage = 1;
+				u.tutorial.continueTutorial(u);
 			}
 			
 		}

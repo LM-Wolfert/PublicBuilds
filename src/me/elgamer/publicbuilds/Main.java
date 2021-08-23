@@ -104,9 +104,8 @@ public class Main extends JavaPlugin {
 	public static Location cranham;
 	
 	//Tutorial
-	public static Location TUTORIAL_1_START;
-	public static Location TUTORIAL_1_YES;
-	public static Location TUTORIAL_1_NO;
+	public static Location TUTORIAL_1_START, TUTORIAL_1_YES, TUTORIAL_1_NO;	
+	public static Location TUTORIAL_2_START, TUTORIAL_2_CORNER_1, TUTORIAL_2_CORNER_2, TUTORIAL_2_CORNER_3, TUTORIAL_2_CORNER_4;
 
 	//Building Poins Hologram
 	Hologram hologram;
@@ -226,6 +225,30 @@ public class Main extends JavaPlugin {
 				config.getDouble("teleport.stage_1.no.z"),
 				(float) config.getDouble("teleport.stage_1.no.yaw"),
 				(float) config.getDouble("teleport.stage_1.no.pitch"));
+		
+		TUTORIAL_2_START = new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), 
+				config.getDouble("teleport.stage_2.start.x"),
+				config.getDouble("teleport.stage_2.start.y"),
+				config.getDouble("teleport.stage_2.start.z"),
+				(float) config.getDouble("teleport.stage_2.start.yaw"),
+				(float) config.getDouble("teleport.stage_2.start.pitch"));
+		TUTORIAL_2_CORNER_1 = new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), 
+				config.getDouble("teleport.stage_2.corner_1.x"),
+				config.getDouble("teleport.stage_2.corner_1.y"),
+				config.getDouble("teleport.stage_2.corner_1.z"));
+		TUTORIAL_2_CORNER_2 = new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), 
+				config.getDouble("teleport.stage_2.corner_2.x"),
+				config.getDouble("teleport.stage_2.corner_2.y"),
+				config.getDouble("teleport.stage_2.corner_2.z"));
+		TUTORIAL_2_CORNER_3 = new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), 
+				config.getDouble("teleport.stage_2.corner_3.x"),
+				config.getDouble("teleport.stage_2.corner_3.y"),
+				config.getDouble("teleport.stage_2.corner_3.z"));
+		TUTORIAL_2_CORNER_4 = new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), 
+				config.getDouble("teleport.stage_2.corner_4.x"),
+				config.getDouble("teleport.stage_2.corner_4.y"),
+				config.getDouble("teleport.stage_2.corner_4.z"));
+				
 
 		//Holograms
 		hologram = HologramsAPI.createHologram(this, new Location(Bukkit.getWorld("Lobby"),
