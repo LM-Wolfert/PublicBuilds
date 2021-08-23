@@ -11,8 +11,8 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.mysql.PlotData;
 import me.elgamer.publicbuilds.mysql.PlotMessage;
+import me.elgamer.publicbuilds.tutorial.Tutorial;
 import me.elgamer.publicbuilds.utils.ClaimFunctions;
-import me.elgamer.publicbuilds.utils.Tutorial;
 import me.elgamer.publicbuilds.utils.User;
 import me.elgamer.publicbuilds.utils.Utils;
 import me.elgamer.publicbuilds.utils.WorldEditor;
@@ -34,6 +34,7 @@ public class ChatListener implements Listener {
 
 		User u = Main.getInstance().getUser(e.getPlayer());
 
+		/*
 		if (u.tutorialStage == 5) {
 			e.setCancelled(true);
 			try {
@@ -50,6 +51,7 @@ public class ChatListener implements Listener {
 				p.sendMessage(Utils.chat("&cThis is not a valid number, please try again!"));
 			}
 		}
+		*/
 
 		//If a reviewer has denied a plot they will need to provide a reason, they will be added to the reason map.
 		//If they send a message and are in the reason map their message will be recorded as the reason for denying the plot.

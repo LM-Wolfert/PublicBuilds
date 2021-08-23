@@ -56,6 +56,29 @@ starting_position:
     x: 0
     y: 70
     z: 0
+    
+teleport:
+    stage_1:
+        start:
+            x:
+            y:
+            z:
+            yaw:
+            pitch:
+        yes:
+            x:
+            y:
+            z:
+            yaw:
+            pitch:
+        no:
+            x:
+            y:
+            z:
+            yaw:
+            pitch:
+
+    
 #The user has to create a plot that includes these points
 plot_corners:
     1:

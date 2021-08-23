@@ -9,10 +9,10 @@ import org.bukkit.inventory.ItemStack;
 import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.mysql.PlayerData;
 import me.elgamer.publicbuilds.mysql.PlotData;
+import me.elgamer.publicbuilds.tutorial.Tutorial;
 import me.elgamer.publicbuilds.utils.ClaimFunctions;
 import me.elgamer.publicbuilds.utils.Plots;
 import me.elgamer.publicbuilds.utils.RankValues;
-import me.elgamer.publicbuilds.utils.Tutorial;
 import me.elgamer.publicbuilds.utils.User;
 import me.elgamer.publicbuilds.utils.Utils;
 import net.md_5.bungee.api.ChatColor;
@@ -89,14 +89,15 @@ public class MainGui {
 			p.openInventory(PlotGui.GUI(u));
 
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Create Plot")) {
-
+			
+			/*
 			//If they are in the third stage of the tutorial check if the plot is valid.
 			if (u.tutorialStage == 3) {
 
-				/*if (!(u.plots.hasLocations())) {
+				if (!(u.plots.hasLocations())) {
 						p.sendMessage(Utils.chat("&9You have not selected 4 corners!"));
 						return;
-					}*/
+					}
 
 				if (u.plots.vector.size() < 3) {
 					p.sendMessage(Utils.chat("&cYou must select a minimum of 3 points!"));
@@ -110,13 +111,14 @@ public class MainGui {
 					
 					u.tutorialStage = 4;
 					u.plots = new Plots();
-					Bukkit.getScheduler().runTaskLater (Main.getInstance(), () -> Tutorial.continueTutorial(u), 60);
+					//Bukkit.getScheduler().runTaskLater (Main.getInstance(), () -> Tutorial.continueTutorial(u), 60);
 					return;
 				} else {
 					p.sendMessage(Utils.chat("&cYour selection does not include all of the building and garden, please try again!"));
 					return;
 				}
 			}
+			*/
 			
 			//Check whether the player has a plot.
 			if (PlotData.hasPlot(p.getUniqueId().toString())) {

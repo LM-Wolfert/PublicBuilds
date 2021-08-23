@@ -11,10 +11,11 @@ import org.bukkit.inventory.ItemStack;
 
 import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.gui.MainGui;
+import me.elgamer.publicbuilds.tutorial.Tutorial;
 import me.elgamer.publicbuilds.utils.Plots;
-import me.elgamer.publicbuilds.utils.Tutorial;
 import me.elgamer.publicbuilds.utils.User;
 import me.elgamer.publicbuilds.utils.Utils;
+import net.md_5.bungee.api.ChatColor;
 
 public class PlayerInteract implements Listener {
 
@@ -40,7 +41,7 @@ public class PlayerInteract implements Listener {
 
 				e.setCancelled(true);
 				
-				if (Plots.inRegion(e.getClickedBlock()) && u.tutorialStage == 7) {
+				if (Plots.inRegion(e.getClickedBlock()) /*&& u.tutorialStage == 7*/) {
 					u.player.sendMessage(Utils.chat("&cThis position already belongs to another plot"));
 					return;
 				}
@@ -52,7 +53,7 @@ public class PlayerInteract implements Listener {
 
 				e.setCancelled(true);
 
-				if (Plots.inRegion(e.getClickedBlock()) && u.tutorialStage == 7) {
+				if (Plots.inRegion(e.getClickedBlock()) /*&& u.tutorialStage == 7*/) {
 					u.player.sendMessage(Utils.chat("&cThis position already belongs to another plot"));
 					return;
 				}
@@ -77,6 +78,10 @@ public class PlayerInteract implements Listener {
 		
 		if (e.getPlayer().getInventory().getItemInMainHand().equals(Main.gui)) {
 			e.setCancelled(true);
+			if (u.tutorial.tutorial_stage == 1) {
+				u.player.sendMessage(ChatColor.RED + "Please continue the tutorial first!");
+				return;
+			}
 			e.getPlayer().openInventory(MainGui.GUI(u));
 		}
 

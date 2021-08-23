@@ -30,8 +30,9 @@ import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.flags.registry.FlagConflictException;
 import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 
-import me.elgamer.publicbuilds.commands.Apply;
+//import me.elgamer.publicbuilds.commands.Apply;
 import me.elgamer.publicbuilds.commands.BuildingPoints;
+import me.elgamer.publicbuilds.commands.ConvertTutorial;
 //import me.elgamer.publicbuilds.commands.Corner;
 import me.elgamer.publicbuilds.commands.CreateArea;
 import me.elgamer.publicbuilds.commands.OpenGui;
@@ -58,9 +59,10 @@ import me.elgamer.publicbuilds.listeners.QuitServer;
 import me.elgamer.publicbuilds.mysql.PlayerData;
 import me.elgamer.publicbuilds.mysql.PlotData;
 import me.elgamer.publicbuilds.mysql.PlotMessage;
+import me.elgamer.publicbuilds.mysql.TutorialData;
+import me.elgamer.publicbuilds.tutorial.Tutorial;
 import me.elgamer.publicbuilds.utils.Particles;
 import me.elgamer.publicbuilds.utils.Ranks;
-import me.elgamer.publicbuilds.utils.Tutorial;
 import me.elgamer.publicbuilds.utils.User;
 import me.elgamer.publicbuilds.utils.Utils;
 import me.elgamer.publicbuilds.utils.WorldGuardFunctions;
@@ -70,7 +72,8 @@ public class Main extends JavaPlugin {
 
 	//MySQL
 	private Connection connection;
-	public String host, database, username, password, playerData, plotData, areaData, denyData, acceptData, submitData;
+	public String host, database, username, password, 
+	playerData, plotData, areaData, denyData, acceptData, submitData, tutorialData;
 	public int port;
 
 	//Other
@@ -99,6 +102,11 @@ public class Main extends JavaPlugin {
 	//Locations
 	public static Location spawn;
 	public static Location cranham;
+	
+	//Tutorial
+	public static Location TUTORIAL_1_START;
+	public static Location TUTORIAL_1_YES;
+	public static Location TUTORIAL_1_NO;
 
 	//Building Poins Hologram
 	Hologram hologram;
@@ -132,6 +140,7 @@ public class Main extends JavaPlugin {
 		createAcceptData();
 		createAreaData();
 		createSubmit();
+		createTutorialData();
 		PlotData.clearReview();
 
 		//Bungeecord
@@ -169,7 +178,8 @@ public class Main extends JavaPlugin {
 		getCommand("buildingpoints").setExecutor(new BuildingPoints());
 		getCommand("spawn").setExecutor(new Spawn());
 		getCommand("tutorial").setExecutor(new TutorialCommand());
-		getCommand("apply").setExecutor(new Apply());
+		//getCommand("apply").setExecutor(new Apply());
+		getCommand("converttutorial").setExecutor(new ConvertTutorial());
 
 		//Get essentials
 		ess = (Essentials) Bukkit.getServer().getPluginManager().getPlugin("Essentials");	
@@ -196,6 +206,26 @@ public class Main extends JavaPlugin {
 				config.getDouble("location.cranham.map.y"),
 				config.getDouble("location.cranham.map.z"),
 				180f, 45f);
+		
+		//Tutorial
+		TUTORIAL_1_START = new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), 
+				config.getDouble("teleport.stage_1.start.x"),
+				config.getDouble("teleport.stage_1.start.y"),
+				config.getDouble("teleport.stage_1.start.z"),
+				(float) config.getDouble("teleport.stage_1.start.yaw"),
+				(float) config.getDouble("teleport.stage_1.start.pitch"));
+		TUTORIAL_1_YES = new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), 
+				config.getDouble("teleport.stage_1.yes.x"),
+				config.getDouble("teleport.stage_1.yes.y"),
+				config.getDouble("teleport.stage_1.yes.z"),
+				(float) config.getDouble("teleport.stage_1.yes.yaw"),
+				(float) config.getDouble("teleport.stage_1.yes.pitch"));
+		TUTORIAL_1_NO = new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), 
+				config.getDouble("teleport.stage_1.no.x"),
+				config.getDouble("teleport.stage_1.no.y"),
+				config.getDouble("teleport.stage_1.no.z"),
+				(float) config.getDouble("teleport.stage_1.no.yaw"),
+				(float) config.getDouble("teleport.stage_1.no.pitch"));
 
 		//Holograms
 		hologram = HologramsAPI.createHologram(this, new Location(Bukkit.getWorld("Lobby"),
@@ -209,10 +239,12 @@ public class Main extends JavaPlugin {
 
 				for (User u : users) {
 
+					/*
 					if (u.tutorialStage == 6) {
 						Utils.spawnFireWork(u.player);
 						Bukkit.getScheduler().runTaskLater (instance, () -> Tutorial.continueTutorial(u), 60); //20 ticks equal 1 second
 					}
+					*/
 
 					//Increase buildingTime for each second the player is in a buildable claim and is not AFK
 					if (!(u.plotOwner == null)) {
@@ -309,6 +341,7 @@ public class Main extends JavaPlugin {
 					}
 
 
+					/*
 					//Set the world of the player.
 					u.world = u.player.getWorld();
 					if ((u.world.getName().equals(config.getString("worlds.build")) && u.tutorialStage < 6)) {
@@ -320,6 +353,7 @@ public class Main extends JavaPlugin {
 							Bukkit.getScheduler().runTaskLater (instance, () -> Tutorial.continueTutorial(u), 60);
 						}
 					}
+					*/
 
 					//Send deny or accept message if a plot has been accepted or denied that they own.
 					//Will not send if they are afk.
@@ -380,7 +414,7 @@ public class Main extends JavaPlugin {
 		for (User u: users) {
 
 			//Set tutorialStage in PlayData.
-			PlayerData.setTutorialStage(u.uuid, u.tutorialStage);
+			TutorialData.updateValues(u);
 
 			//Update the last online time of player.
 			PlayerData.updateTime(u.uuid);
@@ -413,12 +447,14 @@ public class Main extends JavaPlugin {
 		username = config.getString("MySQL_username");
 		password = config.getString("MySQL_password");
 		playerData = config.getString("MySQL_playerData");
+		
 		plotData = config.getString("MySQL_plotData");
 		areaData = config.getString("MySQL_areaData");
 		denyData = config.getString("MySQL_denyData");
 		acceptData = config.getString("MySQL_acceptData");
 		submitData = config.getString("MySQL_submitData");
-
+		tutorialData = config.getString("MySQL_tutorialData");
+		
 		try {
 
 			synchronized (this) {
@@ -471,6 +507,19 @@ public class Main extends JavaPlugin {
 			PreparedStatement statement = instance.getConnection().prepareStatement
 					("CREATE TABLE IF NOT EXISTS " + playerData
 							+ " ( ID VARCHAR(36) NOT NULL , NAME VARCHAR(20) NOT NULL , TUTORIAL_STAGE INT NOT NULL , BUILDING_POINTS INT NOT NULL , LAST_ONLINE BIGINT NOT NULL , BUILDER_ROLE VARCHAR(20) NOT NULL , LAST_SUBMIT BIGINT NOT NULL , UNIQUE (ID))");
+			statement.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	//Setup tutorial_data table for mysql database if it doesn't exist.
+	public void createTutorialData() {
+		try {
+			PreparedStatement statement = instance.getConnection().prepareStatement
+					("CREATE TABLE IF NOT EXISTS " + playerData
+							+ " ( ID VARCHAR(36) NOT NULL , TUTORIAL_TYPE INT NOT NULL , TUTORIAL_STAGE INT NOT NULL , FIRST_TIME TINYINT(1) NOT NULL , UNIQUE (ID))");
 			statement.executeUpdate();
 
 		} catch (SQLException e) {
@@ -616,7 +665,7 @@ public class Main extends JavaPlugin {
 			}
 
 		}
-		
+
 		try {
 
 			StateFlag flag = new StateFlag("no-plot", true);

@@ -9,6 +9,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.mysql.PlayerData;
 import me.elgamer.publicbuilds.mysql.PlotData;
+import me.elgamer.publicbuilds.mysql.TutorialData;
 import me.elgamer.publicbuilds.utils.User;
 import net.md_5.bungee.api.ChatColor;
 
@@ -41,7 +42,7 @@ public class QuitServer implements Listener {
 		Player p = e.getPlayer();
 
 		//Set tutorial stage in PlayerData
-		PlayerData.setTutorialStage(u.uuid, u.tutorialStage);
+		TutorialData.updateValues(u);
 
 		//Update the last online time of player.
 		PlayerData.updateTime(p.getUniqueId().toString());

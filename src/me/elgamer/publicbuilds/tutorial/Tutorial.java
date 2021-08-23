@@ -1,4 +1,4 @@
-package me.elgamer.publicbuilds.utils;
+package me.elgamer.publicbuilds.tutorial;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -10,54 +10,59 @@ import com.sk89q.worldedit.math.BlockVector2;
 import com.sk89q.worldguard.protection.regions.ProtectedPolygonalRegion;
 
 import me.elgamer.publicbuilds.Main;
+import me.elgamer.publicbuilds.mysql.TutorialData;
+import me.elgamer.publicbuilds.utils.Plots;
+import me.elgamer.publicbuilds.utils.User;
+import me.elgamer.publicbuilds.utils.Utils;
 
 public class Tutorial {
 
-	public static void continueTutorial(User u) {
+	public int tutorial_type;
+	public int tutorial_stage;
 
-		switch (u.tutorialStage) {
+	public boolean first_time;
+	public boolean complete;
 
-		case 0:
-			return;
-			
-		case 1:
-			stage1(u);
-			break;
+	public Tutorial(User u) {
 
-		case 2:
-			stage2(u);
-			break;
+		tutorial_type = TutorialData.getType(u.uuid);
+		tutorial_stage = TutorialData.getStage(u.uuid);
 
-		case 3:
-			stage3(u);
-			break;
-
-		case 4:
-			stage4(u);
-			break;
-
-		case 5:
-			stage5(u);
-			break;
-			
-		case 6:
-			stage6(u);
-			break;
-			
-		case 7:
-			return;		
-
-		}
+		first_time = TutorialData.getTime(u.uuid);
+		complete = false;
+		
+		continueTutorial(u);
 
 	}
 
+	public Tutorial(User u, boolean complete) {
+
+		tutorial_type = 10;
+		tutorial_stage = 0;
+
+		first_time = false;
+		this.complete = complete;
+	}
+
+
+
+	public void continueTutorial(User u) {
+
+		if (u.tutorial.tutorial_stage == 1) {
+			u.player.teleport(Main.TUTORIAL_1_START);
+		}
+		
+
+	}
+
+	/*
 	public static void stage1(User u) {
 
 		Player p = u.player;
 		FileConfiguration config = Main.getInstance().getConfig();
 		p.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Tutorial Stage 1/5", "/ll", 10, 100, 50);
 		p.teleport(new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), config.getDouble("starting_position.x"), config.getDouble("starting_position.y"), config.getDouble("starting_position.z")));
-		
+
 		p.sendMessage(Utils.chat("&fThe first thing you'll be wondering, where am I?"));
 		p.sendMessage(Utils.chat("&fFor this we have the command /ll"));
 		p.sendMessage(Utils.chat("&fThis will return your current coordinates in chat with a link to google maps."));
@@ -77,7 +82,7 @@ public class Tutorial {
 	}
 
 	public static void stage3(User u) {
-		
+
 		Player p = u.player;
 		p.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Tutorial Stage 3/5", "Creating a plot", 10, 100, 50);
 		p.sendMessage(Utils.chat("&fNow that you know where you are you can pick out a building to build."));
@@ -88,9 +93,9 @@ public class Tutorial {
 		p.sendMessage(Utils.chat("&fWhen you have selected the corners open the gui and click the emerald."));
 
 	}
-	
+
 	public static void stage4(User u) {
-				
+
 		Player p = u.player;
 		p.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Tutorial Stage 4/5", "Creating outlines", 10, 100, 50);
 		p.sendMessage(Utils.chat("&fOnce you have created a plot you can start to build."));
@@ -99,9 +104,9 @@ public class Tutorial {
 		p.sendMessage(Utils.chat("&fKeep in mind that the roof often sticks out a bit so you may want to move inward a little."));
 		p.sendMessage(Utils.chat("&fWith the coordinates again use /tpll to teleport to the corner of 134+136 Marlborough Gardens."));
 	}
-	
+
 	public static void stage5(User u) {
-		
+
 		Player p = u.player;
 		p.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Tutorial Stage 5/5", "Estimating the height of the building.", 10, 100, 50);
 		p.sendMessage(Utils.chat("&fThe final step is to make the walls the right height."));
@@ -110,9 +115,9 @@ public class Tutorial {
 		p.sendMessage(Utils.chat("&fIf you choose to guess the height a good reference is the door, which is usually around 2 metres."));
 		p.sendMessage(Utils.chat("&fPlease type in chat your estimated height for the front wall of 134+136 Marlborough Gardens."));
 	}
-	
+
 	public static void stage6(User u) {
-				
+
 		Player p = u.player;
 		FileConfiguration config = Main.getInstance().getConfig();
 		u.plots = new Plots();
@@ -121,8 +126,9 @@ public class Tutorial {
 		p.sendMessage(Utils.chat("&fHere is the building built by one of our builders."));
 		p.sendMessage(Utils.chat("&fUse the gui or tpll to leave this area and go back to wherever you want to go."));
 		u.tutorialStage = 7;
-		
+
 	}
+	*/
 
 	public static boolean containsCorners(User u) {
 
@@ -143,10 +149,10 @@ public class Tutorial {
 	}
 
 	public static boolean nearCorners(double[] coords) {
-		
+
 		//Checks whether the player has teleported near the 4 corners of the building using /tpll
 		FileConfiguration config = Main.getInstance().getConfig();
-		
+
 		if ((Math.abs(coords[0]-config.getDouble("tpll_points.1.x")) <= 0.5) && (Math.abs(coords[1]-config.getDouble("tpll_points.1.z")) <= 0.5)) {
 			return true;
 		} else if ((Math.abs(coords[0]-config.getDouble("tpll_points.2.x")) <= 0.5) && (Math.abs(coords[1]-config.getDouble("tpll_points.2.z")) <= 0.5)) {
@@ -161,10 +167,10 @@ public class Tutorial {
 	}
 
 	public static boolean getHeight(Double h) {
-		
+
 		//Checks whether the player has given the correct height of the building.
 		FileConfiguration config = Main.getInstance().getConfig();
-		
+
 		if (Math.floor(h) == config.getInt("building_height")) {
 			return true;
 		} else {

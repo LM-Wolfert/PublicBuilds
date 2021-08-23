@@ -9,7 +9,7 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 import me.elgamer.UKnetUtilities.projections.ModifiedAirocean;
 import me.elgamer.publicbuilds.Main;
-import me.elgamer.publicbuilds.utils.Tutorial;
+import me.elgamer.publicbuilds.tutorial.Tutorial;
 import me.elgamer.publicbuilds.utils.User;
 import me.elgamer.publicbuilds.utils.Utils;
 import net.md_5.bungee.api.ChatColor;
@@ -27,6 +27,7 @@ public class CommandListener implements Listener {
 
 		User u = Main.getInstance().getUser(e.getPlayer());
 
+		/*
 		//If someone uses the /ll command check if they are in stage 1 of the tutorial since this is what they need to do.
 		if (e.getMessage().startsWith("/ll")) {
 
@@ -39,6 +40,7 @@ public class CommandListener implements Listener {
 			}
 
 			//If someone uses /tpll and are in stage 2 or 4 of the tutorial check if they input is correct and continue/redo the tutorial stage.
+	
 		} else if (e.getMessage().startsWith("/tpll")) {
 
 			if (u.tutorialStage == 2) {
@@ -128,8 +130,10 @@ public class CommandListener implements Listener {
 				}
 
 			}
+			
 
 		}
 
+	*/
 	}
 }

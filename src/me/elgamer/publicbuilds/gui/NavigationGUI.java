@@ -8,7 +8,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import me.elgamer.publicbuilds.Main;
-import me.elgamer.publicbuilds.utils.Tutorial;
 import me.elgamer.publicbuilds.utils.User;
 import me.elgamer.publicbuilds.utils.Utils;
 
@@ -55,12 +54,14 @@ public class NavigationGUI {
 		
 		if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Build")) {
 			
+			/*
 			if (u.tutorialStage == 0) {
 				u.tutorialStage = 1;
 				Tutorial.continueTutorial(u);
 				p.closeInventory();
 				return;
 			}
+			*/
 			
 			//Will open the build location gui.
 			p.closeInventory();

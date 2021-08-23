@@ -9,8 +9,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import me.elgamer.publicbuilds.Main;
-import me.elgamer.publicbuilds.utils.Tutorial;
-import me.elgamer.publicbuilds.utils.User;
 import net.md_5.bungee.api.ChatColor;
 
 public class TutorialCommand implements CommandExecutor {
@@ -43,15 +41,10 @@ public class TutorialCommand implements CommandExecutor {
 			p.sendMessage(ChatColor.RED + "/tutorial <1-5>");
 			return true;
 		}
-
-		User u = Main.getInstance().getUser(p);
-		u.tutorialStage = val;
 		
 		FileConfiguration config = Main.getInstance().getConfig();
 		
 		p.teleport(new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), config.getDouble("starting_position.x"), config.getDouble("starting_position.y"), config.getDouble("starting_position.z")));
-		
-		Tutorial.continueTutorial(u);
 
 		return true;
 

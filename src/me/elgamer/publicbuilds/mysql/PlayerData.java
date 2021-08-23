@@ -419,4 +419,20 @@ public class PlayerData {
 		}
 	}
 
+	public static ResultSet getTutorialCompleters() {
+		
+		Main instance = Main.getInstance();
+
+		try {
+			PreparedStatement statement = instance.getConnection().prepareStatement
+					("SELECT * FROM " + instance.playerData + " WHERE TUTORIAL_STAGE=" + 7);
+
+			return (statement.executeQuery());
+
+		} catch (SQLException sql) {
+			sql.printStackTrace();
+			return null;
+		}
+	}
+	
 }

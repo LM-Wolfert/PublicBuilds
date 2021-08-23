@@ -6,9 +6,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.elgamer.publicbuilds.Main;
-import me.elgamer.publicbuilds.utils.Tutorial;
-import me.elgamer.publicbuilds.utils.User;
+//import me.elgamer.publicbuilds.Main;
+//import me.elgamer.publicbuilds.tutorial.Tutorial;
+//import me.elgamer.publicbuilds.utils.User;
 
 public class SkipTutorial implements CommandExecutor {
 	
@@ -27,9 +27,9 @@ public class SkipTutorial implements CommandExecutor {
 			return true;
 		}
 		
-		User u = Main.getInstance().getUser(p);
-		u.tutorialStage = 6;
-		Tutorial.continueTutorial(u);
+		//User u = Main.getInstance().getUser(p);
+		//u.tutorialStage = 6;
+		//Tutorial.continueTutorial(u);
 		
 		return true;
 		

@@ -5,6 +5,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import me.elgamer.publicbuilds.mysql.PlayerData;
+import me.elgamer.publicbuilds.mysql.TutorialData;
+import me.elgamer.publicbuilds.tutorial.Tutorial;
 
 public class User {
 
@@ -13,8 +15,6 @@ public class User {
 	public String name;
 	
 	public int buildingTime;
-	
-	public int tutorialStage;
 	
 	public Plots plots;
 	public Accept accept;
@@ -32,6 +32,8 @@ public class User {
 	
 	public ItemStack slot9;
 	
+	public Tutorial tutorial;
+	
 	public User(Player player) {
 		
 		//Set player, uuid and name variable.
@@ -46,7 +48,11 @@ public class User {
 		buildingTime = me.elgamer.btepoints.utils.PlayerData.getBuildTime(uuid);
 			
 		//Continue the tutorial from where they last were.
-		tutorialStage = PlayerData.getTutorialStage(uuid);
+		if (!(TutorialData.tutorialComplete(uuid))) {
+			new Tutorial(this);
+		} else {
+			new Tutorial(this, true);
+		}
 		
 		//Create plots map.
 		plots = new Plots();
