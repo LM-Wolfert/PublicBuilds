@@ -94,6 +94,7 @@ public class CommandListener implements Listener {
 					u.tutorial.tutorial_stage = 1;
 					u.player.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Tpll Tutorial Complete", "Well Done!", 10, 100, 50);
 					Utils.spawnFireWork(u.player);
+					u.tutorial.continueTutorial(u);
 					
 				}
 				

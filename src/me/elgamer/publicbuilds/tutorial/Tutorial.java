@@ -54,11 +54,23 @@ public class Tutorial {
 
 		if (u.tutorial.tutorial_type == 1) {
 			u.player.teleport(Main.TUTORIAL_1_START);
-		}
-		
-		if (u.tutorial.tutorial_type == 2) {
+		} else if (u.tutorial.tutorial_type == 2) {
 			Bukkit.getScheduler().runTaskLater (Main.getInstance(), () -> startStage2(u), 60);
-		}
+		} else if (u.tutorial.tutorial_type == 3) {
+			Bukkit.getScheduler().runTaskLater (Main.getInstance(), () -> u.player.teleport(Main.TUTORIAL_3_START), 60);
+		} else if (u.tutorial.tutorial_type == 4) {
+			
+		} else if (u.tutorial.tutorial_type == 5) {
+			
+		} else if (u.tutorial.tutorial_type == 6) {
+			
+		} else if (u.tutorial.tutorial_type == 7) {
+			
+		} else if (u.tutorial.tutorial_type == 8) {
+			
+		} else if (u.tutorial.tutorial_type == 9) {
+			
+		} 
 		
 
 	}

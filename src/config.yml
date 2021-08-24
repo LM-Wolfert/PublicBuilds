@@ -100,7 +100,37 @@ teleport:
             x: 2870603.15
             y: 144.0
             z: -5430337.79
-
+    stage_3:
+        start:
+            x: 100.5
+            y: 65.0
+            z: 100.5
+            yaw: 0.0
+            pitch: 0.0
+        continue:
+            x: 90.5
+            y: 65.0
+            z: 109.5
+        worldedit:
+            x: 102.5
+            y: 65.0
+            z: 112.5
+        gep:
+            x: 98.5
+            y: 65.0
+            z: 112.5
+        roofs:
+            x: 94.5
+            y: 65.0
+            z: 111.5
+        details:
+            x: 106.5
+            y: 65.0
+            z: 111.5
+        texture:
+            x: 110.5
+            y: 65.0
+            z: 109.5       
     
 #The user has to create a plot that includes these points
 plot_corners:

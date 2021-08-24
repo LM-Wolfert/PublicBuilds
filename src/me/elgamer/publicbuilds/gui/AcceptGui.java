@@ -5,7 +5,6 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -162,17 +161,13 @@ public class AcceptGui {
 			
 			FileConfiguration config = Main.getInstance().getConfig();
 			String uuid = PlotData.getOwner(u.reviewing);
-			String name = PlayerData.getName(uuid);
 			
 			//Calculate building points and add them
 			int buildingPoints = config.getInt("points_base") + ac.size()*config.getInt("size_multiplier") + ac.accuracy()*config.getInt("accuracy_multiplier") + ac.quality()*config.getInt("quality_multiplier");
 			PlayerData.addPoints(uuid, buildingPoints);
 			
 			//Add points for building with multiplier
-			ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
-			
-			String command = "addpoints " + name + " " + buildingPoints*config.getInt("points_multiplier");
-			Bukkit.dispatchCommand(console, command);
+			me.elgamer.btepoints.utils.Points.addPoints(uuid, buildingPoints*config.getInt("points_multiplier"));
 			
 			//Remove reviewing status
 			PlotData.setStatus(u.reviewing, "completed");

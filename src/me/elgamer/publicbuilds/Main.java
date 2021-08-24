@@ -106,7 +106,14 @@ public class Main extends JavaPlugin {
 	//Tutorial
 	public static Location TUTORIAL_1_START, TUTORIAL_1_YES, TUTORIAL_1_NO;	
 	public static Location TUTORIAL_2_START, TUTORIAL_2_CORNER_1, TUTORIAL_2_CORNER_2, TUTORIAL_2_CORNER_3, TUTORIAL_2_CORNER_4;
-
+	public static Location TUTORIAL_3_START, TUTORIAL_3_CONTINUE, TUTORIAL_3_WORLDEDIT, TUTORIAL_3_GEP, TUTORIAL_3_ROOFS, TUTORIAL_3_DETAILS, TUTORIAL_3_TEXTURE;
+	public static Location TUTORIAL_4_START;
+	public static Location TUTORIAL_5_START;
+	public static Location TUTORIAL_6_START;
+	public static Location TUTORIAL_7_START;
+	public static Location TUTORIAL_8_START;
+	public static Location TUTORIAL_9_START;	
+	
 	//Building Poins Hologram
 	Hologram hologram;
 
@@ -248,6 +255,79 @@ public class Main extends JavaPlugin {
 				config.getDouble("teleport.stage_2.corner_4.x"),
 				config.getDouble("teleport.stage_2.corner_4.y"),
 				config.getDouble("teleport.stage_2.corner_4.z"));
+		
+		TUTORIAL_3_START = new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), 
+				config.getDouble("teleport.stage_3.start.x"),
+				config.getDouble("teleport.stage_3.start.y"),
+				config.getDouble("teleport.stage_3.start.z"),
+				(float) config.getDouble("teleport.stage_3.start.yaw"),
+				(float) config.getDouble("teleport.stage_3.start.pitch"));
+		TUTORIAL_3_CONTINUE = new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), 
+				config.getDouble("teleport.stage_3.continue.x"),
+				config.getDouble("teleport.stage_3.continue.y"),
+				config.getDouble("teleport.stage_3.continue.z"));
+		TUTORIAL_3_WORLDEDIT = new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), 
+				config.getDouble("teleport.stage_3.worldedit.x"),
+				config.getDouble("teleport.stage_3.worldedit.y"),
+				config.getDouble("teleport.stage_3.worldedit.z"));
+		TUTORIAL_3_GEP = new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), 
+				config.getDouble("teleport.stage_3.gep.x"),
+				config.getDouble("teleport.stage_3.gep.y"),
+				config.getDouble("teleport.stage_3.gep.z"));
+		TUTORIAL_3_ROOFS = new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), 
+				config.getDouble("teleport.stage_3.roofs.x"),
+				config.getDouble("teleport.stage_3.roofs.y"),
+				config.getDouble("teleport.stage_3.roofs.z"));
+		TUTORIAL_3_DETAILS = new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), 
+				config.getDouble("teleport.stage_3.details.x"),
+				config.getDouble("teleport.stage_3.details.y"),
+				config.getDouble("teleport.stage_3.details.z"));
+		TUTORIAL_3_TEXTURE = new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), 
+				config.getDouble("teleport.stage_3.texture.x"),
+				config.getDouble("teleport.stage_3.texture.y"),
+				config.getDouble("teleport.stage_3.texture.z"));
+		
+		TUTORIAL_4_START = new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), 
+				config.getDouble("teleport.stage_4.start.x"),
+				config.getDouble("teleport.stage_4.start.y"),
+				config.getDouble("teleport.stage_4.start.z"),
+				(float) config.getDouble("teleport.stage_4.start.yaw"),
+				(float) config.getDouble("teleport.stage_4.start.pitch"));
+		
+		TUTORIAL_5_START = new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), 
+				config.getDouble("teleport.stage_5.start.x"),
+				config.getDouble("teleport.stage_5.start.y"),
+				config.getDouble("teleport.stage_5.start.z"),
+				(float) config.getDouble("teleport.stage_5.start.yaw"),
+				(float) config.getDouble("teleport.stage_5.start.pitch"));
+		
+		TUTORIAL_6_START = new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), 
+				config.getDouble("teleport.stage_6.start.x"),
+				config.getDouble("teleport.stage_6.start.y"),
+				config.getDouble("teleport.stage_6.start.z"),
+				(float) config.getDouble("teleport.stage_6.start.yaw"),
+				(float) config.getDouble("teleport.stage_6.start.pitch"));
+		
+		TUTORIAL_7_START = new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), 
+				config.getDouble("teleport.stage_7.start.x"),
+				config.getDouble("teleport.stage_7.start.y"),
+				config.getDouble("teleport.stage_7.start.z"),
+				(float) config.getDouble("teleport.stage_7.start.yaw"),
+				(float) config.getDouble("teleport.stage_7.start.pitch"));
+		
+		TUTORIAL_8_START = new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), 
+				config.getDouble("teleport.stage_8.start.x"),
+				config.getDouble("teleport.stage_8.start.y"),
+				config.getDouble("teleport.stage_8.start.z"),
+				(float) config.getDouble("teleport.stage_8.start.yaw"),
+				(float) config.getDouble("teleport.stage_8.start.pitch"));
+		
+		TUTORIAL_9_START = new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), 
+				config.getDouble("teleport.stage_9.start.x"),
+				config.getDouble("teleport.stage_9.start.y"),
+				config.getDouble("teleport.stage_9.start.z"),
+				(float) config.getDouble("teleport.stage_9.start.yaw"),
+				(float) config.getDouble("teleport.stage_9.start.pitch"));
 				
 
 		//Holograms
