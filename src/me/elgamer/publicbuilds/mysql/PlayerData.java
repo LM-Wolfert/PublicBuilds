@@ -10,6 +10,7 @@ import java.util.List;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import me.elgamer.publicbuilds.Main;
+import me.elgamer.publicbuilds.utils.Leaderboard;
 import me.elgamer.publicbuilds.utils.Time;
 
 public class PlayerData {
@@ -302,58 +303,46 @@ public class PlayerData {
 		}
 	}
 
-	public static LinkedHashMap<String,Integer> pointsAboveBelow(String uuid, String name) {
+	public static Leaderboard pointsAboveBelow(String uuid, String name) {
 
-		LinkedHashMap<String,Integer> lead = new LinkedHashMap<String,Integer>();
+		Leaderboard lead = new Leaderboard();
 
 		Main instance = Main.getInstance();
 
 		try {
+			//Get all players from playerData in descending order of building points
 			PreparedStatement statement = instance.getConnection().prepareStatement
-					("SELECT * FROM " + instance.playerData + " WHERE ID=?");
-			statement.setString(1, uuid);
+					("SELECT * FROM " + instance.playerData + " ORDER BY BUILDING_POINTS DESC");
+
 			ResultSet results = statement.executeQuery();
-			results.next();
 
-			int points = results.getInt("BUILDING_POINTS");
-
-			statement = instance.getConnection().prepareStatement
-					("SELECT * FROM " + instance.playerData + " WHERE BUILDING_POINTS>? ORDER BY BUILDING_POINTS DESC");
-			statement.setInt(1, points);
-			results = statement.executeQuery();
-
-			int i = 1;
+			int pos = 0;
 
 			while (results.next()) {
-				if (i > 4) { break; }
-				
+				pos += 1;
 				if (results.getString("ID").equals(uuid)) {
 					break;
 				}
-
-				lead.put(results.getString("NAME"), results.getInt("BUILDING_POINTS"));
-				i += 1;
 			}
 
-			lead.put(name, points);
-
-			statement = instance.getConnection().prepareStatement
-					("SELECT * FROM " + instance.playerData + " WHERE BUILDING_POINTS<=? ORDER BY BUILDING_POINTS DESC");
-			statement.setInt(1, points);
-			results = statement.executeQuery();
-
-			i = 1;
-
-			while (results.next()) {
-
-				if (i > 4) { break; }
-
-				if (results.getString("ID").equals(uuid)) {
-					continue;
+			for (int j = 0; j < 5; j++) {
+				pos -= 1;
+				if (results.previous()) {
+				} else {
+					break;
 				}
+			}
 
-				lead.put(results.getString("NAME"), results.getInt("BUILDING_POINTS"));
-				i += 1;
+			for (int i = 0; i < 9; i++) {
+
+				if (results.next()) {
+					pos += 1;
+					lead.position[i] = pos;
+					lead.uuids[i] = results.getString("NAME");
+					lead.points[i] = results.getInt("BUILDING_POINTS");
+				} else {
+					return lead;
+				}
 
 			}
 
@@ -395,9 +384,9 @@ public class PlayerData {
 		}
 
 	}
-	
+
 	public static String getUUID(String name) {
-		
+
 		Main instance = Main.getInstance();
 
 		try {
@@ -408,7 +397,7 @@ public class PlayerData {
 
 			if (results.next()) {
 				return (results.getString("ID"));
-				
+
 			} else {
 				return null;
 			}
@@ -420,7 +409,7 @@ public class PlayerData {
 	}
 
 	public static ResultSet getTutorialCompleters() {
-		
+
 		Main instance = Main.getInstance();
 
 		try {
@@ -434,5 +423,5 @@ public class PlayerData {
 			return null;
 		}
 	}
-	
+
 }

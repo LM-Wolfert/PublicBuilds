@@ -9,9 +9,17 @@ import me.elgamer.publicbuilds.mysql.PlayerData;
 
 public class Leaderboard {
 
+	public String[] uuids = new String[9];
+	public int[] points = new int[9];
+	public int[] position = new int[9];
+	
+	public Leaderboard() {
+		
+	}
+	
 	public static void printLeaderboard(User u) {
 
-		LinkedHashMap<String, Integer> lead = PlayerData.pointsAboveBelow(u.uuid, u.name);
+		Leaderboard lead = PlayerData.pointsAboveBelow(u.uuid, u.name);
 
 		if (lead == null) {
 			u.player.sendMessage(ChatColor.RED + "Not enough entries to create a leaderboard!");
@@ -19,7 +27,7 @@ public class Leaderboard {
 
 		}
 
-		if (lead.size() == 0) {
+		if (lead.points[0] == 0) {
 			u.player.sendMessage(ChatColor.RED + "Nobody has points!");
 			return;
 		}
@@ -27,19 +35,18 @@ public class Leaderboard {
 		u.player.sendMessage(String.format("%-6s%-8s%-16s", "#", "Points" , "Username"));
 		u.player.sendMessage("------------------------");
 
-		int i = 1;
-		
-		for (Entry<String, Integer> e : lead.entrySet()) {
+		for (int i = 0; i < lead.points.length; i++) {
 
-			u.player.sendMessage(String.format("%-6s%-8s%-16s", i, e.getValue() , e.getKey()));
-			i += 1;
-			
+			if (lead.uuids[i] == null) {
+				break;
+			}
+			u.player.sendMessage(String.format("%-6s%-8s%-16s", i, lead.points[i] , lead.uuids[i]));			
 		}
 	}
 	
 	public static void printLeaderboardElse(User u, String uuid, String name) {
 
-		LinkedHashMap<String, Integer> lead = PlayerData.pointsAboveBelow(uuid, name);
+		Leaderboard lead = PlayerData.pointsAboveBelow(uuid, name);
 
 		if (lead == null) {
 			u.player.sendMessage(ChatColor.RED + "Not enough entries to create a leaderboard!");
@@ -47,7 +54,7 @@ public class Leaderboard {
 
 		}
 
-		if (lead.size() == 0) {
+		if (lead.points[0] == 0) {
 			u.player.sendMessage(ChatColor.RED + "Nobody has points!");
 			return;
 		}
@@ -55,13 +62,12 @@ public class Leaderboard {
 		u.player.sendMessage(String.format("%-6s%-8s%-16s", "#", "Points" , "Username"));
 		u.player.sendMessage("------------------------");
 
-		int i = 1;
-		
-		for (Entry<String, Integer> e : lead.entrySet()) {
+		for (int i = 0; i < lead.points.length; i++) {
 
-			u.player.sendMessage(String.format("%-6s%-8s%-16s", i, e.getValue() , e.getKey()));
-			i += 1;
-			
+			if (lead.uuids[i] == null) {
+				break;
+			}
+			u.player.sendMessage(String.format("%-6s%-8s%-16s", i, lead.points[i] , lead.uuids[i]));			
 		}
 	}
 	

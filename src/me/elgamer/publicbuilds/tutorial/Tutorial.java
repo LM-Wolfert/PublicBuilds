@@ -69,7 +69,7 @@ public class Tutorial {
 		} else if (u.tutorial.tutorial_type == 8) {
 			
 		} else if (u.tutorial.tutorial_type == 9) {
-			
+			Bukkit.getScheduler().runTaskLater (Main.getInstance(), () -> startStage9(u), 60);
 		} 
 		
 
@@ -100,6 +100,11 @@ public class Tutorial {
 		corner_sum = 0;
 		
 		
+	}
+	
+	public void startStage9(User u) {
+		
+		u.player.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Plot Tutorial", "Before you can build, you need to create plot", 10, 200, 50);
 	}
 	
 	public String stage2Corner(double[] coords, World world) {
