@@ -52,31 +52,35 @@ worlds:
     tutorial: tutorialWorld
 
 #Tutorial
-starting_position:
-    x: 0
-    y: 70
-    z: 0
+corner_1:
+    x: 2807456
+    z: -5415388
+corner_2:
+    x: 2807440
+    z: -5415421
+corner_3:
+    x: 2807469
+    z: -5415433
+corner_4
+    x: 2807485
+    z: -5415405
     
-teleport:
+tutorial:
     stage_1:
         start:
-            x:
-            y:
-            z:
-            yaw:
-            pitch:
+            x: 0.5
+            y: 64.0
+            z: 0.5
+            yaw: 0.0
+            pitch: 0.0
         yes:
-            x:
-            y:
-            z:
-            yaw:
-            pitch:
+            x: 3.5
+            y: 64.0
+            z: 6.5
         no:
-            x:
-            y:
-            z:
-            yaw:
-            pitch:
+            x: -2.5
+            y: 64.0
+            z: 6.5
     stage_2:
         start:
             x: 2870614.5
@@ -130,39 +134,26 @@ teleport:
         texture:
             x: 110.5
             y: 65.0
-            z: 109.5       
-    
-#The user has to create a plot that includes these points
-plot_corners:
-    1:
-        x: 2808085
-        z: -5408451
-    2:
-        x: 2808107
-        z: -5408431
-    3:
-        x: 2808094
-        z: -5408418
-    4:
-        x: 2808071
-        z: -5408439
-        
-tpll_points:
-    1:
-        x: 2808089.6
-        z: -5408447.8
-    2:
-        x: 2808096.6
-        z: -5408440.4
-    3:
-        x: 2808086.3
-        z: -5408430.5
-    4:
-        x: 2808078.3
-        z: -5408437.8
-        
-building_height: 4
-tutorial_final_stage: 6
+            z: 109.5 
+    stage_9:
+        start:
+            x: 2807465.5
+            y: 72.0
+            z: -5415408.5
+            yaw: -90.0
+            pitch: 0.0
+        corner_1:
+            x: 2807456
+            z: -5415388
+        corner_2:
+            x: 2807440
+            z: -5415421
+        corner_3:
+            x: 2807469
+            z: -5415433
+        corner_4
+            x: 2807485
+            z: -5415405
 
 #Building points
 #Points multiplier for each level

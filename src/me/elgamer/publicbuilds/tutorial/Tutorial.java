@@ -151,6 +151,24 @@ public class Tutorial {
 		
 		
 	}
+	
+	public boolean stage9Corners(User u) {
+		//Checks whether the corners the player has set include all 4 corners of the minimum plot size.
+				FileConfiguration config = Main.getInstance().getConfig();
+				ProtectedPolygonalRegion region = new ProtectedPolygonalRegion("testregion", u.plots.vector, 1, 256);
+
+				BlockVector2 pos1 = BlockVector2.at(config.getInt("tutorial.stage_9.corner_1.x"), config.getInt("tutorial.stage_9.corner_1.z"));
+				BlockVector2 pos2 = BlockVector2.at(config.getInt("tutorial.stage_9.corner_2.x"), config.getInt("tutorial.stage_9.corner_2.z"));
+				BlockVector2 pos3 = BlockVector2.at(config.getInt("tutorial.stage_9.corner_3.x"), config.getInt("tutorial.stage_9.corner_3.z"));
+				BlockVector2 pos4 = BlockVector2.at(config.getInt("tutorial.stage_9.corner_4.x"), config.getInt("tutorial.stage_9.corner_4.z"));
+
+				if (region.contains(pos1) && region.contains(pos2) && region.contains(pos3) && region.contains(pos4)) {
+					return true;
+				} else {
+					return false;
+				}
+		
+	}
 /*
 	public static void stage3(User u) {
 

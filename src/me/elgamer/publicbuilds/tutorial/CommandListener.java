@@ -23,11 +23,6 @@ public class CommandListener implements Listener {
 	public void chatEvent(PlayerCommandPreprocessEvent e) {
 
 		User u = Main.getInstance().getUser(e.getPlayer());
-
-		if (u.tutorial.tutorial_type == 1) {
-			e.setCancelled(true);
-			u.player.sendMessage(ChatColor.RED + "Please continue the tutorial first!");
-		}
 		
 		if (u.tutorial.tutorial_type == 2) {
 			if (!e.getMessage().startsWith("/tpll") && !e.getMessage().startsWith("/ll")) {
@@ -98,7 +93,12 @@ public class CommandListener implements Listener {
 					
 				}
 				
-			}			
+			}	
+			
+			if (u.tutorial.tutorial_type <= 9) {
+				e.setCancelled(true);
+				u.player.sendMessage(ChatColor.RED + "Please continue the tutorial first!");
+			}
 			
 		}
 	}

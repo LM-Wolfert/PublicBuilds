@@ -9,7 +9,6 @@ import org.bukkit.inventory.ItemStack;
 import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.mysql.PlayerData;
 import me.elgamer.publicbuilds.mysql.PlotData;
-import me.elgamer.publicbuilds.tutorial.Tutorial;
 import me.elgamer.publicbuilds.utils.ClaimFunctions;
 import me.elgamer.publicbuilds.utils.Plots;
 import me.elgamer.publicbuilds.utils.RankValues;
@@ -75,8 +74,12 @@ public class MainGui {
 		Player p = u.player;
 
 		if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Navigation Menu")) {
-
+			
 			p.closeInventory();
+			if (u.tutorial.tutorial_stage == 9) {
+				u.player.sendMessage(ChatColor.RED + "Please continue the tutorial first!");
+				return;
+			}
 			p.openInventory(NavigationGUI.GUI(u));
 
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Selection Tool")) {
@@ -86,39 +89,38 @@ public class MainGui {
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Plot Menu")) {
 			//Open the plot gui.
 			p.closeInventory();
+			if (u.tutorial.tutorial_stage == 9) {
+				u.player.sendMessage(ChatColor.RED + "Please continue the tutorial first!");
+				return;
+			}
 			p.openInventory(PlotGui.GUI(u));
 
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Create Plot")) {
 			
-			/*
-			//If they are in the third stage of the tutorial check if the plot is valid.
-			if (u.tutorialStage == 3) {
-
-				if (!(u.plots.hasLocations())) {
-						p.sendMessage(Utils.chat("&9You have not selected 4 corners!"));
-						return;
-					}
+			//If they are in the last stage of the tutorial check if the plot is valid.
+			if (u.tutorial.tutorial_stage == 9) {
 
 				if (u.plots.vector.size() < 3) {
 					p.sendMessage(Utils.chat("&cYou must select a minimum of 3 points!"));
 					return;
 				}
 
-				if (Tutorial.containsCorners(u)) {
+				if (u.tutorial.stage9Corners(u)) {
 					
-					u.player.sendMessage(ChatColor.GREEN + "Stage 3 complete! The tutorial will continue shortly.");
+					u.player.sendMessage(ChatColor.GREEN + "Tutorial Complete");
 					Utils.spawnFireWork(u.player);
 					
-					u.tutorialStage = 4;
+					u.player.teleport(Main.spawn);
+					u.player.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Plot Creation Tutorial Complete", "This is the end of the tutorial, good luck building!", 10, 100, 50);
+					u.tutorial.tutorial_type = 10;
+					u.tutorial.tutorial_stage = 1;
 					u.plots = new Plots();
-					//Bukkit.getScheduler().runTaskLater (Main.getInstance(), () -> Tutorial.continueTutorial(u), 60);
 					return;
 				} else {
-					p.sendMessage(Utils.chat("&cYour selection does not include all of the building and garden, please try again!"));
+					p.sendMessage(Utils.chat("&cYour selection does not include all of the property, please try again!"));
 					return;
 				}
 			}
-			*/
 			
 			//Check whether the player has a plot.
 			if (PlotData.hasPlot(p.getUniqueId().toString())) {
