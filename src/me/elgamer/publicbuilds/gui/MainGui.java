@@ -76,7 +76,7 @@ public class MainGui {
 		if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Navigation Menu")) {
 			
 			p.closeInventory();
-			if (u.tutorial.tutorial_stage == 9) {
+			if (u.tutorial.tutorial_type == 9 && u.tutorial.first_time) {
 				u.player.sendMessage(ChatColor.RED + "Please continue the tutorial first!");
 				return;
 			}
@@ -89,7 +89,7 @@ public class MainGui {
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Plot Menu")) {
 			//Open the plot gui.
 			p.closeInventory();
-			if (u.tutorial.tutorial_stage == 9) {
+			if (u.tutorial.tutorial_type == 9 && u.tutorial.first_time) {
 				u.player.sendMessage(ChatColor.RED + "Please continue the tutorial first!");
 				return;
 			}
@@ -98,7 +98,7 @@ public class MainGui {
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Create Plot")) {
 			
 			//If they are in the last stage of the tutorial check if the plot is valid.
-			if (u.tutorial.tutorial_stage == 9) {
+			if (u.tutorial.tutorial_type == 9) {
 
 				if (u.plots.vector.size() < 3) {
 					p.sendMessage(Utils.chat("&cYou must select a minimum of 3 points!"));
@@ -106,14 +106,15 @@ public class MainGui {
 				}
 
 				if (u.tutorial.stage9Corners(u)) {
-					
-					u.player.sendMessage(ChatColor.GREEN + "Tutorial Complete");
+
 					Utils.spawnFireWork(u.player);
 					
 					u.player.teleport(Main.spawn);
 					u.player.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Plot Creation Tutorial Complete", "This is the end of the tutorial, good luck building!", 10, 100, 50);
 					u.tutorial.tutorial_type = 10;
-					u.tutorial.tutorial_stage = 1;
+					u.tutorial.tutorial_stage = 0;
+					u.tutorial.first_time = false;
+					u.tutorial.complete = true;
 					u.plots = new Plots();
 					return;
 				} else {

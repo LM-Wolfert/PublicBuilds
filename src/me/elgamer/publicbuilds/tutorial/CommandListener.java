@@ -28,9 +28,11 @@ public class CommandListener implements Listener {
 			if (!e.getMessage().startsWith("/tpll") && !e.getMessage().startsWith("/ll")) {
 				e.setCancelled(true);
 				u.player.sendMessage(ChatColor.RED + "Please continue the tutorial first!");
+				return;
 			} else if (u.tutorial.tutorial_stage == 1 && e.getMessage().startsWith("/ll")) {
 				u.tutorial.tutorial_stage = 2;
-				u.player.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Step 1/2 Complete", "Now you have to /tpll to all 4 corners of the warehouse.", 10, 100, 50);			
+				u.player.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Step 1/2 Complete", "Now you have to /tpll to all 4 corners of the warehouse.", 10, 100, 50);
+				return;
 			} else if (u.tutorial.tutorial_stage == 2 && e.getMessage().startsWith("/tpll")) {
 				
 				String[] message = e.getMessage().split("\\s+");
@@ -92,14 +94,21 @@ public class CommandListener implements Listener {
 					u.tutorial.continueTutorial(u);
 					
 				}
+				return;
 				
 			}	
-			
-			if (u.tutorial.tutorial_type <= 9) {
-				e.setCancelled(true);
-				u.player.sendMessage(ChatColor.RED + "Please continue the tutorial first!");
+			return;
+		}
+		
+		if (u.tutorial.tutorial_type == 9) {
+			if (e.getMessage().startsWith("/tpll") || e.getMessage().startsWith("/ll")) {
+				return;
 			}
-			
+		}
+		
+		if (u.tutorial.tutorial_type <= 9 && u.tutorial.first_time) {
+			e.setCancelled(true);
+			u.player.sendMessage(ChatColor.RED + "Please continue the tutorial first!");
 		}
 	}
 }

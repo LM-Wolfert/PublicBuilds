@@ -78,11 +78,15 @@ public class PlayerInteract implements Listener {
 		
 		if (e.getPlayer().getInventory().getItemInMainHand().equals(Main.gui)) {
 			e.setCancelled(true);
-			if (u.tutorial.tutorial_stage < 9) {
+			if (u.tutorial.tutorial_type < 9 && u.tutorial.first_time) {
 				u.player.sendMessage(ChatColor.RED + "Please continue the tutorial first!");
 				return;
 			}
 			e.getPlayer().openInventory(MainGui.GUI(u));
+		} else if (e.getPlayer().getInventory().getItemInMainHand().equals(Main.tutorialSkip)) {
+			e.setCancelled(true);
+			u.tutorial.skipStage(u);
+			return;
 		}
 
 	}

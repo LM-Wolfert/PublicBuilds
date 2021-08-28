@@ -15,7 +15,7 @@ public class TutorialData {
 
 		try {
 			PreparedStatement statement = instance.getConnection().prepareStatement
-					("INSERT INTO " + instance.tutorialData + " (ID,NAME,TUTORIAL_TYPE,TUTORIAL_STAGE,FIRST_TIME) VALUE (?,?,?,?)");
+					("INSERT INTO " + instance.tutorialData + " (ID,TUTORIAL_TYPE,TUTORIAL_STAGE,FIRST_TIME) VALUE (?,?,?,?)");
 			statement.setString(1, uuid);
 			statement.setInt(2, tutorial_type);
 			statement.setInt(3, tutorial_stage);
@@ -123,6 +123,23 @@ public class TutorialData {
 	}
 	
 	public static void updateValues(User u) {
+		
+		Main instance = Main.getInstance();
+
+		try {
+			PreparedStatement statement = instance.getConnection().prepareStatement
+					("UPDATE " + instance.tutorialData + " SET TUTORIAL_TYPE=?,TUTORIAL_STAGE=?,FIRST_TIME=? WHERE ID=?");
+			statement.setInt(1, u.tutorial.tutorial_type);
+			statement.setInt(2, u.tutorial.tutorial_stage);
+			statement.setBoolean(3, u.tutorial.first_time);
+			statement.setString(4, u.uuid);
+			
+			statement.executeUpdate();
+
+
+		} catch (SQLException sql) {
+			sql.printStackTrace();
+		}
 		
 	}
 

@@ -11,6 +11,7 @@ import com.sk89q.worldguard.protection.regions.ProtectedPolygonalRegion;
 
 import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.mysql.TutorialData;
+import me.elgamer.publicbuilds.utils.Plots;
 import me.elgamer.publicbuilds.utils.User;
 
 public class Tutorial {
@@ -34,8 +35,6 @@ public class Tutorial {
 
 		first_time = TutorialData.getTime(u.uuid);
 		complete = false;
-		
-		continueTutorial(u);
 
 	}
 
@@ -74,6 +73,33 @@ public class Tutorial {
 		
 
 	}
+	
+	public void skipStage(User u) {
+		if (u.tutorial.tutorial_type == 1) {
+		} else if (u.tutorial.tutorial_type == 2) {
+			u.tutorial.tutorial_type = 3;
+			u.tutorial.tutorial_stage = 1;
+			u.tutorial.continueTutorial(u);
+		} else if (u.tutorial.tutorial_type == 3) {
+		} else if (u.tutorial.tutorial_type == 4) {
+			
+		} else if (u.tutorial.tutorial_type == 5) {
+			
+		} else if (u.tutorial.tutorial_type == 6) {
+			
+		} else if (u.tutorial.tutorial_type == 7) {
+			
+		} else if (u.tutorial.tutorial_type == 8) {
+			
+		} else if (u.tutorial.tutorial_type == 9) {
+			u.player.teleport(Main.spawn);
+			u.tutorial.tutorial_type = 10;
+			u.tutorial.tutorial_stage = 0;
+			u.tutorial.first_time = false;
+			u.tutorial.complete = true;
+			u.plots = new Plots();
+		} 
+	}
 
 	/*
 	public static void stage1(User u) {
@@ -109,9 +135,7 @@ public class Tutorial {
 	
 	public String stage2Corner(double[] coords, World world) {
 		
-		double y = world.getHighestBlockYAt((int) Math.floor(coords[0]), (int) Math.floor(coords[1]));
-		y += 1;
-		Location l = new Location(world, coords[0], y, coords[1]);
+		Location l = new Location(world, coords[0], 143, coords[1]);
 		
 		if (l.distance(Main.TUTORIAL_2_CORNER_1) <= 1) {
 			if (corner_1) {
@@ -121,7 +145,7 @@ public class Tutorial {
 				corner_sum += 1;
 				return (ChatColor.GREEN + "Correct, you now have " + (4-corner_sum) + " corners left.");
 			}
-		} else if (l.distance(Main.TUTORIAL_2_CORNER_1) <= 1) {
+		} else if (l.distance(Main.TUTORIAL_2_CORNER_2) <= 1) {
 			if (corner_2) {
 				return (ChatColor.RED + "You have already teleported to this corner, you have " + (4-corner_sum) + " corners left.");
 			} else {
@@ -129,7 +153,7 @@ public class Tutorial {
 				corner_sum += 1;
 				return (ChatColor.GREEN + "Correct, you now have " + (4-corner_sum) + " corners left.");
 			}
-		} else if (l.distance(Main.TUTORIAL_2_CORNER_1) <= 1) {
+		} else if (l.distance(Main.TUTORIAL_2_CORNER_3) <= 1) {
 			if (corner_3) {
 				return (ChatColor.RED + "You have already teleported to this corner, you have " + (4-corner_sum) + " corners left.");
 			} else {
@@ -137,7 +161,7 @@ public class Tutorial {
 				corner_sum += 1;
 				return (ChatColor.GREEN + "Correct, you now have " + (4-corner_sum) + " corners left.");
 			}
-		} else if (l.distance(Main.TUTORIAL_2_CORNER_1) <= 1) {
+		} else if (l.distance(Main.TUTORIAL_2_CORNER_4) <= 1) {
 			if (corner_4) {
 				return (ChatColor.RED + "You have already teleported to this corner, you have " + (4-corner_sum) + " corners left.");
 			} else {
@@ -147,7 +171,7 @@ public class Tutorial {
 			}
 		}
 		
-		return null;
+		return (ChatColor.RED + "This is not close enough to the corner of the building.");
 		
 		
 	}
@@ -157,10 +181,10 @@ public class Tutorial {
 				FileConfiguration config = Main.getInstance().getConfig();
 				ProtectedPolygonalRegion region = new ProtectedPolygonalRegion("testregion", u.plots.vector, 1, 256);
 
-				BlockVector2 pos1 = BlockVector2.at(config.getInt("tutorial.stage_9.corner_1.x"), config.getInt("tutorial.stage_9.corner_1.z"));
-				BlockVector2 pos2 = BlockVector2.at(config.getInt("tutorial.stage_9.corner_2.x"), config.getInt("tutorial.stage_9.corner_2.z"));
-				BlockVector2 pos3 = BlockVector2.at(config.getInt("tutorial.stage_9.corner_3.x"), config.getInt("tutorial.stage_9.corner_3.z"));
-				BlockVector2 pos4 = BlockVector2.at(config.getInt("tutorial.stage_9.corner_4.x"), config.getInt("tutorial.stage_9.corner_4.z"));
+				BlockVector2 pos1 = BlockVector2.at(config.getInt("tutorial_9.corner_1.x"), config.getInt("tutorial_9.corner_1.z"));
+				BlockVector2 pos2 = BlockVector2.at(config.getInt("tutorial_9.corner_2.x"), config.getInt("tutorial_9.corner_2.z"));
+				BlockVector2 pos3 = BlockVector2.at(config.getInt("tutorial_9.corner_3.x"), config.getInt("tutorial_9.corner_3.z"));
+				BlockVector2 pos4 = BlockVector2.at(config.getInt("tutorial_9.corner_4.x"), config.getInt("tutorial_9.corner_4.z"));
 
 				if (region.contains(pos1) && region.contains(pos2) && region.contains(pos3) && region.contains(pos4)) {
 					return true;

@@ -51,7 +51,6 @@ import me.elgamer.publicbuilds.gui.ReviewGui;
 import me.elgamer.publicbuilds.gui.SwitchServerGUI;
 import me.elgamer.publicbuilds.listeners.ChatListener;
 import me.elgamer.publicbuilds.listeners.ClaimEnter;
-import me.elgamer.publicbuilds.listeners.CommandListener;
 import me.elgamer.publicbuilds.listeners.InventoryClicked;
 import me.elgamer.publicbuilds.listeners.JoinServer;
 import me.elgamer.publicbuilds.listeners.PlayerInteract;
@@ -60,6 +59,8 @@ import me.elgamer.publicbuilds.mysql.PlayerData;
 import me.elgamer.publicbuilds.mysql.PlotData;
 import me.elgamer.publicbuilds.mysql.PlotMessage;
 import me.elgamer.publicbuilds.mysql.TutorialData;
+import me.elgamer.publicbuilds.tutorial.CommandListener;
+import me.elgamer.publicbuilds.tutorial.MoveEvent;
 import me.elgamer.publicbuilds.tutorial.Tutorial;
 import me.elgamer.publicbuilds.utils.Particles;
 import me.elgamer.publicbuilds.utils.Ranks;
@@ -94,15 +95,17 @@ public class Main extends JavaPlugin {
 	public static StateFlag CREATE_PLOT_APPRENTICE;
 	public static StateFlag CREATE_PLOT_JRBUILDER;
 	public static StateFlag NO_PLOT;
+	
 	public static ItemStack selectionTool;
 	public static ItemStack gui;
+	public static ItemStack tutorialSkip;
 
 	int interval;
 
 	//Locations
 	public static Location spawn;
 	public static Location cranham;
-	
+
 	//Tutorial
 	public static Location TUTORIAL_1_START, TUTORIAL_1_YES, TUTORIAL_1_NO;	
 	public static Location TUTORIAL_2_START, TUTORIAL_2_CORNER_1, TUTORIAL_2_CORNER_2, TUTORIAL_2_CORNER_3, TUTORIAL_2_CORNER_4;
@@ -113,7 +116,7 @@ public class Main extends JavaPlugin {
 	public static Location TUTORIAL_7_START;
 	public static Location TUTORIAL_8_START;
 	public static Location TUTORIAL_9_START;	
-	
+
 	//Building Poins Hologram
 	Hologram hologram;
 
@@ -167,14 +170,23 @@ public class Main extends JavaPlugin {
 		meta2.setDisplayName(ChatColor.AQUA + "" + ChatColor.BOLD + "Building Menu");
 		gui.setItemMeta(meta2);
 
+		//Create tutorial type skip item				
+		tutorialSkip = new ItemStack(Material.MAGENTA_GLAZED_TERRACOTTA);
+		ItemMeta meta3 = gui.getItemMeta();
+		meta3.setDisplayName(ChatColor.AQUA + "" + ChatColor.BOLD + "Skip Tutorial Stage");
+		tutorialSkip.setItemMeta(meta3);
+
 		//Listeners
 		new JoinServer(this);
 		new QuitServer(this);
 		new InventoryClicked(this);
 		new ClaimEnter(this);
 		new ChatListener(this);
-		new CommandListener(this);
 		new PlayerInteract(this, selectionTool);
+
+		//Tutorial listeners
+		new CommandListener(this);
+		new MoveEvent(this);
 
 		//Commands
 		getCommand("gui").setExecutor(new OpenGui());
@@ -212,119 +224,120 @@ public class Main extends JavaPlugin {
 				config.getDouble("location.cranham.map.y"),
 				config.getDouble("location.cranham.map.z"),
 				180f, 45f);
-		
+
 		//Tutorial
 		TUTORIAL_1_START = new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), 
-				config.getDouble("tutorial.stage_1.start.x"),
-				config.getDouble("tutorial.stage_1.start.y"),
-				config.getDouble("tutorial.stage_1.start.z"),
-				(float) config.getDouble("tutorial.stage_1.start.yaw"),
-				(float) config.getDouble("tutorial.stage_1.start.pitch"));
+				config.getDouble("tutorial_1.start.x"),
+				config.getDouble("tutorial_1.start.y"),
+				config.getDouble("tutorial_1.start.z"),
+				(float) config.getDouble("tutorial_1.start.yaw"),
+				(float) config.getDouble("tutorial_1.start.pitch"));
 		TUTORIAL_1_YES = new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), 
-				config.getDouble("tutorial.stage_1.yes.x"),
-				config.getDouble("tutorial.stage_1.yes.y"),
-				config.getDouble("tutorial.stage_1.yes.z"));
+				config.getDouble("tutorial_1.good.x"),
+				config.getDouble("tutorial_1.good.y"),
+				config.getDouble("tutorial_1.good.z"));
 		TUTORIAL_1_NO = new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), 
-				config.getDouble("tutorial.stage_1.no.x"),
-				config.getDouble("tutorial.stage_1.no.y"),
-				config.getDouble("tutorial.stage_1.no.z"));
-		
+				config.getDouble("tutorial_1.bad.x"),
+				config.getDouble("tutorial_1.bad.y"),
+				config.getDouble("tutorial_1.bad.z"));
+
 		TUTORIAL_2_START = new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), 
-				config.getDouble("tutorial.stage_2.start.x"),
-				config.getDouble("tutorial.stage_2.start.y"),
-				config.getDouble("tutorial.stage_2.start.z"),
-				(float) config.getDouble("tutorial.stage_2.start.yaw"),
-				(float) config.getDouble("tutorial.stage_2.start.pitch"));
+				config.getDouble("tutorial_2.start.x"),
+				config.getDouble("tutorial_2.start.y"),
+				config.getDouble("tutorial_2.start.z"),
+				(float) config.getDouble("tutorial_2.start.yaw"),
+				(float) config.getDouble("tutorial_2.start.pitch"));
 		TUTORIAL_2_CORNER_1 = new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), 
-				config.getDouble("tutorial.stage_2.corner_1.x"),
-				config.getDouble("tutorial.stage_2.corner_1.y"),
-				config.getDouble("tutorial.stage_2.corner_1.z"));
+				config.getDouble("tutorial_2.corner_1.x"),
+				config.getDouble("tutorial_2.corner_1.y"),
+				config.getDouble("tutorial_2.corner_1.z"));
 		TUTORIAL_2_CORNER_2 = new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), 
-				config.getDouble("tutorial.stage_2.corner_2.x"),
-				config.getDouble("tutorial.stage_2.corner_2.y"),
-				config.getDouble("tutorial.stage_2.corner_2.z"));
+				config.getDouble("tutorial_2.corner_2.x"),
+				config.getDouble("tutorial_2.corner_2.y"),
+				config.getDouble("tutorial_2.corner_2.z"));
 		TUTORIAL_2_CORNER_3 = new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), 
-				config.getDouble("tutorial.stage_2.corner_3.x"),
-				config.getDouble("tutorial.stage_2.corner_3.y"),
-				config.getDouble("tutorial.stage_2.corner_3.z"));
+				config.getDouble("tutorial_2.corner_3.x"),
+				config.getDouble("tutorial_2.corner_3.y"),
+				config.getDouble("tutorial_2.corner_3.z"));
 		TUTORIAL_2_CORNER_4 = new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), 
-				config.getDouble("tutorial.stage_2.corner_4.x"),
-				config.getDouble("tutorial.stage_2.corner_4.y"),
-				config.getDouble("tutorial.stage_2.corner_4.z"));
-		
+				config.getDouble("tutorial_2.corner_4.x"),
+				config.getDouble("tutorial_2.corner_4.y"),
+				config.getDouble("tutorial_2.corner_4.z"));
+
 		TUTORIAL_3_START = new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), 
-				config.getDouble("tutorial.stage_3.start.x"),
-				config.getDouble("tutorial.stage_3.start.y"),
-				config.getDouble("tutorial.stage_3.start.z"),
-				(float) config.getDouble("tutorial.stage_3.start.yaw"),
-				(float) config.getDouble("tutorial.stage_3.start.pitch"));
+				config.getDouble("tutorial_3.start.x"),
+				config.getDouble("tutorial_3.start.y"),
+				config.getDouble("tutorial_3.start.z"),
+				(float) config.getDouble("tutorial_3.start.yaw"),
+				(float) config.getDouble("tutorial_3.start.pitch"));
 		TUTORIAL_3_CONTINUE = new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), 
-				config.getDouble("tutorial.stage_3.continue.x"),
-				config.getDouble("tutorial.stage_3.continue.y"),
-				config.getDouble("tutorial.stage_3.continue.z"));
+				config.getDouble("tutorial_3.continue.x"),
+				config.getDouble("tutorial_3.continue.y"),
+				config.getDouble("tutorial_3.continue.z"));
 		TUTORIAL_3_WORLDEDIT = new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), 
-				config.getDouble("tutorial.stage_3.worldedit.x"),
-				config.getDouble("tutorial.stage_3.worldedit.y"),
-				config.getDouble("tutorial.stage_3.worldedit.z"));
+				config.getDouble("tutorial_3.worldedit.x"),
+				config.getDouble("tutorial_3.worldedit.y"),
+				config.getDouble("tutorial_3.worldedit.z"));
 		TUTORIAL_3_GEP = new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), 
-				config.getDouble("tutorial.stage_3.gep.x"),
-				config.getDouble("tutorial.stage_3.gep.y"),
-				config.getDouble("tutorial.stage_3.gep.z"));
+				config.getDouble("tutorial_3.gep.x"),
+				config.getDouble("tutorial_3.gep.y"),
+				config.getDouble("tutorial_3.gep.z"));
 		TUTORIAL_3_ROOFS = new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), 
-				config.getDouble("tutorial.stage_3.roofs.x"),
-				config.getDouble("tutorial.stage_3.roofs.y"),
-				config.getDouble("tutorial.stage_3.roofs.z"));
+				config.getDouble("tutorial_3.roofs.x"),
+				config.getDouble("tutorial_3.roofs.y"),
+				config.getDouble("tutorial_3.roofs.z"));
 		TUTORIAL_3_DETAILS = new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), 
-				config.getDouble("tutorial.stage_3.details.x"),
-				config.getDouble("tutorial.stage_3.details.y"),
-				config.getDouble("tutorial.stage_3.details.z"));
+				config.getDouble("tutorial_3.details.x"),
+				config.getDouble("tutorial_3.details.y"),
+				config.getDouble("tutorial_3.details.z"));
 		TUTORIAL_3_TEXTURE = new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), 
-				config.getDouble("tutorial.stage_3.texture.x"),
-				config.getDouble("tutorial.stage_3.texture.y"),
-				config.getDouble("tutorial.stage_3.texture.z"));
-		
+				config.getDouble("tutorial_3.texture.x"),
+				config.getDouble("tutorial_3.texture.y"),
+				config.getDouble("tutorial_3.texture.z"));
+
+		/*
 		TUTORIAL_4_START = new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), 
-				config.getDouble("tutorial.stage_4.start.x"),
-				config.getDouble("tutorial.stage_4.start.y"),
-				config.getDouble("tutorial.stage_4.start.z"),
-				(float) config.getDouble("tutorial.stage_4.start.yaw"),
-				(float) config.getDouble("tutorial.stage_4.start.pitch"));
-		
+				config.getDouble("tutorial_4.start.x"),
+				config.getDouble("tutorial_4.start.y"),
+				config.getDouble("tutorial_4.start.z"),
+				(float) config.getDouble("tutorial_4.start.yaw"),
+				(float) config.getDouble("tutorial_4.start.pitch"));
+
 		TUTORIAL_5_START = new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), 
-				config.getDouble("tutorial.stage_5.start.x"),
-				config.getDouble("tutorial.stage_5.start.y"),
-				config.getDouble("tutorial.stage_5.start.z"),
-				(float) config.getDouble("tutorial.stage_5.start.yaw"),
-				(float) config.getDouble("tutorial.stage_5.start.pitch"));
-		
+				config.getDouble("tutorial_5.start.x"),
+				config.getDouble("tutorial_5.start.y"),
+				config.getDouble("tutorial_5.start.z"),
+				(float) config.getDouble("tutorial_5.start.yaw"),
+				(float) config.getDouble("tutorial_5.start.pitch"));
+
 		TUTORIAL_6_START = new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), 
-				config.getDouble("tutorial.stage_6.start.x"),
-				config.getDouble("tutorial.stage_6.start.y"),
-				config.getDouble("tutorial.stage_6.start.z"),
-				(float) config.getDouble("tutorial.stage_6.start.yaw"),
-				(float) config.getDouble("tutorial.stage_6.start.pitch"));
-		
+				config.getDouble("tutorial_6.start.x"),
+				config.getDouble("tutorial_6.start.y"),
+				config.getDouble("tutorial_6.start.z"),
+				(float) config.getDouble("tutorial_6.start.yaw"),
+				(float) config.getDouble("tutorial_6.start.pitch"));
+
 		TUTORIAL_7_START = new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), 
-				config.getDouble("tutorial.stage_7.start.x"),
-				config.getDouble("tutorial.stage_7.start.y"),
-				config.getDouble("tutorial.stage_7.start.z"),
-				(float) config.getDouble("tutorial.stage_7.start.yaw"),
-				(float) config.getDouble("tutorial.stage_7.start.pitch"));
-		
+				config.getDouble("tutorial_7.start.x"),
+				config.getDouble("tutorial_7.start.y"),
+				config.getDouble("tutorial_7.start.z"),
+				(float) config.getDouble("tutorial_7.start.yaw"),
+				(float) config.getDouble("tutorial_7.start.pitch"));
+
 		TUTORIAL_8_START = new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), 
-				config.getDouble("tutorial.stage_8.start.x"),
-				config.getDouble("tutorial.stage_8.start.y"),
-				config.getDouble("tutorial.stage_8.start.z"),
-				(float) config.getDouble("tutorial.stage_8.start.yaw"),
-				(float) config.getDouble("tutorial.stage_8.start.pitch"));
-		
+				config.getDouble("tutorial_8.start.x"),
+				config.getDouble("tutorial_8.start.y"),
+				config.getDouble("tutorial_8.start.z"),
+				(float) config.getDouble("tutorial_8.start.yaw"),
+				(float) config.getDouble("tutorial_8.start.pitch"));
+		*/
 		TUTORIAL_9_START = new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), 
-				config.getDouble("tutorial.stage_9.start.x"),
-				config.getDouble("tutorial.stage_9.start.y"),
-				config.getDouble("tutorial.stage_9.start.z"),
-				(float) config.getDouble("tutorial.stage_9.start.yaw"),
-				(float) config.getDouble("tutorial.stage_9.start.pitch"));
-				
+				config.getDouble("tutorial_9.start.x"),
+				config.getDouble("tutorial_9.start.y"),
+				config.getDouble("tutorial_9.start.z"),
+				(float) config.getDouble("tutorial_9.start.yaw"),
+				(float) config.getDouble("tutorial_9.start.pitch"));
+
 
 		//Holograms
 		hologram = HologramsAPI.createHologram(this, new Location(Bukkit.getWorld("Lobby"),
@@ -343,7 +356,7 @@ public class Main extends JavaPlugin {
 						Utils.spawnFireWork(u.player);
 						Bukkit.getScheduler().runTaskLater (instance, () -> Tutorial.continueTutorial(u), 60); //20 ticks equal 1 second
 					}
-					*/
+					 */
 
 					//Increase buildingTime for each second the player is in a buildable claim and is not AFK
 					if (!(u.plotOwner == null)) {
@@ -440,19 +453,14 @@ public class Main extends JavaPlugin {
 					}
 
 
-					/*
 					//Set the world of the player.
 					u.world = u.player.getWorld();
-					if ((u.world.getName().equals(config.getString("worlds.build")) && u.tutorialStage < 6)) {
-						if (u.tutorialStage == 0) {
-							u.tutorialStage = 1;
-							Bukkit.getScheduler().runTaskLater (instance, () -> Tutorial.continueTutorial(u), 60); //20 ticks equal 1 second
-						} else {
-							u.player.teleport(new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), config.getDouble("starting_position.x"), config.getDouble("starting_position.y"), config.getDouble("starting_position.z")));
-							Bukkit.getScheduler().runTaskLater (instance, () -> Tutorial.continueTutorial(u), 60);
-						}
+					if (!(u.world.getName().equals(config.getString("worlds.tutorial"))) && u.tutorial.first_time == false) {
+						u.tutorial.tutorial_stage = 0;
+						u.tutorial.tutorial_type = 10;
+					} else if (!(u.world.getName().equals(config.getString("worlds.tutorial"))) && u.tutorial.first_time == true) {
+						Bukkit.getScheduler().runTaskLater (instance, () -> u.tutorial.continueTutorial(u), 60);
 					}
-					*/
 
 					//Send deny or accept message if a plot has been accepted or denied that they own.
 					//Will not send if they are afk.
@@ -479,7 +487,8 @@ public class Main extends JavaPlugin {
 					}
 
 					Ranks.checkRankup(u);
-
+					
+					u.slot5 = u.player.getInventory().getItem(4);
 					u.slot9 = u.player.getInventory().getItem(8);
 
 					if (!(u.slot9 == null)) {
@@ -490,6 +499,25 @@ public class Main extends JavaPlugin {
 						}
 					} else {
 						u.player.getInventory().setItem(8, gui);
+					}
+
+					if (u.tutorial.first_time && u.tutorial.complete==false && u.tutorial.tutorial_type != 1 && u.tutorial.tutorial_type != 3) {
+						if (!(u.slot5 == null)) {
+							if (u.slot5.equals(tutorialSkip)) {
+
+							} else {
+								u.player.getInventory().setItem(4, tutorialSkip);
+							}
+						} else {
+							u.player.getInventory().setItem(4, tutorialSkip);
+						}	
+					} else if ((u.tutorial.tutorial_type == 3 || u.tutorial.tutorial_type == 1)) {
+						if (!(u.slot5 == null)) {
+							if (u.slot5.equals(tutorialSkip)) {
+								u.player.getInventory().setItem(4, null);
+								
+							}
+						}
 					}
 				}
 
@@ -546,14 +574,14 @@ public class Main extends JavaPlugin {
 		username = config.getString("MySQL_username");
 		password = config.getString("MySQL_password");
 		playerData = config.getString("MySQL_playerData");
-		
+
 		plotData = config.getString("MySQL_plotData");
 		areaData = config.getString("MySQL_areaData");
 		denyData = config.getString("MySQL_denyData");
 		acceptData = config.getString("MySQL_acceptData");
 		submitData = config.getString("MySQL_submitData");
 		tutorialData = config.getString("MySQL_tutorialData");
-		
+
 		try {
 
 			synchronized (this) {
@@ -617,7 +645,7 @@ public class Main extends JavaPlugin {
 	public void createTutorialData() {
 		try {
 			PreparedStatement statement = instance.getConnection().prepareStatement
-					("CREATE TABLE IF NOT EXISTS " + playerData
+					("CREATE TABLE IF NOT EXISTS " + tutorialData
 							+ " ( ID VARCHAR(36) NOT NULL , TUTORIAL_TYPE INT NOT NULL , TUTORIAL_STAGE INT NOT NULL , FIRST_TIME TINYINT(1) NOT NULL , UNIQUE (ID))");
 			statement.executeUpdate();
 

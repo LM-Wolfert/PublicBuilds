@@ -130,11 +130,17 @@ public class InventoryClicked implements Listener {
 		else if (e.getCurrentItem().equals(Main.gui)) {
 			e.setCancelled(true);
 			u.player.closeInventory();
-			if (u.tutorial.tutorial_stage < 9) {
+			if (u.tutorial.tutorial_type < 9 && u.tutorial.first_time) {
 				u.player.sendMessage(ChatColor.RED + "Please continue the tutorial first!");
 				return;
 			}
 			u.player.openInventory(MainGui.GUI(u));
+		}
+		else if (e.getCurrentItem().equals(Main.tutorialSkip)) {
+			e.setCancelled(true);
+			u.player.closeInventory();
+			u.tutorial.skipStage(u);
+			return;
 		}
 		else {
 			

@@ -30,6 +30,7 @@ public class User {
 	
 	public World world;
 	
+	public ItemStack slot5;
 	public ItemStack slot9;
 	
 	public Tutorial tutorial;
@@ -49,9 +50,10 @@ public class User {
 			
 		//Continue the tutorial from where they last were.
 		if (!(TutorialData.tutorialComplete(uuid))) {
-			new Tutorial(this);
+			tutorial = new Tutorial(this);
+			tutorial.continueTutorial(this);
 		} else {
-			new Tutorial(this, true);
+			tutorial = new Tutorial(this, true);
 		}
 		
 		//Create plots map.
