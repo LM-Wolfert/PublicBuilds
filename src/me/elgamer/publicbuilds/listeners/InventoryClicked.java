@@ -17,6 +17,7 @@ import me.elgamer.publicbuilds.gui.PlotGui;
 import me.elgamer.publicbuilds.gui.PlotInfo;
 import me.elgamer.publicbuilds.gui.ReviewGui;
 import me.elgamer.publicbuilds.gui.SwitchServerGUI;
+import me.elgamer.publicbuilds.gui.TutorialGui;
 import me.elgamer.publicbuilds.utils.User;
 import net.md_5.bungee.api.ChatColor;
 
@@ -125,6 +126,15 @@ public class InventoryClicked implements Listener {
 			}
 			if (title.equals(NavigationGUI.inventory_name)) {
 				NavigationGUI.clicked(u, e.getSlot(), e.getCurrentItem(), e.getInventory());
+			}
+		}
+		else if (title.equals(TutorialGui.inventory_name)) {
+			e.setCancelled(true);
+			if (e.getCurrentItem() == null){
+				return;
+			}
+			if (title.equals(TutorialGui.inventory_name)) {
+				TutorialGui.clicked(u, e.getSlot(), e.getCurrentItem(), e.getInventory());
 			}
 		}
 		else if (e.getCurrentItem().equals(Main.gui)) {

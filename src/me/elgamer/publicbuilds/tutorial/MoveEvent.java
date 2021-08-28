@@ -9,6 +9,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 
 import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.utils.User;
+import net.md_5.bungee.api.ChatColor;
 
 public class MoveEvent implements Listener {
 
@@ -26,11 +27,10 @@ public class MoveEvent implements Listener {
 		if (u.tutorial.tutorial_type == 1) {
 			
 			if (nearYes(e.getTo())) {
-				u.player.teleport(Main.TUTORIAL_9_START);
 				u.tutorial.tutorial_type = 9;
 				u.tutorial.tutorial_stage = 1;
+				u.tutorial.continueTutorial(u);
 			} else if (nearNo(e.getTo())) {
-				u.player.teleport(Main.TUTORIAL_2_START);
 				u.tutorial.tutorial_type = 2;
 				u.tutorial.tutorial_stage = 1;
 				u.tutorial.continueTutorial(u);
@@ -38,7 +38,7 @@ public class MoveEvent implements Listener {
 			
 		} else if (u.tutorial.tutorial_type == 3) {
 			
-			if (nearWorldedit(e.getTo())) {
+			/*if (nearWorldedit(e.getTo())) {
 				u.player.teleport(Main.TUTORIAL_4_START);
 				u.tutorial.tutorial_type = 4;
 				u.tutorial.tutorial_stage = 1;
@@ -63,11 +63,27 @@ public class MoveEvent implements Listener {
 				u.tutorial.tutorial_type = 8;
 				u.tutorial.tutorial_stage = 1;
 				u.tutorial.continueTutorial(u);
-			} else if (nearContinue(e.getTo())) {
+			} else*/ if (nearContinue(e.getTo())) {
 				u.player.teleport(Main.TUTORIAL_9_START);
 				u.tutorial.tutorial_type = 9;
 				u.tutorial.tutorial_stage = 1;
 				u.tutorial.continueTutorial(u);
+			}
+			
+		} else if (u.tutorial.tutorial_type == 2) {
+			
+			if (e.getTo().distance(Main.TUTORIAL_2_START) >= 75) {
+				e.setCancelled(true);
+				u.player.sendMessage(ChatColor.RED + "You may not leave this area!");
+				return;
+			}
+			
+		} else if (u.tutorial.tutorial_type == 9) {
+			
+			if (e.getTo().distance(Main.TUTORIAL_9_START) >= 70) {
+				e.setCancelled(true);
+				u.player.sendMessage(ChatColor.RED + "You may not leave this area!");
+				return;
 			}
 			
 		}

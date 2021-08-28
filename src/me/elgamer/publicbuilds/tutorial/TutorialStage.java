@@ -25,7 +25,7 @@ public class TutorialStage implements CommandExecutor {
 				sender.sendMessage(ChatColor.GREEN + u.name + " is not in the tutorial.");
 				return true;
 			} else {
-				sender.sendMessage(ChatColor.GREEN + "Tutorial " + tutorialType(u.tutorial.tutorial_type) + ", stage " + u.tutorial.tutorial_stage);
+				sender.sendMessage(ChatColor.GREEN + args[0] + " is in tutorial " + tutorialType(u.tutorial.tutorial_type));
 				return true;
 			}
 		} else {

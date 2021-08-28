@@ -47,6 +47,7 @@ import me.elgamer.publicbuilds.gui.PlotGui;
 import me.elgamer.publicbuilds.gui.PlotInfo;
 import me.elgamer.publicbuilds.gui.ReviewGui;
 import me.elgamer.publicbuilds.gui.SwitchServerGUI;
+import me.elgamer.publicbuilds.gui.TutorialGui;
 import me.elgamer.publicbuilds.listeners.ChatListener;
 import me.elgamer.publicbuilds.listeners.ClaimEnter;
 import me.elgamer.publicbuilds.listeners.InventoryClicked;
@@ -219,6 +220,7 @@ public class Main extends JavaPlugin {
 		ConfirmCancel.initialize();
 		NavigationGUI.initialize();
 		SwitchServerGUI.initialize();
+		TutorialGui.initialize();
 
 		//Locations
 		spawn = new Location(Bukkit.getWorld("Lobby"), 
@@ -507,7 +509,7 @@ public class Main extends JavaPlugin {
 						u.player.getInventory().setItem(8, gui);
 					}
 
-					if (u.tutorial.first_time && u.tutorial.complete==false && u.tutorial.tutorial_type != 1 && u.tutorial.tutorial_type != 3) {
+					if (u.tutorial.first_time && u.tutorial.complete==false && u.tutorial.tutorial_type <= 8 && u.tutorial.tutorial_type >= 4) {
 						if (!(u.slot5 == null)) {
 							if (u.slot5.equals(tutorialSkip)) {
 
@@ -517,7 +519,7 @@ public class Main extends JavaPlugin {
 						} else {
 							u.player.getInventory().setItem(4, tutorialSkip);
 						}	
-					} else if ((u.tutorial.tutorial_type == 3 || u.tutorial.tutorial_type == 1)) {
+					} else if (!(u.tutorial.tutorial_type >= 4 && u.tutorial.tutorial_type <= 8)) {
 						if (!(u.slot5 == null)) {
 							if (u.slot5.equals(tutorialSkip)) {
 								u.player.getInventory().setItem(4, null);

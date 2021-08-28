@@ -40,7 +40,7 @@ public class Leaderboard {
 			if (lead.uuids[i] == null) {
 				break;
 			}
-			u.player.sendMessage(String.format("%-6s%-8s%-16s", i, lead.points[i] , lead.uuids[i]));			
+			u.player.sendMessage(String.format("%-6s%-8s%-16s", lead.position[i], lead.points[i] , lead.uuids[i]));			
 		}
 	}
 	
@@ -67,7 +67,7 @@ public class Leaderboard {
 			if (lead.uuids[i] == null) {
 				break;
 			}
-			u.player.sendMessage(String.format("%-6s%-8s%-16s", i, lead.points[i] , lead.uuids[i]));			
+			u.player.sendMessage(String.format("%-6s%-8s%-16s", lead.position[i], lead.points[i] , lead.uuids[i]));			
 		}
 	}
 	

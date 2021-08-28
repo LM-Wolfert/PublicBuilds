@@ -30,7 +30,7 @@ public class NavigationGUI {
 		
 		inv.clear();
 		
-		Utils.createItem(inv, Material.BRICK, 1, 14, ChatColor.AQUA + "" + ChatColor.BOLD + "Build",
+		Utils.createItem(inv, Material.BRICK, 1, 5, ChatColor.AQUA + "" + ChatColor.BOLD + "Build",
 				Utils.chat("&fChoose a location you would like to build."),
 				Utils.chat("&fThen you can create a plot and start building."),
 				Utils.chat("&fAll ranks can build here."));	
@@ -40,6 +40,10 @@ public class NavigationGUI {
 		
 		Utils.createItem(inv, Material.GRASS_BLOCK, 1, 12, ChatColor.AQUA + "" + ChatColor.BOLD + "Spawn",
 				Utils.chat("&fTeleport to spawn."));
+		
+		Utils.createItem(inv, Material.WRITABLE_BOOK, 1, 23, ChatColor.AQUA + "" + ChatColor.BOLD + "Tutorial", 
+				Utils.chat("&fPick a tutorial you want to do."),
+				Utils.chat("&fYou can leave it at any time."));	
 		
 		Utils.createItem(inv, Material.SPRUCE_DOOR, 1, 27, ChatColor.AQUA + "" + ChatColor.BOLD + "Return", 
 				Utils.chat("&fGo back to the building menu."));	
@@ -54,16 +58,6 @@ public class NavigationGUI {
 		
 		if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Build")) {
 			
-			/*
-			if (u.tutorialStage == 0) {
-				u.tutorialStage = 1;
-				Tutorial.continueTutorial(u);
-				p.closeInventory();
-				return;
-			}
-			*/
-			
-			//Will open the build location gui.
 			p.closeInventory();
 			p.openInventory(LocationGUI.GUI(u));
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Return")) {
@@ -73,7 +67,11 @@ public class NavigationGUI {
 			p.closeInventory();
 			p.openInventory(SwitchServerGUI.GUI(u));
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Spawn")) {
+			p.closeInventory();
 			p.teleport(Main.spawn);
+		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Tutorial")) {
+			p.closeInventory();
+			p.openInventory(TutorialGui.GUI(u));
 		}
 	}
 

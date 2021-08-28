@@ -8,7 +8,6 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import me.elgamer.UKnetUtilities.projections.ModifiedAirocean;
 import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.utils.User;
-import me.elgamer.publicbuilds.utils.Utils;
 import net.md_5.bungee.api.ChatColor;
 
 public class CommandListener implements Listener {
@@ -25,13 +24,9 @@ public class CommandListener implements Listener {
 		User u = Main.getInstance().getUser(e.getPlayer());
 		
 		if (u.tutorial.tutorial_type == 2) {
-			if (!e.getMessage().startsWith("/tpll") && !e.getMessage().startsWith("/ll")) {
-				e.setCancelled(true);
-				u.player.sendMessage(ChatColor.RED + "Please continue the tutorial first!");
-				return;
-			} else if (u.tutorial.tutorial_stage == 1 && e.getMessage().startsWith("/ll")) {
+			if (u.tutorial.tutorial_stage == 1 && e.getMessage().startsWith("/ll")) {
 				u.tutorial.tutorial_stage = 2;
-				u.player.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Step 1/2 Complete", "Now you have to /tpll to all 4 corners of the warehouse.", 10, 100, 50);
+				u.player.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Step 1/2 Complete", "Now you have to /tpll to all 4 corners of the warehouse.", 10, 75, 10);
 				return;
 			} else if (u.tutorial.tutorial_stage == 2 && e.getMessage().startsWith("/tpll")) {
 				
@@ -89,15 +84,15 @@ public class CommandListener implements Listener {
 				if (u.tutorial.corner_sum == 4) {
 					u.tutorial.tutorial_type = 3;
 					u.tutorial.tutorial_stage = 1;
-					u.player.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Tpll Tutorial Complete", "Well Done!", 10, 100, 50);
-					Utils.spawnFireWork(u.player);
-					u.tutorial.continueTutorial(u);
+					u.player.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Tpll Tutorial Complete", "Well Done!", 10, 75, 10);
+					Bukkit.getScheduler().runTaskLater (Main.getInstance(), () -> u.tutorial.continueTutorial(u), 10);
 					
 				}
 				return;
 				
-			}	
-			return;
+			} else if (e.getMessage().startsWith("/ll")) {
+				return;
+			}
 		}
 		
 		if (u.tutorial.tutorial_type == 9) {

@@ -107,10 +107,9 @@ public class MainGui {
 
 				if (u.tutorial.stage9Corners(u)) {
 
-					Utils.spawnFireWork(u.player);
-					
 					u.player.teleport(Main.spawn);
-					u.player.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Plot Creation Tutorial Complete", "This is the end of the tutorial, good luck building!", 10, 100, 50);
+					Utils.spawnFireWork(u.player);
+					u.player.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Tutorial Complete", "Good luck building!", 10, 100, 50);
 					u.tutorial.tutorial_type = 10;
 					u.tutorial.tutorial_stage = 0;
 					u.tutorial.first_time = false;

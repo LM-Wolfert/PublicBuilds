@@ -1,6 +1,5 @@
 package me.elgamer.publicbuilds.tutorial;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -54,9 +53,10 @@ public class Tutorial {
 		if (u.tutorial.tutorial_type == 1) {
 			u.player.teleport(Main.TUTORIAL_1_START);
 		} else if (u.tutorial.tutorial_type == 2) {
-			Bukkit.getScheduler().runTaskLater (Main.getInstance(), () -> startStage2(u), 60);
+			u.player.teleport(Main.TUTORIAL_2_START);
+			startStage2(u);
 		} else if (u.tutorial.tutorial_type == 3) {
-			Bukkit.getScheduler().runTaskLater (Main.getInstance(), () -> u.player.teleport(Main.TUTORIAL_3_START), 60);
+			u.player.teleport(Main.TUTORIAL_3_START);
 		} else if (u.tutorial.tutorial_type == 4) {
 			
 		} else if (u.tutorial.tutorial_type == 5) {
@@ -68,7 +68,8 @@ public class Tutorial {
 		} else if (u.tutorial.tutorial_type == 8) {
 			
 		} else if (u.tutorial.tutorial_type == 9) {
-			Bukkit.getScheduler().runTaskLater (Main.getInstance(), () -> startStage9(u), 60);
+			u.player.teleport(Main.TUTORIAL_9_START);
+			startStage9(u);
 		} 
 		
 
@@ -118,7 +119,7 @@ public class Tutorial {
 */
 	public void startStage2(User u) {
 
-		u.player.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Tpll Tutorial", "/tpll is the most important command in this project", 10, 200, 50);
+		u.player.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Tpll Tutorial", "/tpll is the most important command in this project", 10, 75, 10);
 		corner_1 = false;
 		corner_2 = false;
 		corner_3 = false;
@@ -130,7 +131,7 @@ public class Tutorial {
 	
 	public void startStage9(User u) {
 		
-		u.player.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Plot Tutorial", "Before you can build, you need to create plot", 10, 200, 50);
+		u.player.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Plot Tutorial", "Before you can build, you need to create plot", 10, 75, 10);
 	}
 	
 	public String stage2Corner(double[] coords, World world) {

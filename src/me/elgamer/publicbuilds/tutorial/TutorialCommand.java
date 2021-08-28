@@ -29,18 +29,22 @@ public class TutorialCommand implements CommandExecutor {
 		User u = Main.getInstance().getUser(p);
 
 		if (args[0].equalsIgnoreCase("tpll")) {
+			u.tutorial.complete = false;
 			u.tutorial.tutorial_type = 2;
 			u.tutorial.tutorial_stage = 1;
 			u.tutorial.continueTutorial(u);
 		} else if (args[0].equalsIgnoreCase("plot")) {
+			u.tutorial.complete = false;
 			u.tutorial.tutorial_type = 9;
 			u.tutorial.tutorial_stage = 1;
 			u.tutorial.continueTutorial(u);
 		} else if (args[0].equalsIgnoreCase("start")) {
+			u.tutorial.complete = false;
 			u.tutorial.tutorial_type = 1;
 			u.tutorial.tutorial_stage = 1;
 			u.tutorial.continueTutorial(u);
 		} else if (args[0].equalsIgnoreCase("optional")) {
+			u.tutorial.complete = false;
 			u.tutorial.tutorial_type = 3;
 			u.tutorial.tutorial_stage = 1;
 			u.tutorial.continueTutorial(u);
