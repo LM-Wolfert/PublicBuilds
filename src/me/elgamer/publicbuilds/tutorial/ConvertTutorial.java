@@ -1,4 +1,4 @@
-package me.elgamer.publicbuilds.commands;
+package me.elgamer.publicbuilds.tutorial;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

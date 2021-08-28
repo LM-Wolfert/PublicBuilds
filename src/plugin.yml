@@ -12,9 +12,6 @@ commands:
     createarea:
         usage: /<command>
         description: Creates a polygonal area in which plots can be claimed, requires a polygon selection.
-    skiptutorial:
-        usage: /<command>
-        description: Skips the tutorial.
     buildingpoints:
         usage: /<command>
         description: Lists building points of 9 players.
@@ -24,6 +21,9 @@ commands:
     tutorial:
         usage: /<command>
         description: Sets the tutorial stage to that specific in the command.
+    tutorialstage:
+        usage: /<command>
+        description: Shows what stage of the tutorial a specific player is on.
     converttutorial:
         usage: /<command>
         description: Converts previous tutorial completers to the new tutorial system.    

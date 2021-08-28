@@ -32,13 +32,11 @@ import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 
 //import me.elgamer.publicbuilds.commands.Apply;
 import me.elgamer.publicbuilds.commands.BuildingPoints;
-import me.elgamer.publicbuilds.commands.ConvertTutorial;
 //import me.elgamer.publicbuilds.commands.Corner;
 import me.elgamer.publicbuilds.commands.CreateArea;
 import me.elgamer.publicbuilds.commands.OpenGui;
-import me.elgamer.publicbuilds.commands.SkipTutorial;
+//import me.elgamer.publicbuilds.commands.SkipTutorial;
 import me.elgamer.publicbuilds.commands.Spawn;
-import me.elgamer.publicbuilds.commands.TutorialCommand;
 import me.elgamer.publicbuilds.gui.AcceptGui;
 import me.elgamer.publicbuilds.gui.ConfirmCancel;
 import me.elgamer.publicbuilds.gui.DenyGui;
@@ -60,8 +58,12 @@ import me.elgamer.publicbuilds.mysql.PlotData;
 import me.elgamer.publicbuilds.mysql.PlotMessage;
 import me.elgamer.publicbuilds.mysql.TutorialData;
 import me.elgamer.publicbuilds.tutorial.CommandListener;
+import me.elgamer.publicbuilds.tutorial.ConvertTutorial;
 import me.elgamer.publicbuilds.tutorial.MoveEvent;
 import me.elgamer.publicbuilds.tutorial.Tutorial;
+import me.elgamer.publicbuilds.tutorial.TutorialCommand;
+import me.elgamer.publicbuilds.tutorial.TutorialStage;
+import me.elgamer.publicbuilds.tutorial.TutorialTabCompleter;
 import me.elgamer.publicbuilds.utils.Particles;
 import me.elgamer.publicbuilds.utils.Ranks;
 import me.elgamer.publicbuilds.utils.User;
@@ -192,13 +194,17 @@ public class Main extends JavaPlugin {
 		getCommand("gui").setExecutor(new OpenGui());
 		//getCommand("corner").setExecutor(new Corner());
 		getCommand("createarea").setExecutor(new CreateArea());
-		getCommand("skiptutorial").setExecutor(new SkipTutorial());
+		//getCommand("skiptutorial").setExecutor(new SkipTutorial());
 		getCommand("buildingpoints").setExecutor(new BuildingPoints());
 		getCommand("spawn").setExecutor(new Spawn());
 		getCommand("tutorial").setExecutor(new TutorialCommand());
+		getCommand("tutorialStage").setExecutor(new TutorialStage());
 		//getCommand("apply").setExecutor(new Apply());
 		getCommand("converttutorial").setExecutor(new ConvertTutorial());
 
+		//Tab Completer
+		getCommand("tutorial").setTabCompleter(new TutorialTabCompleter());
+		
 		//Get essentials
 		ess = (Essentials) Bukkit.getServer().getPluginManager().getPlugin("Essentials");	
 

@@ -1,0 +1,69 @@
+package me.elgamer.publicbuilds.tutorial;
+
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+
+import me.elgamer.publicbuilds.Main;
+import me.elgamer.publicbuilds.utils.User;
+
+public class TutorialStage implements CommandExecutor {
+	
+	@Override
+	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+
+		if (args.length != 1) {
+			sender.sendMessage(error());
+			return true;
+		}
+
+		if (Bukkit.getPlayer(args[0]) != null) {
+			User u = Main.getInstance().getUser(Bukkit.getPlayer(args[0]));
+			if (u.tutorial.complete) {
+				sender.sendMessage(ChatColor.GREEN + u.name + " is not in the tutorial.");
+				return true;
+			} else {
+				sender.sendMessage(ChatColor.GREEN + "Tutorial " + tutorialType(u.tutorial.tutorial_type) + ", stage " + u.tutorial.tutorial_stage);
+				return true;
+			}
+		} else {
+			sender.sendMessage(ChatColor.RED + "This player isn't online!");
+			return true;
+		}
+
+	}
+	
+	private String error() {
+		return (ChatColor.RED + "/tutorialstage <player>");
+	}
+	
+	private String tutorialType(int type) {
+		
+		switch(type) {
+		
+		case 1:
+			return "start";
+		case 2:
+			return "tpll";
+		case 3:
+			return "optional";
+		case 4:
+			return "worldedit";
+		case 5:
+			return "gep";
+		case 6:
+			return "roofs";
+		case 7:
+			return "details";
+		case 8:
+			return "texture";
+		case 9:
+			return "plot";				
+		default:
+			return "none";
+		}
+	}
+
+}
