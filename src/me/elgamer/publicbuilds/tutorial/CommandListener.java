@@ -82,10 +82,12 @@ public class CommandListener implements Listener {
 
 				u.player.sendMessage((u.tutorial.stage2Corner(coords, u.player.getWorld())));
 				if (u.tutorial.corner_sum == 4) {
+					e.setCancelled(true);
 					u.tutorial.tutorial_type = 3;
 					u.tutorial.tutorial_stage = 1;
 					u.player.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Tpll Tutorial Complete", "Well Done!", 10, 75, 10);
-					Bukkit.getScheduler().runTaskLater (Main.getInstance(), () -> u.tutorial.continueTutorial(u), 10);
+					u.tutorial.continueTutorial(u);
+					return;
 					
 				}
 				return;
