@@ -166,6 +166,7 @@ public class PlotData {
 							("UPDATE " + instance.plotData + " SET STATUS=? WHERE ID=?");
 					update.setString(1, "reviewing");
 					update.setInt(2, plot);
+					update.executeUpdate();
 
 					return(plot);
 				}
