@@ -10,6 +10,7 @@ import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.mysql.PlayerData;
 import me.elgamer.publicbuilds.mysql.PlotData;
 import me.elgamer.publicbuilds.utils.ClaimFunctions;
+import me.elgamer.publicbuilds.utils.Plots;
 import me.elgamer.publicbuilds.utils.Time;
 import me.elgamer.publicbuilds.utils.User;
 import me.elgamer.publicbuilds.utils.Utils;
@@ -132,6 +133,7 @@ public class PlotInfo {
 			
 			p.sendMessage(ClaimFunctions.editClaim(u.currentPlot, u.uuid, u.plots.vector));
 			p.closeInventory();
+			u.plots = new Plots();
 			return;
 
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Return")) {

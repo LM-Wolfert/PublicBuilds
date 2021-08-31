@@ -15,7 +15,6 @@ import me.elgamer.publicbuilds.tutorial.Tutorial;
 import me.elgamer.publicbuilds.utils.Plots;
 import me.elgamer.publicbuilds.utils.User;
 import me.elgamer.publicbuilds.utils.Utils;
-import net.md_5.bungee.api.ChatColor;
 
 public class PlayerInteract implements Listener {
 
@@ -78,10 +77,6 @@ public class PlayerInteract implements Listener {
 		
 		if (e.getPlayer().getInventory().getItemInMainHand().equals(Main.gui)) {
 			e.setCancelled(true);
-			if (u.tutorial.tutorial_type < 9 && u.tutorial.first_time) {
-				u.player.sendMessage(ChatColor.RED + "Please continue the tutorial first!");
-				return;
-			}
 			e.getPlayer().openInventory(MainGui.GUI(u));
 		} else if (e.getPlayer().getInventory().getItemInMainHand().equals(Main.tutorialSkip)) {
 			e.setCancelled(true);

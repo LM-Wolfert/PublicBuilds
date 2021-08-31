@@ -46,9 +46,9 @@ public class RankValues {
 		
 		if (role.equals("builder")) {
 			return config.getInt("plot_distance.builder");
-		} else if (role.equals("group.jrbuilder")) {
+		} else if (role.equals("jrbuilder")) {
 			return config.getInt("plot_distance.jrbuilder");
-		} else if (role.equals("group.apprentice")) {
+		} else if (role.equals("apprentice")) {
 			return config.getInt("plot_distance.apprentice");
 		} else {
 			return config.getInt("plot_distance.guest");

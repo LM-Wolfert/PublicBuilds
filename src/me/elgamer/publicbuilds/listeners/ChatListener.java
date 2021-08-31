@@ -12,6 +12,7 @@ import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.mysql.PlotData;
 import me.elgamer.publicbuilds.mysql.PlotMessage;
 import me.elgamer.publicbuilds.utils.ClaimFunctions;
+import me.elgamer.publicbuilds.utils.Plots;
 import me.elgamer.publicbuilds.utils.User;
 import me.elgamer.publicbuilds.utils.Utils;
 import me.elgamer.publicbuilds.utils.WorldEditor;
@@ -87,6 +88,7 @@ public class ChatListener implements Listener {
 				//Set the reasonType and reviewing back to default values.
 				u.reasonType = null;
 				u.reviewing = 0;
+				u.plots = new Plots();
 				
 				if (p.getWorld().equals(Bukkit.getWorld(config.getString("worlds.save")))) {
 					Location l = p.getLocation();

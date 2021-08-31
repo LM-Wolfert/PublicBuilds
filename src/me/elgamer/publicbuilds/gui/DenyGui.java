@@ -33,11 +33,11 @@ public class DenyGui {
 		
 		Utils.createItem(inv, Material.SPRUCE_DOOR, 1, 27, ChatColor.AQUA + "" + ChatColor.BOLD + "Return", Utils.chat("&fGo back to the review menu."));
 		
-		Utils.createItem(inv, Material.LIME_CONCRETE, 1, 13, ChatColor.AQUA + "" + ChatColor.BOLD + "Another Chance", Utils.chat("&fDeny the plot and return it to the builder."));
+		Utils.createItem(inv, Material.LIME_CONCRETE, 1, 12, ChatColor.AQUA + "" + ChatColor.BOLD + "Another Chance", Utils.chat("&fDeny the plot and return it to the builder."));
 		
-		Utils.createItem(inv, Material.YELLOW_CONCRETE, 1, 24, ChatColor.AQUA + "" + ChatColor.BOLD + "Resize plot", Utils.chat("&fDeny the plot and return it with a larger area."), Utils.chat("&fYour selection must include all of the existing area."));
+		Utils.createItem(inv, Material.YELLOW_CONCRETE, 1, 14, ChatColor.AQUA + "" + ChatColor.BOLD + "Resize plot", Utils.chat("&fDeny the plot and return it with a larger area."), Utils.chat("&fYour selection must include all of the existing area."));
 		
-		Utils.createItem(inv, Material.RED_CONCRETE, 1, 15, ChatColor.AQUA + "" + ChatColor.BOLD + "Remove Plot", Utils.chat("&fDeny the plot and return it to its orginal state."));
+		Utils.createItem(inv, Material.RED_CONCRETE, 1, 16, ChatColor.AQUA + "" + ChatColor.BOLD + "Remove Plot", Utils.chat("&fDeny the plot and return it to its orginal state."));
 			
 		toReturn.setContents(inv.getContents());
 		return toReturn;

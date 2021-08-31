@@ -178,6 +178,8 @@ public class AcceptGui {
 			List<BlockVector2> corners = WorldGuardFunctions.getPoints(u.reviewing);
 			WorldEditor.updateWorld(corners, Bukkit.getWorld(config.getString("worlds.build")), Bukkit.getWorld(config.getString("worlds.save")));
 			
+			Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Plot " + ChatColor.DARK_AQUA + u.reviewing + ChatColor.GREEN + " accepted for " + ChatColor.DARK_AQUA + buildingPoints + ChatColor.GREEN + " building points.");
+			
 			//Remove plot from worldguard
 			ClaimFunctions.removeClaim(u.reviewing);
 			p.sendMessage(ChatColor.GREEN + "Plot " + u.reviewing + " accepted!");

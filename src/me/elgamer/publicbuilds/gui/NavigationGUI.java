@@ -58,6 +58,11 @@ public class NavigationGUI {
 		
 		if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Build")) {
 			
+			if (u.tutorial.tutorial_type <= 9 && u.tutorial.first_time) {
+				u.player.sendMessage(ChatColor.RED + "Please continue the tutorial first!");
+				return;
+			}
+			
 			p.closeInventory();
 			p.openInventory(LocationGUI.GUI(u));
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Return")) {
@@ -67,9 +72,17 @@ public class NavigationGUI {
 			p.closeInventory();
 			p.openInventory(SwitchServerGUI.GUI(u));
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Spawn")) {
+			if (u.tutorial.tutorial_type <= 9 && u.tutorial.first_time) {
+				u.player.sendMessage(ChatColor.RED + "Please continue the tutorial first!");
+				return;
+			}
 			p.closeInventory();
 			p.teleport(Main.spawn);
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Tutorial")) {
+			if (u.tutorial.tutorial_type <= 9 && u.tutorial.first_time) {
+				u.player.sendMessage(ChatColor.RED + "Please continue the tutorial first!");
+				return;
+			}
 			p.closeInventory();
 			p.openInventory(TutorialGui.GUI(u));
 		}
