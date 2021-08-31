@@ -140,7 +140,7 @@ public class MainGui {
 			}
 
 			//Check whether the player has selected the corners correctly.
-			//Has selected all 4 corners.
+			//Has selected at least 3 points to create a polygon.
 			if (u.plots.vector.size() >= 3) {
 
 				//Does not exceed the size.
@@ -158,19 +158,6 @@ public class MainGui {
 					return;
 
 				}
-
-				/*//Is not too small.
-				if (u.plots.minDis(p)) {
-					p.sendMessage(Utils.chat("&cYour selection is too small!"));
-					p.closeInventory();
-					return;
-				}
-				//Does not exceed the size.
-				if (u.plots.maxDis(p)) {
-					p.sendMessage(Utils.chat("&cYour selection is too large!"));
-					p.closeInventory();
-					return;
-				}*/
 
 			} else {
 				p.sendMessage(Utils.chat("&cYou must select a minimum of 3 points to create a plot!"));

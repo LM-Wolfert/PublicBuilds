@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.mysql.PlayerData;
 import me.elgamer.publicbuilds.mysql.PlotData;
+import me.elgamer.publicbuilds.utils.ClaimFunctions;
 import me.elgamer.publicbuilds.utils.Time;
 import me.elgamer.publicbuilds.utils.User;
 import me.elgamer.publicbuilds.utils.Utils;
@@ -43,11 +44,15 @@ public class PlotInfo {
 					Utils.chat("&fSubmit your plot and put it up for review."),
 					Utils.chat("&fIf you change your mind you can always retract the submission."));
 		}
+		
+		Utils.createItem(inv, Material.YELLOW_CONCRETE, 1, 14, ChatColor.AQUA + "" + ChatColor.BOLD + "Resize Plot",
+				Utils.chat("&fWith your current Selection Tool selection edit the area of your plot."),
+				Utils.chat("&fYour new selection must include all of the current area else it will not work."));
 
 		Utils.createItem(inv, Material.RED_CONCRETE, 1, 16, ChatColor.AQUA + "" + ChatColor.BOLD + "Remove Plot",
 				Utils.chat("&fCancels your plot and removes your progress."),
 				Utils.chat("&fWARNING will revert all blocks placed to how it was before claiming!"));
-		Utils.createItem(inv, Material.SPRUCE_BOAT, 1, 14, ChatColor.AQUA + "" + ChatColor.BOLD + "Teleport",
+		Utils.createItem(inv, Material.SPRUCE_BOAT, 1, 5, ChatColor.AQUA + "" + ChatColor.BOLD + "Teleport",
 				Utils.chat("&fTeleports you to your plot."));
 		Utils.createItem(inv, Material.SPRUCE_DOOR, 1, 27, ChatColor.AQUA + "" + ChatColor.BOLD + "Return",
 				Utils.chat("&fGo back to the plot menu."));
@@ -120,6 +125,12 @@ public class PlotInfo {
 			PlotData.removeSubmit(u.currentPlot);
 			p.sendMessage(ChatColor.RED + "The submission for plot " + u.currentPlot + " has been retracted.");
 
+			p.closeInventory();
+			return;
+			
+		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Resize Plot")) {
+			
+			p.sendMessage(ClaimFunctions.editClaim(u.currentPlot, u.uuid, u.plots.vector));
 			p.closeInventory();
 			return;
 

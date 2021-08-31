@@ -6,6 +6,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import me.elgamer.publicbuilds.mysql.PlotData;
+import me.elgamer.publicbuilds.utils.ClaimFunctions;
 import me.elgamer.publicbuilds.utils.User;
 import me.elgamer.publicbuilds.utils.Utils;
 import net.md_5.bungee.api.ChatColor;
@@ -33,7 +35,7 @@ public class DenyGui {
 		
 		Utils.createItem(inv, Material.LIME_CONCRETE, 1, 13, ChatColor.AQUA + "" + ChatColor.BOLD + "Another Chance", Utils.chat("&fDeny the plot and return it to the builder."));
 		
-		//Utils.createItem(inv, Material.YELLOW_CONCRETE, 1, 24, Utils.chat("&9Resize plot"), Utils.chat("&1Edit the plot boundaries to include more or less!"));
+		Utils.createItem(inv, Material.YELLOW_CONCRETE, 1, 24, ChatColor.AQUA + "" + ChatColor.BOLD + "Resize plot", Utils.chat("&fDeny the plot and return it with a larger area."), Utils.chat("&fYour selection must include all of the existing area."));
 		
 		Utils.createItem(inv, Material.RED_CONCRETE, 1, 15, ChatColor.AQUA + "" + ChatColor.BOLD + "Remove Plot", Utils.chat("&fDeny the plot and return it to its orginal state."));
 			
@@ -61,8 +63,16 @@ public class DenyGui {
 						
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&cResize plot"))) {
 			
+			//Will prompt the reviewer to input a reason.
 			p.closeInventory();
-			p.sendMessage(Utils.chat("&cCurrently Not Implemented!"));
+			
+			if (!(ClaimFunctions.checkEdit(p, u.reviewing, PlotData.getOwner(u.reviewing), u.plots.vector))) {
+				return;
+			}
+			u.reasonType = "resized";
+			p.sendMessage(Utils.chat("&aBefore the plot gets denied you must give a reason!"));
+			p.sendMessage(Utils.chat("&aType the reason in chat, the first message sent will count!"));
+			
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Remove Plot")) {
 			
 			//Will prompt the reviewer to to input a reason.

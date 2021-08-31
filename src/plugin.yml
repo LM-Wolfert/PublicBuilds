@@ -1,5 +1,5 @@
 name: PublicBuilds
-version: 1.3
+version: 1.4
 main: me.elgamer.publicbuilds.Main
 description: Claiming System
 depend: [WorldGuard, WorldEdit, UKnetUtilities, BTEPoints, LuckPerms, Essentials, HolographicDisplays]

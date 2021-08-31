@@ -14,7 +14,7 @@ public class RankValues {
 		
 		if (p.hasPermission("group.builder")) {
 			return config.getInt("plot_limit.builder");
-		} else if (p.hasPermission("group.jr builder")) {
+		} else if (p.hasPermission("group.jrbuilder")) {
 			return config.getInt("plot_limit.jrbuilder");
 		} else if (p.hasPermission("group.apprentice")) {
 			return config.getInt("plot_limit.apprentice");
@@ -30,9 +30,25 @@ public class RankValues {
 		
 		if (p.hasPermission("group.builder")) {
 			return config.getInt("plot_distance.builder");
-		} else if (p.hasPermission("group.jr builder")) {
+		} else if (p.hasPermission("group.jrbuilder")) {
 			return config.getInt("plot_distance.jrbuilder");
 		} else if (p.hasPermission("group.apprentice")) {
+			return config.getInt("plot_distance.apprentice");
+		} else {
+			return config.getInt("plot_distance.guest");
+		}
+	}
+	
+	public static int maxDis(String role) {
+
+		Main instance = Main.getInstance();
+		FileConfiguration config = instance.getConfig();
+		
+		if (role.equals("builder")) {
+			return config.getInt("plot_distance.builder");
+		} else if (role.equals("group.jrbuilder")) {
+			return config.getInt("plot_distance.jrbuilder");
+		} else if (role.equals("group.apprentice")) {
 			return config.getInt("plot_distance.apprentice");
 		} else {
 			return config.getInt("plot_distance.guest");

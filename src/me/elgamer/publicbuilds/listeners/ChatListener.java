@@ -69,6 +69,15 @@ public class ChatListener implements Listener {
 					ClaimFunctions.removeClaim(u.reviewing);
 				}
 				
+				if (u.reasonType.equals("resized")) {
+					if (ClaimFunctions.resizePlot(u.reviewing, PlotData.getOwner(u.reviewing), u.plots.vector)) {
+						u.reasonType = "claimed";
+					} else {
+						p.sendMessage(ChatColor.RED + "An error occured with resizing the plot, please try again.");
+						return;
+					}
+				}
+				
 				//Sets the deny message and returns or cancels the plot.
 				PlotMessage.addDenyMessage(u.reviewing, PlotData.getOwner(u.reviewing), e.getMessage(), u.reasonType);
 				PlotData.setStatus(u.reviewing, u.reasonType);
@@ -82,7 +91,7 @@ public class ChatListener implements Listener {
 				if (p.getWorld().equals(Bukkit.getWorld(config.getString("worlds.save")))) {
 					Location l = p.getLocation();
 					l.setWorld(Bukkit.getWorld(config.getString("worlds.build")));
-					p.teleport(l);
+					Bukkit.getScheduler().runTaskLater (Main.getInstance(), () -> p.teleport(l), 10); //20 ticks equal 1 second
 				}
 				
 			}
