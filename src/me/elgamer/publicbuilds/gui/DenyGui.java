@@ -61,7 +61,7 @@ public class DenyGui {
 			p.sendMessage(Utils.chat("&aBefore the plot gets denied you must give a reason!"));
 			p.sendMessage(Utils.chat("&aType the reason in chat, the first message sent will count!"));
 						
-		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(Utils.chat("&cResize plot"))) {
+		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Resize Plot")) {
 			
 			//Will prompt the reviewer to input a reason.
 			p.closeInventory();
