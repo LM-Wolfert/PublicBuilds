@@ -37,6 +37,7 @@ import me.elgamer.publicbuilds.commands.CreateArea;
 import me.elgamer.publicbuilds.commands.OpenGui;
 //import me.elgamer.publicbuilds.commands.SkipTutorial;
 import me.elgamer.publicbuilds.commands.Spawn;
+import me.elgamer.publicbuilds.commands.TutorialHelp;
 import me.elgamer.publicbuilds.gui.AcceptGui;
 import me.elgamer.publicbuilds.gui.ConfirmCancel;
 import me.elgamer.publicbuilds.gui.DenyGui;
@@ -202,6 +203,7 @@ public class Main extends JavaPlugin {
 		getCommand("tutorialStage").setExecutor(new TutorialStage());
 		//getCommand("apply").setExecutor(new Apply());
 		getCommand("converttutorial").setExecutor(new ConvertTutorial());
+		getCommand("tutorialhelp").setExecutor(new TutorialHelp());
 
 		//Tab Completer
 		getCommand("tutorial").setTabCompleter(new TutorialTabCompleter());

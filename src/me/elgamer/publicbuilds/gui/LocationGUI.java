@@ -30,12 +30,14 @@ public class LocationGUI {
 		
 		inv.clear();
 		
-		Utils.createItem(inv, Material.SPRUCE_FENCE, 1, 14, ChatColor.AQUA + "" + ChatColor.BOLD + "London, Cranham",
+		Utils.createItem(inv, Material.SPRUCE_FENCE, 1, 13, ChatColor.AQUA + "" + ChatColor.BOLD + "London, Cranham",
 				Utils.chat("&fCranham is a residential area of east London"),
 				Utils.chat("&fin the London Borough of Havering."),
 				Utils.chat("&fHistorically a rural village in Essex,"),
 				Utils.chat("&fnow it is peripheral to London"),
 				Utils.chat("&fforming the eastern edge of the urban sprawl."));
+		
+		Utils.createItem(inv, Material.ACACIA_FENCE, 1, 15, ChatColor.AQUA + "" + ChatColor.BOLD + "Coming Soon!");
 		
 		Utils.createItem(inv, Material.SPRUCE_DOOR, 1, 27, ChatColor.AQUA + "" + ChatColor.BOLD + "Return", 
 				Utils.chat("&fGo back to the navigation menu."));	

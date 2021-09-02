@@ -26,4 +26,7 @@ commands:
         description: Shows what stage of the tutorial a specific player is on.
     converttutorial:
         usage: /<command>
-        description: Converts previous tutorial completers to the new tutorial system.    
+        description: Converts previous tutorial completers to the new tutorial system.
+    tutorialhelp:
+        usage: /<command>
+        description: Tutorial Video    
