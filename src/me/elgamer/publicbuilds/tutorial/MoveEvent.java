@@ -25,6 +25,9 @@ public class MoveEvent implements Listener {
 		User u = Main.getInstance().getUser(e.getPlayer());
 		
 		if (u.tutorial.tutorial_type == 1) {
+			if (!(u.world.equals(Bukkit.getWorld(Main.getInstance().getConfig().getString("worlds.tutorial"))))) {
+				return;
+			}
 			
 			if (nearYes(e.getTo())) {
 				u.tutorial.tutorial_type = 9;
@@ -37,7 +40,9 @@ public class MoveEvent implements Listener {
 			}
 			
 		} else if (u.tutorial.tutorial_type == 3) {
-			
+			if (!(u.world.equals(Bukkit.getWorld(Main.getInstance().getConfig().getString("worlds.tutorial"))))) {
+				return;
+			}
 			/*if (nearWorldedit(e.getTo())) {
 				u.player.teleport(Main.TUTORIAL_4_START);
 				u.tutorial.tutorial_type = 4;
@@ -71,7 +76,9 @@ public class MoveEvent implements Listener {
 			}
 			
 		} else if (u.tutorial.tutorial_type == 2) {
-			
+			if (!(u.world.equals(Bukkit.getWorld(Main.getInstance().getConfig().getString("worlds.tutorial"))))) {
+				return;
+			}
 			if (e.getTo().distance(Main.TUTORIAL_2_START) >= 75) {
 				e.setCancelled(true);
 				u.player.sendMessage(ChatColor.RED + "You may not leave this area!");
@@ -79,7 +86,9 @@ public class MoveEvent implements Listener {
 			}
 			
 		} else if (u.tutorial.tutorial_type == 9) {
-			
+			if (!(u.world.equals(Bukkit.getWorld(Main.getInstance().getConfig().getString("worlds.tutorial"))))) {
+				return;
+			}
 			if (e.getTo().distance(Main.TUTORIAL_9_START) >= 70) {
 				e.setCancelled(true);
 				u.player.sendMessage(ChatColor.RED + "You may not leave this area!");

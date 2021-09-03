@@ -23,6 +23,10 @@ public class CommandListener implements Listener {
 
 		User u = Main.getInstance().getUser(e.getPlayer());
 		
+		if (e.getMessage().startsWith("/tutorialhelp")) {
+			return;
+		}
+		
 		if (u.tutorial.tutorial_type == 2) {
 			if (u.tutorial.tutorial_stage == 1 && e.getMessage().startsWith("/ll")) {
 				u.tutorial.tutorial_stage = 2;
