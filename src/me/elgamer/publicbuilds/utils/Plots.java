@@ -210,7 +210,7 @@ public class Plots {
 
 		BlockVector2 bv2 = BlockVector2.at(block.getX(), block.getZ());
 
-		u.plots.vector = new ArrayList<BlockVector2>();
+		u.plots.vector.clear();
 		//u.plots.locations = new ArrayList<Location>();
 
 		u.plots.vector.add(bv2);

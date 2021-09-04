@@ -111,7 +111,7 @@ public class ClaimFunctions {
 			e1.printStackTrace();
 		}
 
-		u.plots = new Plots();
+		u.plots.vector.clear();;
 		return (ChatColor.GREEN + "Plot created with ID " + ChatColor.DARK_AQUA + plotID);
 
 	}

@@ -433,6 +433,10 @@ public class Main extends JavaPlugin {
 
 							for (int i : pls) {
 
+								if (i == u.reviewing) {
+									continue;
+								}
+								
 								pt = WorldGuardFunctions.getPoints(i);
 
 								for (BlockVector2 point : pt) {
@@ -562,17 +566,19 @@ public class Main extends JavaPlugin {
 				PlotData.setStatus(u.reviewing, "submitted");
 
 			}
+			users.remove(u);
 		}
 
 		//MySQL
 		try {
 			if (connection != null && !connection.isClosed()) {
-				Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "MySQL disconnected from " + config.getString("MySQL_database"));
 				connection.close();
+				Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "MySQL disconnected from " + config.getString("MySQL_database"));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		Bukkit.getConsoleSender().sendMessage("Disabled publicbuilds");
 	}
 
 	//Creates the mysql connection.
