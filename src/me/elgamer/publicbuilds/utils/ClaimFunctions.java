@@ -44,8 +44,10 @@ public class ClaimFunctions {
 		RegionManager saveRegions = container.get(saveWorld);
 		RegionManager buildRegions = container.get(buildWorld);
 
+		PlotData plotData = Main.getInstance().plotData;
+		
 		//Create new id
-		int plotID = PlotData.getNewID();
+		int plotID = plotData.getNewID();
 
 		//Create region
 		ProtectedPolygonalRegion region = new ProtectedPolygonalRegion(String.valueOf(plotID), vector, 1, 256);
@@ -87,7 +89,7 @@ public class ClaimFunctions {
 		}
 
 		//Create an entry in the database for the plot.
-		if (!(PlotData.createPlot(plotID, u.uuid))) {
+		if (!(plotData.createPlot(plotID, u.uuid))) {
 			return (ChatColor.RED + "An error occured, please try again!");
 		}
 
@@ -118,12 +120,13 @@ public class ClaimFunctions {
 
 	public static String editClaim(int id, String uuid, List<BlockVector2> vector) {
 
+		PlayerData playerData =  Main.getInstance().playerData;
 		//Check whether the player has selected the corners correctly.
 		//Has selected at least 3 points to create a polygon.
 		if (vector.size() >= 3) {
 
 			//Does not exceed the size.
-			if (Plots.largestDistance(vector) > RankValues.maxDis(PlayerData.getRole(uuid))) {
+			if (Plots.largestDistance(vector) > RankValues.maxDis(playerData.getRole(uuid))) {
 				return(Utils.chat("&cYour selection is too large!"));
 			}
 
@@ -206,12 +209,13 @@ public class ClaimFunctions {
 
 	public static boolean checkEdit(Player p, int id, String uuid, List<BlockVector2> vector) {
 
+		PlayerData playerData =  Main.getInstance().playerData;
 		//Check whether the player has selected the corners correctly.
 		//Has selected at least 3 points to create a polygon.
 		if (vector.size() >= 3) {
 
 			//Does not exceed the size.
-			if (Plots.largestDistance(vector) > RankValues.maxDis(PlayerData.getRole(uuid))) {
+			if (Plots.largestDistance(vector) > RankValues.maxDis(playerData.getRole(uuid))) {
 				p.sendMessage(Utils.chat("&cYour selection is too large!"));
 				return false;
 			}
@@ -262,12 +266,13 @@ public class ClaimFunctions {
 
 	public static boolean resizePlot(int id, String uuid, List<BlockVector2> vector) {
 
+		PlayerData playerData =  Main.getInstance().playerData;
 		//Check whether the player has selected the corners correctly.
 		//Has selected at least 3 points to create a polygon.
 		if (vector.size() >= 3) {
 
 			//Does not exceed the size.
-			if (Plots.largestDistance(vector) > RankValues.maxDis(PlayerData.getRole(uuid))) {
+			if (Plots.largestDistance(vector) > RankValues.maxDis(playerData.getRole(uuid))) {
 				return false;
 			}
 

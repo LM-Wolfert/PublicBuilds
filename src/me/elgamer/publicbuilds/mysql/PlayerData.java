@@ -1,11 +1,14 @@
 package me.elgamer.publicbuilds.mysql;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+
+import javax.sql.DataSource;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -15,14 +18,24 @@ import me.elgamer.publicbuilds.utils.Time;
 
 public class PlayerData {
 
-
-	public static boolean playerExists(String uuid) {
-
-		Main instance = Main.getInstance();
-
-		try {
-			PreparedStatement statement = instance.getConnection().prepareStatement
-					("SELECT * FROM " + instance.playerData + " WHERE ID=?");
+	DataSource dataSource;
+	
+	public PlayerData(DataSource dataSource) {
+		
+		this.dataSource = dataSource;
+		
+	}
+	
+	private Connection conn() throws SQLException {
+		return dataSource.getConnection();
+	}
+	
+	
+	public boolean playerExists(String uuid) {
+		
+		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
+				"SELECT uuid FROM player_data WHERE uuid = ?;"
+		)){
 			statement.setString(1, uuid);
 			ResultSet results = statement.executeQuery();
 
@@ -40,90 +53,45 @@ public class PlayerData {
 
 	}
 
-	public static void updatePlayerName(String uuid, String name) {
+	public boolean updatePlayerName(String uuid, String name) {
 
-		Main instance = Main.getInstance();
-
-		try {
-			PreparedStatement statement = instance.getConnection().prepareStatement
-					("UPDATE " + instance.playerData + " SET NAME=? WHERE ID=?");
+		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
+				"UPDATE player_data SET name = ? WHERE uuid = ?;"
+		)){
 			statement.setString(1, name);
 			statement.setString(2, uuid);
 			statement.executeUpdate();
+			return true;
 
 		} catch (SQLException sql) {
 			sql.printStackTrace();
+			return false;
 		}
 	}
 
-	public static void createPlayerInstance(String uuid, String name, String role) {
+	public void createPlayerInstance(String uuid, String name, String role) {
 
-		Main instance = Main.getInstance();
-
-		try {
-			PreparedStatement statement = instance.getConnection().prepareStatement
-					("INSERT INTO " + instance.playerData + " (ID,NAME,TUTORIAL_STAGE,BUILDING_POINTS,LAST_ONLINE,BUILDER_ROLE,LAST_SUBMIT) VALUE (?,?,?,?,?,?,?)");
+		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
+				"INSERT INTO player_data(uuid, name, b_points, last_join, role, last_submit) VALUES(?, ?, ?, ?, ?, ?);"
+		)){
 			statement.setString(1, uuid);
 			statement.setString(2, name);
 			statement.setInt(3, 0);
-			statement.setInt(4, 0);
-			statement.setLong(5, Time.currentTime());
-			statement.setString(6, role);
-			statement.setLong(7, 1);
+			statement.setLong(4, Time.currentTime());
+			statement.setString(5, role);
+			statement.setLong(6, 1);
 			statement.executeUpdate();
 
 		} catch (SQLException sql) {
 			sql.printStackTrace();
 		}
 	}
+	
+	public void updateTime(String uuid) {		
 
-	public static int getTutorialStage(String uuid) {
-
-		Main instance = Main.getInstance();
-
-		try {
-			PreparedStatement statement = instance.getConnection().prepareStatement
-					("SELECT * FROM " + instance.playerData + " WHERE ID=?");
-			statement.setString(1, uuid);
-			ResultSet results = statement.executeQuery();
-
-			if (results.next()) {
-				return (results.getInt("TUTORIAL_STAGE"));
-			} else {
-				return 0;
-			}
-
-
-		} catch (SQLException sql) {
-			sql.printStackTrace();
-			return 0;
-		}
-	}
-
-	public static void setTutorialStage(String uuid, int stage) {
-
-		Main instance = Main.getInstance();
-
-		try {
-			PreparedStatement statement = instance.getConnection().prepareStatement
-					("UPDATE " + instance.playerData + " SET TUTORIAL_STAGE=? WHERE ID=?");
-			statement.setInt(1, stage);
-			statement.setString(2, uuid);
-			statement.executeUpdate();
-
-
-		} catch (SQLException sql) {
-			sql.printStackTrace();
-		}
-	}
-
-	public static void updateTime(String uuid) {
-
-		Main instance = Main.getInstance();
-
-		try {
-			PreparedStatement statement = instance.getConnection().prepareStatement
-					("UPDATE " + instance.playerData + " SET LAST_ONLINE=? WHERE ID=?");
+		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
+				"UPDATE player_data SET last_join = ? WHERE uuid = ?;"
+		)){
 			statement.setLong(1, Time.currentTime());
 			statement.setString(2, uuid);
 			statement.executeUpdate();
@@ -133,13 +101,11 @@ public class PlayerData {
 		}
 	}
 
-	public static void addPoints(String uuid, int points) {
+	public void addPoints(String uuid, int points) {
 
-		Main instance = Main.getInstance();
-
-		try {
-			PreparedStatement statement = instance.getConnection().prepareStatement
-					("UPDATE " + instance.playerData + " SET BUILDING_POINTS=BUILDING_POINTS+" + points + " WHERE ID=?");
+		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
+				"UPDATE player_data SET b_points = b_points + " + points + " WHERE uuid = ?;"
+		)){
 			statement.setString(1, uuid);
 			statement.executeUpdate();
 
@@ -148,18 +114,16 @@ public class PlayerData {
 		}
 	}
 
-	public static int getPoints(String uuid) {
+	public int getPoints(String uuid) {
 
-		Main instance = Main.getInstance();
-
-		try {
-			PreparedStatement statement = instance.getConnection().prepareStatement
-					("SELECT * FROM " + instance.playerData + " WHERE ID=?");
+		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
+				"SELECT b_points FROM player_data WHERE uuid = ?;"
+		)){
 			statement.setString(1, uuid);
 			ResultSet results = statement.executeQuery();
 
 			if (results.next()) {
-				return (results.getInt("BUILDING_POINTS"));
+				return (results.getInt("b_points"));
 			} else {
 				return 0;
 			}
@@ -170,18 +134,16 @@ public class PlayerData {
 		}
 	}
 
-	public static String getRole(String uuid) {
+	public String getRole(String uuid) {
 
-		Main instance = Main.getInstance();
-
-		try {
-			PreparedStatement statement = instance.getConnection().prepareStatement
-					("SELECT * FROM " + instance.playerData + " WHERE ID=?");
+		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
+				"SELECT role FROM player_data WHERE uuid = ?;"
+		)){
 			statement.setString(1, uuid);
 			ResultSet results = statement.executeQuery();
 
 			if (results.next()) {
-				return (results.getString("BUILDER_ROLE"));
+				return (results.getString("role"));
 			} else {
 				return null;
 			}
@@ -192,11 +154,10 @@ public class PlayerData {
 		}
 	}
 
-	public static List<String> getInactivePlayers() {
+	public List<String> getInactivePlayers() {
 
-		//Get plugin instance and config.
-		Main instance = Main.getInstance();
-		FileConfiguration config = instance.getConfig();
+		//Get config.
+		FileConfiguration config = Main.getInstance().getConfig();
 
 		//Calculate the time in milliseconds inactiveMax days ago, inactiveMax is the number of days player can be inactive before their plots are cancelled.
 		int inactiveMax = config.getInt("plot_inactive_cancel");
@@ -208,14 +169,14 @@ public class PlayerData {
 		List<String> players = new ArrayList<String>();
 
 		//Find all players who have not been online since the timeCheck time.
-		try {
-			PreparedStatement statement = instance.getConnection().prepareStatement
-					("SELECT * FROM " + instance.playerData + " WHERE LAST_ONLINE<?");
+		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
+				"SELECT uuid FROM player_data WHERE last_join < ?;"
+		)){
 			statement.setLong(1, timeCheck);
 			ResultSet results = statement.executeQuery();
 
 			while (results.next()) {
-				players.add(results.getString("ID"));
+				players.add(results.getString("uuid"));
 			}
 
 			if (players.isEmpty()) {
@@ -232,13 +193,11 @@ public class PlayerData {
 
 	}
 
-	public static void newSubmit(String uuid) {
+	public void newSubmit(String uuid) {
 
-		Main instance = Main.getInstance();
-
-		try {
-			PreparedStatement statement = instance.getConnection().prepareStatement
-					("UPDATE " + instance.playerData + " SET LAST_SUBMIT=? WHERE ID=?");
+		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
+				"UPDATE player_data SET last_submit = ? WHERE uuid = ?;"
+		)){
 			statement.setLong(1, Time.currentTime());
 			statement.setString(2, uuid);
 			statement.executeUpdate();
@@ -248,18 +207,16 @@ public class PlayerData {
 		}
 	}
 
-	public static long getSubmit(String uuid) {
+	public long getSubmit(String uuid) {
 
-		Main instance = Main.getInstance();
-
-		try {
-			PreparedStatement statement = instance.getConnection().prepareStatement
-					("SELECT * FROM " + instance.playerData + " WHERE ID=?");
+		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
+				"SELECT last_submit FROM player_data WHERE uuid = ?;"
+		)){
 			statement.setString(1, uuid);
 
 			ResultSet results = statement.executeQuery();
 			results.next();
-			return (results.getLong("LAST_SUBMIT"));
+			return (results.getLong("last_submit"));
 
 		} catch (SQLException sql) {
 			sql.printStackTrace();
@@ -268,18 +225,16 @@ public class PlayerData {
 
 	}
 
-	public static String getName(String uuid) {
+	public String getName(String uuid) {
 
-		Main instance = Main.getInstance();
-
-		try {
-			PreparedStatement statement = instance.getConnection().prepareStatement
-					("SELECT * FROM " + instance.playerData + " WHERE ID=?");
+		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
+				"SELECT name FROM player_data WHERE uuid = ?;"
+		)){
 			statement.setString(1, uuid);
 
 			ResultSet results = statement.executeQuery();
 			results.next();
-			return (results.getString("NAME"));
+			return (results.getString("name"));
 
 		} catch (SQLException sql) {
 			sql.printStackTrace();
@@ -287,13 +242,11 @@ public class PlayerData {
 		}
 	}
 
-	public static void updateRole(String uuid, String role) {
+	public void updateRole(String uuid, String role) {
 
-		Main instance = Main.getInstance();
-
-		try {
-			PreparedStatement statement = instance.getConnection().prepareStatement
-					("UPDATE " + instance.playerData + " SET BUILDER_ROLE=? WHERE ID=?");
+		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
+				"UPDATE player_data SET role = ? WHERE uuid = ?;"
+		)){
 			statement.setString(1, role);
 			statement.setString(2, uuid);
 			statement.executeUpdate();
@@ -303,24 +256,20 @@ public class PlayerData {
 		}
 	}
 
-	public static Leaderboard pointsAboveBelow(String uuid, String name) {
+	public Leaderboard pointsAboveBelow(String uuid, String name) {
 
 		Leaderboard lead = new Leaderboard();
 
-		Main instance = Main.getInstance();
-
-		try {
-			//Get all players from playerData in descending order of building points
-			PreparedStatement statement = instance.getConnection().prepareStatement
-					("SELECT * FROM " + instance.playerData + " ORDER BY BUILDING_POINTS DESC");
-
+		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
+				"SELECT uuid, name, b_points FROM player_data ORDER BY b_points DESC;"
+		)){
 			ResultSet results = statement.executeQuery();
 
 			int pos = 0;
 
 			while (results.next()) {
 				pos += 1;
-				if (results.getString("ID").equals(uuid)) {
+				if (results.getString("uuid").equals(uuid)) {
 					break;
 				}
 			}
@@ -338,8 +287,8 @@ public class PlayerData {
 				if (results.next()) {
 					pos += 1;
 					lead.position[i] = pos;
-					lead.uuids[i] = results.getString("NAME");
-					lead.points[i] = results.getInt("BUILDING_POINTS");
+					lead.uuids[i] = results.getString("name");
+					lead.points[i] = results.getInt("b_points");
 				} else {
 					return lead;
 				}
@@ -355,15 +304,13 @@ public class PlayerData {
 
 	}
 
-	public static LinkedHashMap<String,Integer> pointsTop() {
+	public LinkedHashMap<String,Integer> pointsTop() {
 
 		LinkedHashMap<String,Integer> lead = new LinkedHashMap<String,Integer>();
 
-		Main instance = Main.getInstance();
-
-		try {
-			PreparedStatement statement = instance.getConnection().prepareStatement
-					("SELECT * FROM " + instance.playerData + " ORDER BY BUILDING_POINTS DESC");
+		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
+				"SELECT name, b_points FROM player_data ORDER BY b_points DESC;"
+		)){
 			ResultSet results = statement.executeQuery();
 
 			int i = 1;
@@ -372,7 +319,7 @@ public class PlayerData {
 
 				if (i > 9) { break; }
 
-				lead.put(results.getString("NAME"), results.getInt("BUILDING_POINTS"));
+				lead.put(results.getString("name"), results.getInt("b_points"));
 				i += 1;
 			}
 
@@ -385,38 +332,20 @@ public class PlayerData {
 
 	}
 
-	public static String getUUID(String name) {
+	public String getUUID(String name) {
 
-		Main instance = Main.getInstance();
-
-		try {
-			PreparedStatement statement = instance.getConnection().prepareStatement
-					("SELECT * FROM " + instance.playerData + " WHERE NAME=?");
+		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
+				"SELECT uuid FROM player_data WHERE name = ?;"
+		)){
 			statement.setString(1, name);
 			ResultSet results = statement.executeQuery();
 
 			if (results.next()) {
-				return (results.getString("ID"));
+				return (results.getString("uuid"));
 
 			} else {
 				return null;
 			}
-
-		} catch (SQLException sql) {
-			sql.printStackTrace();
-			return null;
-		}
-	}
-
-	public static ResultSet getTutorialCompleters() {
-
-		Main instance = Main.getInstance();
-
-		try {
-			PreparedStatement statement = instance.getConnection().prepareStatement
-					("SELECT * FROM " + instance.playerData + " WHERE TUTORIAL_STAGE=" + 7);
-
-			return (statement.executeQuery());
 
 		} catch (SQLException sql) {
 			sql.printStackTrace();

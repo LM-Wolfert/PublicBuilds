@@ -5,6 +5,7 @@ import java.util.Map.Entry;
 
 import org.bukkit.ChatColor;
 
+import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.mysql.PlayerData;
 
 public class Leaderboard {
@@ -19,7 +20,9 @@ public class Leaderboard {
 	
 	public static void printLeaderboard(User u) {
 
-		Leaderboard lead = PlayerData.pointsAboveBelow(u.uuid, u.name);
+		PlayerData playerData = Main.getInstance().playerData;
+		
+		Leaderboard lead = playerData.pointsAboveBelow(u.uuid, u.name);
 
 		if (lead == null) {
 			u.player.sendMessage(ChatColor.RED + "Not enough entries to create a leaderboard!");
@@ -46,7 +49,8 @@ public class Leaderboard {
 	
 	public static void printLeaderboardElse(User u, String uuid, String name) {
 
-		Leaderboard lead = PlayerData.pointsAboveBelow(uuid, name);
+		PlayerData playerData = Main.getInstance().playerData;
+		Leaderboard lead = playerData.pointsAboveBelow(uuid, name);
 
 		if (lead == null) {
 			u.player.sendMessage(ChatColor.RED + "Not enough entries to create a leaderboard!");
@@ -73,7 +77,8 @@ public class Leaderboard {
 	
 	public static void printLeaderboardTop(User u) {
 
-		LinkedHashMap<String, Integer> lead = PlayerData.pointsTop();
+		PlayerData playerData = Main.getInstance().playerData;
+		LinkedHashMap<String, Integer> lead = playerData.pointsTop();
 
 		if (lead == null) {
 			u.player.sendMessage(ChatColor.RED + "Not enough entries to create a leaderboard!");

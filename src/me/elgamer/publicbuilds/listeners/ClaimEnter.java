@@ -26,10 +26,13 @@ import net.md_5.bungee.api.chat.TextComponent;
 public class ClaimEnter implements Listener{
 
 	public WorldGuardPlugin worldGuardPlugin;
+	PlotData plotData;
+	PlayerData playerData;
 
-	public  ClaimEnter(Main plugin) {
+	public  ClaimEnter(Main plugin, PlotData plotData, PlayerData playerData) {
 
 		Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
+		this.plotData = plotData;
 	}
 
 	@EventHandler
@@ -73,12 +76,12 @@ public class ClaimEnter implements Listener{
 
 						u.inPlot = plot;
 						u.plotOwner = owners;
-						u.player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.GREEN + "You have entered " + PlayerData.getName(u.plotOwner) + "'s plot!"));
+						u.player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.GREEN + "You have entered " + playerData.getName(u.plotOwner) + "'s plot!"));
 					}
 
 					if (u.uuid.equals(owners)) {
 
-						PlotData.setLastVisit(u.uuid, u.inPlot);
+						plotData.setLastVisit(u.inPlot);
 
 					}
 
@@ -92,7 +95,7 @@ public class ClaimEnter implements Listener{
 
 		if (applicableRegionSet.size() < 2 && u.inPlot != 0) {
 
-			u.player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.GREEN + "You have left " + PlayerData.getName(u.plotOwner) + "'s plot!"));
+			u.player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.GREEN + "You have left " + playerData.getName(u.plotOwner) + "'s plot!"));
 			u.inPlot = 0;
 
 		}

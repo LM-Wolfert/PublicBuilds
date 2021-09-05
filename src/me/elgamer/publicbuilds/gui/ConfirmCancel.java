@@ -57,6 +57,8 @@ public class ConfirmCancel {
 		//Get config.
 		FileConfiguration config = Main.getInstance().getConfig();
 
+		PlotData plotData = Main.getInstance().plotData;
+		
 		//Get player
 		Player p = u.player;
 
@@ -67,7 +69,7 @@ public class ConfirmCancel {
 
 			WorldEditor.updateWorld(vector, Bukkit.getWorld(config.getString("worlds.save")), Bukkit.getWorld(config.getString("worlds.build")));
 			ClaimFunctions.removeClaim(u.currentPlot);
-			PlotData.setStatus(u.currentPlot, "cancelled");
+			plotData.setStatus(u.currentPlot, "cancelled");
 			p.sendMessage(ChatColor.RED + "Plot " + u.currentPlot + " has been removed!");
 
 			p.closeInventory();

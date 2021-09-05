@@ -20,9 +20,14 @@ import net.md_5.bungee.api.ChatColor;
 
 public class ChatListener implements Listener {
 
-	public ChatListener(Main plugin) {
+	PlotData plotData;
+	PlotMessage plotMessage;
+	
+	public ChatListener(Main plugin, PlotData plotData, PlotMessage plotMessage) {
 
 		Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
+		this.plotData = plotData;
+		this.plotMessage = plotMessage;
 
 	}
 
@@ -70,7 +75,7 @@ public class ChatListener implements Listener {
 				}
 				
 				if (u.reasonType.equals("resized")) {
-					if (ClaimFunctions.resizePlot(u.reviewing, PlotData.getOwner(u.reviewing), u.plots.vector)) {
+					if (ClaimFunctions.resizePlot(u.reviewing, plotData.getOwner(u.reviewing), u.plots.vector)) {
 						u.reasonType = "claimed";
 					} else {
 						p.sendMessage(ChatColor.RED + "An error occured with resizing the plot, please try again.");
@@ -79,11 +84,11 @@ public class ChatListener implements Listener {
 				}
 				
 				//Sets the deny message and returns or cancels the plot.
-				PlotMessage.addDenyMessage(u.reviewing, PlotData.getOwner(u.reviewing), e.getMessage(), u.reasonType);
-				PlotData.setStatus(u.reviewing, u.reasonType);
+				plotMessage.addDenyMessage(u.reviewing, plotData.getOwner(u.reviewing), e.getMessage(), u.reasonType);
+				plotData.setStatus(u.reviewing, u.reasonType);
 
 				p.sendMessage(ChatColor.GREEN + "Plot " + u.reviewing + " denied with reason: " + e.getMessage());
-				PlotData.setLastVisit(u.reviewing);
+				plotData.setLastVisit(u.reviewing);
 				//Set the reasonType and reviewing back to default values.
 				u.reasonType = null;
 				u.reviewing = 0;

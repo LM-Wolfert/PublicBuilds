@@ -8,15 +8,6 @@ MySQL_password: password
 #Database name (doesn't require adjusting)
 MySQL_database: minecraft_publicbuilds
 
-#Tables in database (doesn't require adjusting)
-MySQL_playerData: player_data
-MySQL_plotData: plot_data
-MySQL_denyData: deny_data
-MySQL_acceptData: accept_data
-MySQL_areaData: area_data
-MySQL_submitData: submit_data
-MySQL_tutorialData: tutorial_data
-
 #Promotion Point Values
 rankup:
     apprentice: 10

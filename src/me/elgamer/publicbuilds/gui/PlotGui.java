@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.mysql.PlotData;
 import me.elgamer.publicbuilds.utils.User;
 import me.elgamer.publicbuilds.utils.Utils;
@@ -29,6 +30,7 @@ public class PlotGui {
 
 	public static Inventory GUI (User u) {
 
+		PlotData plotData = Main.getInstance().plotData;
 		Inventory toReturn = Bukkit.createInventory(null, inv_rows, inventory_name);
 
 		inv.clear();
@@ -38,7 +40,7 @@ public class PlotGui {
 
 
 		//Get all plots owned by the player.
-		HashMap<Integer, String> plots = PlotData.getPlots(u.uuid);
+		HashMap<Integer, String> plots = plotData.getPlots(u.uuid);
 
 		if (plots == null) {
 
@@ -84,7 +86,7 @@ public class PlotGui {
 					Utils.chat("&fas well as teleport to the before and after view."));
 		}
 
-		else if (Utils.isPlayerInGroup(u.player, "reviewer") && PlotData.reviewExists(u)) {
+		else if (Utils.isPlayerInGroup(u.player, "reviewer") && plotData.reviewExists(u)) {
 			Utils.createItem(inv, Material.LIME_STAINED_GLASS_PANE, 1, 41, ChatColor.AQUA + "" + ChatColor.BOLD + "New Review", 
 					Utils.chat("&fStart reviewing a new plot."),
 					Utils.chat("&fWill instantly open the review menu."));
@@ -95,7 +97,8 @@ public class PlotGui {
 	}
 
 	public static void clicked(User u, int slot, ItemStack clicked, Inventory inv) {
-
+		
+		PlotData plotData = Main.getInstance().plotData;
 		Player p = u.player;
 
 		if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Return")) {
@@ -109,8 +112,8 @@ public class PlotGui {
 			return;
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "New Review")) {
 			//If there is a plot available to review, create a new review and open the review gui.
-			if (PlotData.reviewExists(u)) {
-				u.reviewing = PlotData.newReview(u);
+			if (plotData.reviewExists(u)) {
+				u.reviewing = plotData.newReview(u);
 				p.closeInventory();
 				p.openInventory(ReviewGui.GUI(u));
 				return;

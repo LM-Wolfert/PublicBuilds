@@ -32,6 +32,8 @@ public class MainGui {
 	public static Inventory GUI (User u) {
 
 		Player p = u.player;
+		PlotData plotData = Main.getInstance().plotData;
+		PlayerData playerData = Main.getInstance().playerData;
 
 		Inventory toReturn = Bukkit.createInventory(null, inv_rows, inventory_name);
 
@@ -56,8 +58,8 @@ public class MainGui {
 				Utils.chat("&fand teleport to your plot."));
 
 		Utils.createPlayerSkull(inv, p, 1, 24, ChatColor.AQUA + "" + ChatColor.BOLD + "Stats", 
-				Utils.chat("&fBuilding Points: " + PlayerData.getPoints(u.uuid)),
-				Utils.chat("&fCompleted Plots: " + PlotData.completedPlots(u.uuid)));
+				Utils.chat("&fBuilding Points: " + playerData.getPoints(u.uuid)),
+				Utils.chat("&fCompleted Plots: " + plotData.completedPlots(u.uuid)));
 
 		Utils.createItem(inv, Material.WHITE_BANNER, 1, 25, ChatColor.AQUA + "" + ChatColor.BOLD + "Banner Maker", 
 				Utils.chat("&fOpens the Banner Maker!"));
@@ -72,6 +74,7 @@ public class MainGui {
 	public static void clicked(User u, int slot, ItemStack clicked, Inventory inv) {
 
 		Player p = u.player;
+		PlotData plotData = Main.getInstance().plotData;
 
 		if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Navigation Menu")) {
 			
@@ -123,16 +126,16 @@ public class MainGui {
 			}
 			
 			//Check whether the player has a plot.
-			if (PlotData.hasPlot(p.getUniqueId().toString())) {
+			if (plotData.hasPlot(p.getUniqueId().toString())) {
 				//Count all active plots, if they exceed the limit then end the method.
-				if (PlotData.activePlotCount(p.getUniqueId().toString()) >= RankValues.plotLimit(p)) {
+				if (plotData.activePlotCount(p.getUniqueId().toString()) >= RankValues.plotLimit(p)) {
 					p.sendMessage(Utils.chat("&cYou have reached your plot limit, please complete and existing plot to create a new one!"));
 					p.closeInventory();
 					return;
 				}
 
 				//Count total plots, this includes claimed, submitted and under review, if they exceed the limit then end the method.
-				if (PlotData.totalPlotCount(p.getUniqueId().toString()) >= Main.getInstance().getConfig().getInt("plot_maximum")) {
+				if (plotData.totalPlotCount(p.getUniqueId().toString()) >= Main.getInstance().getConfig().getInt("plot_maximum")) {
 					p.sendMessage(Utils.chat("&cYou have too many plots submitted/claimed, please wait for at least 1 to be reviewed!"));
 					p.closeInventory();
 					return;

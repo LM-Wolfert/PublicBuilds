@@ -29,10 +29,12 @@ public class Tutorial {
 
 	public Tutorial(User u) {
 
-		tutorial_type = TutorialData.getType(u.uuid);
-		tutorial_stage = TutorialData.getStage(u.uuid);
+		TutorialData tutorialData = Main.getInstance().tutorialData;
+		
+		tutorial_type = tutorialData.getType(u.uuid);
+		tutorial_stage = tutorialData.getStage(u.uuid);
 
-		first_time = TutorialData.getTime(u.uuid);
+		first_time = tutorialData.getTime(u.uuid);
 		complete = false;
 
 	}

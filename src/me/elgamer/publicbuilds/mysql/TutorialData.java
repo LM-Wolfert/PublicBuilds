@@ -1,21 +1,33 @@
 package me.elgamer.publicbuilds.mysql;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import me.elgamer.publicbuilds.Main;
+import javax.sql.DataSource;
+
 import me.elgamer.publicbuilds.utils.User;
 
 public class TutorialData {
 
-	public static void createPlayerInstance(String uuid, int tutorial_type, int tutorial_stage, boolean first_time) {
+	DataSource dataSource;
 
-		Main instance = Main.getInstance();
+	public TutorialData(DataSource dataSource) {
 
-		try {
-			PreparedStatement statement = instance.getConnection().prepareStatement
-					("INSERT INTO " + instance.tutorialData + " (ID,TUTORIAL_TYPE,TUTORIAL_STAGE,FIRST_TIME) VALUE (?,?,?,?)");
+		this.dataSource = dataSource;
+
+	}
+
+	private Connection conn() throws SQLException {
+		return dataSource.getConnection();
+	}
+
+	public void createPlayerInstance(String uuid, int tutorial_type, int tutorial_stage, boolean first_time) {
+
+		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
+				"INSERT INTO tutorial_data(uuid, type, stage, first_time) VALUES(?, ?, ?, ?)"
+		)){
 			statement.setString(1, uuid);
 			statement.setInt(2, tutorial_type);
 			statement.setInt(3, tutorial_stage);
@@ -27,24 +39,22 @@ public class TutorialData {
 		}
 	}
 
-	public static boolean tutorialComplete(String uuid) {
+	public boolean tutorialComplete(String uuid) {
 
-		Main instance = Main.getInstance();
-
-		try {
-			PreparedStatement statement = instance.getConnection().prepareStatement
-					("SELECT * FROM " + instance.tutorialData + " WHERE ID=?");
+		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
+				"SELECT type FROM tutorial_data WHERE uuid = ?"
+		)){
 			statement.setString(1, uuid);
 			ResultSet results = statement.executeQuery();
 
 			if (results.next()) {
-				
-				if (results.getInt("TUTORIAL_TYPE") == 10) {
+
+				if (results.getInt("type") == 10) {
 					return true;
 				} else {
 					return false;
 				}
-				
+
 			} else {
 				createPlayerInstance(uuid, 1, 1, true);
 				return false;
@@ -58,14 +68,12 @@ public class TutorialData {
 
 
 	}
-	
-	public static int getType(String uuid) {
 
-		Main instance = Main.getInstance();
+	public int getType(String uuid) {
 
-		try {
-			PreparedStatement statement = instance.getConnection().prepareStatement
-					("SELECT * FROM " + instance.tutorialData + " WHERE ID=?");
+		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
+				"SELECT type FROM tutorial_data WHERE uuid = ?"
+		)){
 			statement.setString(1, uuid);
 			ResultSet results = statement.executeQuery();
 
@@ -79,14 +87,12 @@ public class TutorialData {
 		}
 
 	}
-	
-	public static int getStage(String uuid) {
 
-		Main instance = Main.getInstance();
+	public int getStage(String uuid) {
 
-		try {
-			PreparedStatement statement = instance.getConnection().prepareStatement
-					("SELECT * FROM " + instance.tutorialData + " WHERE ID=?");
+		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
+				"SELECT stage FROM tutorial_data WHERE uuid = ?"
+		)){
 			statement.setString(1, uuid);
 			ResultSet results = statement.executeQuery();
 
@@ -100,14 +106,12 @@ public class TutorialData {
 		}
 
 	}
-	
-	public static boolean getTime(String uuid) {
 
-		Main instance = Main.getInstance();
+	public boolean getTime(String uuid) {
 
-		try {
-			PreparedStatement statement = instance.getConnection().prepareStatement
-					("SELECT * FROM " + instance.tutorialData + " WHERE ID=?");
+		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
+				"SELECT first_time FROM tutorial_data WHERE uuid = ?"
+		)){
 			statement.setString(1, uuid);
 			ResultSet results = statement.executeQuery();
 
@@ -121,26 +125,24 @@ public class TutorialData {
 		}
 
 	}
-	
-	public static void updateValues(User u) {
-		
-		Main instance = Main.getInstance();
 
-		try {
-			PreparedStatement statement = instance.getConnection().prepareStatement
-					("UPDATE " + instance.tutorialData + " SET TUTORIAL_TYPE=?,TUTORIAL_STAGE=?,FIRST_TIME=? WHERE ID=?");
+	public void updateValues(User u) {
+
+		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
+				"UPDATE tutorial_data SET type = ?, stage = ?, first_time = ? WHERE uuid = ?"
+		)){
 			statement.setInt(1, u.tutorial.tutorial_type);
 			statement.setInt(2, u.tutorial.tutorial_stage);
 			statement.setBoolean(3, u.tutorial.first_time);
 			statement.setString(4, u.uuid);
-			
+
 			statement.executeUpdate();
 
 
 		} catch (SQLException sql) {
 			sql.printStackTrace();
 		}
-		
+
 	}
 
 }

@@ -12,7 +12,9 @@ public class Ranks {
 
 	public static void checkRankup(User u) {
 
-		int points = PlayerData.getPoints(u.uuid);
+		PlayerData playerData = Main.getInstance().playerData;
+		
+		int points = playerData.getPoints(u.uuid);
 		FileConfiguration config = Main.getInstance().getConfig();
 		
 		if (points >= config.getInt("rankup.builder") && u.role.equals("jrbuilder")) {
@@ -31,7 +33,7 @@ public class Ranks {
 		String command = "lp user " + u.name + " promote builder";
 		Bukkit.dispatchCommand(console, command);
 		Bukkit.broadcastMessage(ChatColor.GREEN + u.name + " has been promoted to " + u.role);
-		PlayerData.updateRole(u.uuid, u.role);
+		playerData.updateRole(u.uuid, u.role);
 		checkRankup(u);
 	}
 

@@ -22,7 +22,9 @@ public class Inactive {
 		long timeCap = config.getLong("plot_inactive_cancel")*24*60*60*1000;
 		long timeDif = time - timeCap; 
 		
-		List<Integer> inactivePlots = PlotData.getInactivePlots(timeDif);
+		PlotData plotData = Main.getInstance().plotData;
+		
+		List<Integer> inactivePlots = plotData.getInactivePlots(timeDif);
 
 		//If there are no inactive plots, end the method.
 		if (inactivePlots == null || inactivePlots.isEmpty()) {
@@ -34,7 +36,7 @@ public class Inactive {
 
 			WorldEditor.updateWorld(WorldGuardFunctions.getPoints(plot), Bukkit.getWorld(config.getString("worlds.save")), Bukkit.getWorld(config.getString("worlds.build")));
 			ClaimFunctions.removeClaim(plot);
-			PlotData.setStatus(plot, "cancelled");
+			plotData.setStatus(plot, "cancelled");
 			Bukkit.broadcastMessage(ChatColor.RED + "Plot " + plot + " has been removed due to inactivity!");
 		}
 

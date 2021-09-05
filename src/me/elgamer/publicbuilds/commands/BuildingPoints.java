@@ -40,7 +40,9 @@ public class BuildingPoints implements CommandExecutor {
 			return true;
 		}
 		
-		String uuid = PlayerData.getUUID(args[0]);
+		PlayerData playerData = Main.getInstance().playerData;
+		
+		String uuid = playerData.getUUID(args[0]);
 		
 		if (uuid == null) {
 			
@@ -49,7 +51,7 @@ public class BuildingPoints implements CommandExecutor {
 			
 		}
 		
-		Leaderboard.printLeaderboardElse(u, uuid, PlayerData.getName(uuid));
+		Leaderboard.printLeaderboardElse(u, uuid, playerData.getName(uuid));
 		return true;
 		
 	}

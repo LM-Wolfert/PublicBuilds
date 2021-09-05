@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.mysql.PlayerData;
 import me.elgamer.publicbuilds.mysql.PlotData;
 import me.elgamer.publicbuilds.utils.Accept;
@@ -29,6 +30,8 @@ public class ReviewGui {
 
 	public static Inventory GUI (User u) {
 
+		PlayerData playerData = Main.getInstance().playerData;
+		PlotData plotData = Main.getInstance().plotData;
 		Inventory toReturn = Bukkit.createInventory(null, inv_rows, inventory_name);
 
 		inv.clear();
@@ -37,7 +40,7 @@ public class ReviewGui {
 		
 		Utils.createItem(inv, Material.BOOK, 1, 5, ChatColor.AQUA + "" + ChatColor.BOLD + "Plot Info",
 				Utils.chat("&fPlot ID: " + u.reviewing),
-				Utils.chat("&fPlot Owner: " + PlayerData.getName(PlotData.getOwner(u.reviewing))));
+				Utils.chat("&fPlot Owner: " + playerData.getName(plotData.getOwner(u.reviewing))));
 		
 		Utils.createItem(inv, Material.GRASS_BLOCK, 1, 13, ChatColor.AQUA + "" + ChatColor.BOLD + "Before View",
 				Utils.chat("&fTeleport to the plot before it was claimed."));

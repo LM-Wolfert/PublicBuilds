@@ -4,6 +4,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.mysql.PlayerData;
 import me.elgamer.publicbuilds.mysql.TutorialData;
 import me.elgamer.publicbuilds.tutorial.Tutorial;
@@ -35,12 +36,18 @@ public class User {
 	
 	public Tutorial tutorial;
 	
+	TutorialData tutorialData;
+	PlayerData playerData;
+	
 	public User(Player player) {
 		
 		//Set player, uuid and name variable.
 		this.player = player;
 		uuid = player.getUniqueId().toString();
 		name = player.getName();
+		
+		tutorialData = Main.getInstance().tutorialData;
+		playerData = Main.getInstance().playerData;
 		
 		//Update player data.
 		updatePlayerData();
@@ -49,7 +56,7 @@ public class User {
 		buildingTime = me.elgamer.btepoints.utils.PlayerData.getBuildTime(uuid);
 			
 		//Continue the tutorial from where they last were.
-		if (!(TutorialData.tutorialComplete(uuid))) {
+		if (!(tutorialData.tutorialComplete(uuid))) {
 			tutorial = new Tutorial(this);
 			tutorial.continueTutorial(this);
 		} else {
@@ -78,15 +85,15 @@ public class User {
 			role = "guest";
 		}
 		
-		if (PlayerData.playerExists(uuid)) {
+		if (playerData.playerExists(uuid)) {
 			
 			//If true then update their last online time and username.
-			PlayerData.updateTime(uuid);
-			PlayerData.updatePlayerName(uuid, player.getName());
-			PlayerData.updateRole(uuid, role);
+			playerData.updateTime(uuid);
+			playerData.updatePlayerName(uuid, player.getName());
+			playerData.updateRole(uuid, role);
 		} else {
 			
-			PlayerData.createPlayerInstance(player.getUniqueId().toString(), player.getName(), role);
+			playerData.createPlayerInstance(player.getUniqueId().toString(), player.getName(), role);
 			
 		}
 		

@@ -65,6 +65,8 @@ public class PlotInfo {
 
 		//Get player
 		Player p = u.player;
+		PlotData plotData = Main.getInstance().plotData;
+		PlayerData playerData = Main.getInstance().playerData;
 
 		if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Teleport")) {
 
@@ -86,9 +88,9 @@ public class PlotInfo {
 
 			long lon_min = Main.getInstance().getConfig().getInt("submit_cooldown")*60*1000;
 
-			if (Time.currentTime() - PlayerData.getSubmit(u.uuid) <= lon_min) {
+			if (Time.currentTime() - playerData.getSubmit(u.uuid) <= lon_min) {
 
-				long lon_dif = lon_min - (Time.currentTime() - PlayerData.getSubmit(u.uuid));
+				long lon_dif = lon_min - (Time.currentTime() - playerData.getSubmit(u.uuid));
 
 				int sec = (int) ((lon_dif / 1000) % 60);
 				int min = (int) ((lon_dif / 1000) / 60);
@@ -110,9 +112,9 @@ public class PlotInfo {
 			}
 
 			//Submits the plot.
-			PlotData.setStatus(u.currentPlot, "submitted");
-			PlotData.newSubmit(u.currentPlot);
-			PlayerData.newSubmit(u.uuid);
+			plotData.setStatus(u.currentPlot, "submitted");
+			plotData.newSubmit(u.currentPlot);
+			playerData.newSubmit(u.uuid);
 			p.sendMessage(ChatColor.GREEN + "Plot " + u.currentPlot + " has been submitted.");
 
 			p.closeInventory();
@@ -121,8 +123,8 @@ public class PlotInfo {
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Retract Submission")) {
 
 			//Retracts a plot submission.
-			PlotData.setStatus(u.currentPlot, "claimed");
-			PlotData.removeSubmit(u.currentPlot);
+			plotData.setStatus(u.currentPlot, "claimed");
+			plotData.removeSubmit(u.currentPlot);
 			p.sendMessage(ChatColor.RED + "The submission for plot " + u.currentPlot + " has been retracted.");
 
 			p.closeInventory();

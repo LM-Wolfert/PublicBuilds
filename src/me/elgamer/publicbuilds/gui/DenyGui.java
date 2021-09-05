@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.mysql.PlotData;
 import me.elgamer.publicbuilds.utils.ClaimFunctions;
 import me.elgamer.publicbuilds.utils.User;
@@ -46,6 +47,8 @@ public class DenyGui {
 	public static void clicked(User u, int slot, ItemStack clicked, Inventory inv) {
 		
 		Player p = u.player;
+
+		PlotData plotData = Main.getInstance().plotData;
 		
 		if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Return")) {
 			//Open the review gui.
@@ -66,7 +69,7 @@ public class DenyGui {
 			//Will prompt the reviewer to input a reason.
 			p.closeInventory();
 			
-			if (!(ClaimFunctions.checkEdit(p, u.reviewing, PlotData.getOwner(u.reviewing), u.plots.vector))) {
+			if (!(ClaimFunctions.checkEdit(p, u.reviewing, plotData.getOwner(u.reviewing), u.plots.vector))) {
 				return;
 			}
 			u.reasonType = "resized";

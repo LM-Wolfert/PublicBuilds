@@ -159,20 +159,24 @@ public class AcceptGui {
 			p.openInventory(GUI(u));
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Submit")) {
 			
+			PlayerData playerData = Main.getInstance().playerData;
+			PlotData plotData = Main.getInstance().plotData;
+			PlotMessage plotMessage = Main.getInstance().plotMessage;
+			
 			FileConfiguration config = Main.getInstance().getConfig();
-			String uuid = PlotData.getOwner(u.reviewing);
+			String uuid = plotData.getOwner(u.reviewing);
 			
 			//Calculate building points and add them
 			int buildingPoints = config.getInt("points_base") + ac.size()*config.getInt("size_multiplier") + ac.accuracy()*config.getInt("accuracy_multiplier") + ac.quality()*config.getInt("quality_multiplier");
-			PlayerData.addPoints(uuid, buildingPoints);
+			playerData.addPoints(uuid, buildingPoints);
 			
 			//Add points for building with multiplier
 			me.elgamer.btepoints.utils.Points.addPoints(uuid, buildingPoints*config.getInt("points_multiplier"));
 			
 			//Remove reviewing status
-			PlotData.setStatus(u.reviewing, "completed");
+			plotData.setStatus(u.reviewing, "completed");
 			
-			PlotMessage.addAccept(u.reviewing, uuid, buildingPoints);
+			plotMessage.addAccept(u.reviewing, uuid, buildingPoints);
 			
 			//Add plot to saveWorld
 			List<BlockVector2> corners = WorldGuardFunctions.getPoints(u.reviewing);

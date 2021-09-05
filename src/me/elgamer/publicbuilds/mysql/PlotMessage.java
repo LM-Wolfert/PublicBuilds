@@ -1,20 +1,31 @@
 package me.elgamer.publicbuilds.mysql;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import me.elgamer.publicbuilds.Main;
+import javax.sql.DataSource;
 
 public class PlotMessage {
 
-	public static void addDenyMessage(int id, String uuid, String message, String type) {
+	DataSource dataSource;
 
-		Main instance = Main.getInstance();
+	public PlotMessage(DataSource dataSource) {
 
-		try {
-			PreparedStatement statement = instance.getConnection().prepareStatement
-					("INSERT INTO " + instance.denyData + " (ID,OWNER,MESSAGE,TYPE) VALUE (?,?,?,?)");
+		this.dataSource = dataSource;
+
+	}
+
+	private Connection conn() throws SQLException {
+		return dataSource.getConnection();
+	}
+
+	public  void addDenyMessage(int id, String uuid, String message, String type) {
+
+		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
+				"INSERT INTO deny_data(id, uuid, feedback, type) VALUES(?, ?, ?, ?);"
+		)){
 			statement.setInt(1, id);
 			statement.setString(2, uuid);
 			statement.setString(3, message);
@@ -27,13 +38,11 @@ public class PlotMessage {
 
 	}
 
-	public static void addAccept(int id, String uuid, int points) {
+	public  void addAccept(int id, String uuid, int points) {
 
-		Main instance = Main.getInstance();
-
-		try {
-			PreparedStatement statement = instance.getConnection().prepareStatement
-					("INSERT INTO " + instance.acceptData + " (ID,OWNER,POINTS) VALUE (?,?,?)");
+		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
+				"INSERT INTO accept_data(id, uuid, points) VALUES (?, ?, ?);"
+		)){
 			statement.setInt(1, id);
 			statement.setString(2, uuid);
 			statement.setInt(3, points);
@@ -45,13 +54,11 @@ public class PlotMessage {
 
 	}
 
-	public static boolean hasDenyMessage(String uuid) {
+	public  boolean hasDenyMessage(String uuid) {
 
-		Main instance = Main.getInstance();
-
-		try {
-			PreparedStatement statement = instance.getConnection().prepareStatement
-					("SELECT * FROM " + instance.denyData + " WHERE OWNER=?");
+		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
+				"SELECT id FROM deny_data WHERE uuid = ?"
+		)){
 			statement.setString(1, uuid);
 			ResultSet results = statement.executeQuery();
 
@@ -63,13 +70,11 @@ public class PlotMessage {
 		}
 	}
 
-	public static boolean hasAcceptMessage(String uuid) {
+	public  boolean hasAcceptMessage(String uuid) {
 
-		Main instance = Main.getInstance();
-
-		try {
-			PreparedStatement statement = instance.getConnection().prepareStatement
-					("SELECT * FROM " + instance.acceptData + " WHERE OWNER=?");
+		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
+				"SELECT id FROM accept_data WHERE uuid = ?"
+		)){
 			statement.setString(1, uuid);
 			ResultSet results = statement.executeQuery();
 
@@ -80,99 +85,104 @@ public class PlotMessage {
 			return false;
 		}
 	}
-	
-	public static int getAccept(String uuid) {
-		
-		Main instance = Main.getInstance();
 
-		try {
-			PreparedStatement statement = instance.getConnection().prepareStatement
-					("SELECT * FROM " + instance.acceptData + " WHERE OWNER=?");
+	public int getAccept(String uuid) {
+
+		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
+				"SELECT id FROM accept_data WHERE uuid = ?"
+		)){
 			statement.setString(1, uuid);
 			ResultSet results = statement.executeQuery();
 
 			results.next();
-			int id = results.getInt("ID");
-			
-			statement = instance.getConnection().prepareStatement
-					("DELETE FROM " + instance.acceptData + " WHERE ID=?");
-			statement.setInt(1, id);
-			statement.executeUpdate();
+			int id = results.getInt("id");
+
+			if (!(deleteAccept(id))) {
+				return 0;
+			}
 
 			return id;
-			
+
 		} catch (SQLException sql) {
 			sql.printStackTrace();
 			return 0;
 		}
 	}
 	
-	public static int getDenyPlot(String uuid) {
+	public boolean deleteAccept(int id) {
 		
-		Main instance = Main.getInstance();
+		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
+				"DELETE FROM accept_data WHERE id = ?"
+		)){
+			statement.setInt(1, id);
+			statement.executeUpdate();
+			return true;
 
-		try {
-			PreparedStatement statement = instance.getConnection().prepareStatement
-					("SELECT * FROM " + instance.denyData + " WHERE OWNER=?");
+		} catch (SQLException sql) {
+			sql.printStackTrace();
+			return false;
+		}
+	}
+
+	public  int getDenyPlot(String uuid) {
+		
+		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
+				"SELECT id FROM deny_data WHERE uuid = ?"
+		)){
 			statement.setString(1, uuid);
 			ResultSet results = statement.executeQuery();
 
 			results.next();
-			return (results.getInt("ID"));
-			
+			return (results.getInt("id"));
+
 		} catch (SQLException sql) {
 			sql.printStackTrace();
 			return 0;
 		}
 	}
-	
-	public static String getDenyReason(int plot) {
-		
-		Main instance = Main.getInstance();
 
-		try {
-			PreparedStatement statement = instance.getConnection().prepareStatement
-					("SELECT * FROM " + instance.denyData + " WHERE ID=?");
+	public  String getDenyReason(int plot) {
+
+		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
+				"SELECT feedback FROM deny_data WHERE id = ?"
+		)){
 			statement.setInt(1, plot);
 			ResultSet results = statement.executeQuery();
 
 			results.next();
-			return (results.getString("MESSAGE"));
-			
+			return (results.getString("feedback"));
+
 		} catch (SQLException sql) {
 			sql.printStackTrace();
 			return null;
 		}
 	}
-	
-	public static String getDenyType(int plot) {
-		
-		Main instance = Main.getInstance();
 
-		try {
-			PreparedStatement statement = instance.getConnection().prepareStatement
-					("SELECT * FROM " + instance.denyData + " WHERE ID=?");
+	public  String getDenyType(int plot) {
+
+		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
+				"SELECT type FROM deny_Data WHERE id = ?"
+		)){
 			statement.setInt(1, plot);
 			ResultSet results = statement.executeQuery();
 
 			results.next();
-			return (results.getString("TYPE"));
-			
+			return (results.getString("type"));
+
 		} catch (SQLException sql) {
 			sql.printStackTrace();
 			return null;
 		}
 	}
-	
-	public static void deleteDenyMessage(int plot) {
-		Main instance = Main.getInstance();
 
-		try {
-			PreparedStatement statement = instance.getConnection().prepareStatement
-					("DELETE FROM " + instance.denyData + " WHERE ID=?");
+	public  void deleteDenyMessage(int plot) {
+
+		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
+				"DELETE FROM deny_data WHERE id = ?"
+		)){
 			statement.setInt(1, plot);
 			statement.executeUpdate();
-			
+
 		} catch (SQLException sql) {
 			sql.printStackTrace();
 		}

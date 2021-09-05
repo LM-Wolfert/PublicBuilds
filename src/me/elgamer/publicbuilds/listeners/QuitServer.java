@@ -15,7 +15,11 @@ import net.md_5.bungee.api.ChatColor;
 
 public class QuitServer implements Listener {
 
-	public QuitServer(Main plugin) {
+	TutorialData tutorialData;
+	PlayerData playerData;
+	PlotData plotData;
+	
+	public QuitServer(Main plugin, TutorialData tutorialData, PlayerData playerData, PlotData plotData) {
 
 		Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
 
@@ -42,15 +46,15 @@ public class QuitServer implements Listener {
 		Player p = e.getPlayer();
 
 		//Set tutorial stage in PlayerData
-		TutorialData.updateValues(u);
+		tutorialData.updateValues(u);
 
 		//Update the last online time of player.
-		PlayerData.updateTime(p.getUniqueId().toString());
+		playerData.updateTime(p.getUniqueId().toString());
 
 		//If the player is in a review, cancel it.
 		if (u.reviewing != 0) {
 
-			PlotData.setStatus(u.reviewing, "submitted");
+			plotData.setStatus(u.reviewing, "submitted");
 
 		}
 

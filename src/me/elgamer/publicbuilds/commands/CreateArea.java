@@ -1,8 +1,5 @@
 package me.elgamer.publicbuilds.commands;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -111,35 +108,14 @@ public class CreateArea implements CommandExecutor {
 		} else {
 			return false;
 		}
+		
+		if (!(Main.getInstance().areaData.newArea(args[0], args[1]))) {
+			p.sendMessage(ChatColor.RED + "An error occured!");
+			return true;
+		}
 
 		//Add the regions to the worlds
 		buildRegions.addRegion(polyregion);
-		
-		int val;
-		
-		try {
-			PreparedStatement statement = instance.getConnection().prepareStatement
-					("SELECT * FROM " + instance.areaData);
-			ResultSet results = statement.executeQuery();
-
-			if (results.last()) {
-				int last = results.getInt("ID");
-				val = (last+1);
-			} else {
-				val = 1;
-			}
-			
-			statement = instance.getConnection().prepareStatement
-					("INSERT INTO " + instance.areaData + " (ID,NAME,TYPE,STATUS) VALUE (?,?,?,?)");
-			statement.setInt(1, val);
-			statement.setString(2, args[0]);
-			statement.setString(3, args[1]);
-			statement.setString(4, "active");
-			statement.executeUpdate();
-
-		} catch (SQLException sql) {
-			sql.printStackTrace();
-		}
 		
 		//Save the new regions
 		try {

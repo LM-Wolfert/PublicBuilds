@@ -1,7 +1,10 @@
 package me.elgamer.publicbuilds;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -9,6 +12,10 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.stream.Collectors;
+
+import javax.sql.DataSource;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -23,6 +30,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.earth2me.essentials.Essentials;
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
+import com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource;
+import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 import com.sk89q.worldedit.math.BlockVector2;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.flags.Flag;
@@ -55,12 +64,12 @@ import me.elgamer.publicbuilds.listeners.InventoryClicked;
 import me.elgamer.publicbuilds.listeners.JoinServer;
 import me.elgamer.publicbuilds.listeners.PlayerInteract;
 import me.elgamer.publicbuilds.listeners.QuitServer;
+import me.elgamer.publicbuilds.mysql.AreaData;
 import me.elgamer.publicbuilds.mysql.PlayerData;
 import me.elgamer.publicbuilds.mysql.PlotData;
 import me.elgamer.publicbuilds.mysql.PlotMessage;
 import me.elgamer.publicbuilds.mysql.TutorialData;
 import me.elgamer.publicbuilds.tutorial.CommandListener;
-import me.elgamer.publicbuilds.tutorial.ConvertTutorial;
 import me.elgamer.publicbuilds.tutorial.MoveEvent;
 import me.elgamer.publicbuilds.tutorial.Tutorial;
 import me.elgamer.publicbuilds.tutorial.TutorialCommand;
@@ -76,10 +85,16 @@ import net.milkbowl.vault.permission.Permission;
 public class Main extends JavaPlugin {
 
 	//MySQL
-	private Connection connection;
-	public String host, database, username, password, 
-	playerData, plotData, areaData, denyData, acceptData, submitData, tutorialData;
+	public String host, database, username, password;
 	public int port;
+	
+	private DataSource dataSource;
+	public PlayerData playerData;
+	public PlotData plotData;
+	public PlotMessage plotMessage;
+	public TutorialData tutorialData;
+	public AreaData areaData;
+	
 
 	//Other
 	public static Permission perms = null;
@@ -146,15 +161,21 @@ public class Main extends JavaPlugin {
 		interval = 10*60;
 
 		//MySQL		
-		mysqlSetup();
-		createPlayerData();
-		createPlotData();
-		createDenyData();
-		createAcceptData();
-		createAreaData();
-		createSubmit();
-		createTutorialData();
-		PlotData.clearReview();
+		try {
+			dataSource = mysqlSetup();
+			initDb();
+			
+			playerData = new PlayerData(dataSource);
+			plotData = new PlotData(dataSource);
+			plotMessage = new PlotMessage(dataSource);
+			tutorialData = new TutorialData(dataSource);
+			areaData = new AreaData(dataSource);
+			
+		} catch (SQLException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		plotData.clearReview();
 
 		//Bungeecord
 		this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
@@ -182,10 +203,10 @@ public class Main extends JavaPlugin {
 
 		//Listeners
 		new JoinServer(this);
-		new QuitServer(this);
+		new QuitServer(this, tutorialData, playerData, plotData);
 		new InventoryClicked(this);
-		new ClaimEnter(this);
-		new ChatListener(this);
+		new ClaimEnter(this, plotData, playerData);
+		new ChatListener(this, plotData, plotMessage);
 		new PlayerInteract(this, selectionTool);
 
 		//Tutorial listeners
@@ -202,7 +223,7 @@ public class Main extends JavaPlugin {
 		getCommand("tutorial").setExecutor(new TutorialCommand());
 		getCommand("tutorialStage").setExecutor(new TutorialStage());
 		//getCommand("apply").setExecutor(new Apply());
-		getCommand("converttutorial").setExecutor(new ConvertTutorial());
+		//getCommand("converttutorial").setExecutor(new ConvertTutorial());
 		getCommand("tutorialhelp").setExecutor(new TutorialHelp());
 
 		//Tab Completer
@@ -406,7 +427,7 @@ public class Main extends JavaPlugin {
 					//Spawn particles at all plots owned by the player, if they are in the buildWorld.
 					if (u.world.equals(Bukkit.getWorld(config.getString("worlds.build")))) {
 
-						pl = PlotData.getPlots(u.uuid);
+						pl = plotData.getPlots(u.uuid);
 
 						for (Entry<Integer, String> i : pl.entrySet()) {
 
@@ -479,16 +500,16 @@ public class Main extends JavaPlugin {
 					//Send deny or accept message if a plot has been accepted or denied that they own.
 					//Will not send if they are afk.
 					if (!(ess.getUser(u.player).isAfk())) {
-						if (PlotMessage.hasAcceptMessage(u.uuid)) {
-							int plot = PlotMessage.getAccept(u.uuid);
+						if (plotMessage.hasAcceptMessage(u.uuid)) {
+							int plot = plotMessage.getAccept(u.uuid);
 							u.player.sendMessage(ChatColor.GREEN + "Your plot with ID " + plot + " has been accepted.");
 						}
 
-						if (PlotMessage.hasDenyMessage(u.uuid)) {
-							int plot = PlotMessage.getDenyPlot(u.uuid);
-							String reason = PlotMessage.getDenyReason(plot);
-							String type = PlotMessage.getDenyType(plot);
-							PlotMessage.deleteDenyMessage(plot);
+						if (plotMessage.hasDenyMessage(u.uuid)) {
+							int plot = plotMessage.getDenyPlot(u.uuid);
+							String reason = plotMessage.getDenyReason(plot);
+							String type = plotMessage.getDenyType(plot);
+							plotMessage.deleteDenyMessage(plot);
 
 							if (type.equals("claimed")) {
 								u.player.sendMessage(ChatColor.RED + "Your plot with ID " + plot + " has been denied and returned.");
@@ -543,7 +564,6 @@ public class Main extends JavaPlugin {
 			public void run() {
 
 				updateHologram();
-				getConnection();
 
 			}
 		}, 0L, 1200L);
@@ -555,184 +575,82 @@ public class Main extends JavaPlugin {
 		for (User u: users) {
 
 			//Set tutorialStage in PlayData.
-			TutorialData.updateValues(u);
+			tutorialData.updateValues(u);
 
 			//Update the last online time of player.
-			PlayerData.updateTime(u.uuid);
+			playerData.updateTime(u.uuid);
 
 			//If the player is in a review, cancel it.
 			if (u.reviewing != 0) {
 
-				PlotData.setStatus(u.reviewing, "submitted");
+				plotData.setStatus(u.reviewing, "submitted");
 
 			}
 			users.remove(u);
 		}
-
-		//MySQL
-		try {
-			if (connection != null && !connection.isClosed()) {
-				connection.close();
-				Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "MySQL disconnected from " + config.getString("MySQL_database"));
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		
 		Bukkit.getConsoleSender().sendMessage("Disabled publicbuilds");
 	}
 
 	//Creates the mysql connection.
-	public void mysqlSetup() {
+	private DataSource mysqlSetup() throws SQLException {
 
 		host = config.getString("MySQL_host");
 		port = config.getInt("MySQL_port");
 		database = config.getString("MySQL_database");
 		username = config.getString("MySQL_username");
 		password = config.getString("MySQL_password");
-		playerData = config.getString("MySQL_playerData");
+		
+		MysqlDataSource dataSource = new MysqlConnectionPoolDataSource();
+		
+		dataSource.setServerName(host);
+		dataSource.setPortNumber(port);
+		dataSource.setDatabaseName(database);
+		dataSource.setUser(username);
+		dataSource.setPassword(password);
+		
+		testDataSource(dataSource);
+		return dataSource;
 
-		plotData = config.getString("MySQL_plotData");
-		areaData = config.getString("MySQL_areaData");
-		denyData = config.getString("MySQL_denyData");
-		acceptData = config.getString("MySQL_acceptData");
-		submitData = config.getString("MySQL_submitData");
-		tutorialData = config.getString("MySQL_tutorialData");
-
-		try {
-
-			synchronized (this) {
-				if (connection != null && !connection.isClosed()) {
-					return;
-				}
-
-				Class.forName("com.mysql.jdbc.Driver");
-				setConnection(DriverManager.getConnection("jdbc:mysql://" + this.host + ":" 
-						+ this.port + "/" + this.database + "?&useSSL=false&", this.username, this.password));
-
-				Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "MySQL connected to " + config.getString("MySQL_database"));
+	}
+	
+	private void testDataSource(DataSource dataSource) throws SQLException{
+		try (Connection connection = dataSource.getConnection()) {
+			if (!connection.isValid(1000)) {
+				throw new SQLException("Could not establish database connection.");
 			}
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
 		}
-
 	}
-
-	//Returns the mysql connection.
-	public Connection getConnection() {
-
-		try {
-			if (connection == null || connection.isClosed()) {
-				mysqlSetup();
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return connection;
+	
+	private void initDb() throws SQLException, IOException {
+	    // first lets read our setup file.
+	    // This file contains statements to create our inital tables.
+	    // it is located in the resources.
+	    String setup;
+	    try (InputStream in = getClassLoader().getResourceAsStream("dbsetup.sql")) {
+	        // Legacy way
+	        setup = new BufferedReader(new InputStreamReader(in)).lines().collect(Collectors.joining("\n"));
+	    } catch (IOException e) {
+	        getLogger().log(Level.SEVERE, "Could not read db setup file.", e);
+	        throw e;
+	    }
+	    // Mariadb can only handle a single query per statement. We need to split at ;.
+	    String[] queries = setup.split(";");
+	    // execute each query to the database.
+	    for (String query : queries) {
+	        // If you use the legacy way you have to check for empty queries here.
+	        if (query.isEmpty()) continue;
+	        try (Connection conn = dataSource.getConnection();
+	             PreparedStatement stmt = conn.prepareStatement(query)) {
+	            stmt.execute();
+	        }
+	    }
+	    getLogger().info("§2Database setup complete.");
 	}
-
-	//Sets the mysql connection as the variable 'connection'.
-	public void setConnection(Connection connection) {
-		this.connection = connection;
-	}
-
+	
 	//Returns an instance of the plugin.
 	public static Main getInstance() {
 		return instance;
-	}
-
-	//Setup player_data table for mysql database if it doesn't exist.
-	public void createPlayerData() {
-		try {
-			PreparedStatement statement = instance.getConnection().prepareStatement
-					("CREATE TABLE IF NOT EXISTS " + playerData
-							+ " ( ID VARCHAR(36) NOT NULL , NAME VARCHAR(20) NOT NULL , TUTORIAL_STAGE INT NOT NULL , BUILDING_POINTS INT NOT NULL , LAST_ONLINE BIGINT NOT NULL , BUILDER_ROLE VARCHAR(20) NOT NULL , LAST_SUBMIT BIGINT NOT NULL , UNIQUE (ID))");
-			statement.executeUpdate();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	//Setup tutorial_data table for mysql database if it doesn't exist.
-	public void createTutorialData() {
-		try {
-			PreparedStatement statement = instance.getConnection().prepareStatement
-					("CREATE TABLE IF NOT EXISTS " + tutorialData
-							+ " ( ID VARCHAR(36) NOT NULL , TUTORIAL_TYPE INT NOT NULL , TUTORIAL_STAGE INT NOT NULL , FIRST_TIME TINYINT(1) NOT NULL , UNIQUE (ID))");
-			statement.executeUpdate();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	//Setup plot_data table for mysql database if it doesn't exist.
-	public void createPlotData() {
-		try {
-			PreparedStatement statement = instance.getConnection().prepareStatement
-					("CREATE TABLE IF NOT EXISTS " + plotData
-							+ " ( ID INT NOT NULL , OWNER TEXT NOT NULL , STATUS TEXT NOT NULL , LAST_VISIT BIGINT NOT NULL , UNIQUE (ID))");
-			statement.executeUpdate();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	//Setup deny_data table for mysql database if it doesn't exist.
-	public void createDenyData() {
-		try {
-			PreparedStatement statement = instance.getConnection().prepareStatement
-					("CREATE TABLE IF NOT EXISTS " + denyData
-							+ " ( ID INT NOT NULL , OWNER TEXT NOT NULL , MESSAGE TEXT NOT NULL , TYPE TEXT NOT NULL , UNIQUE (ID))");
-			statement.executeUpdate();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	//Setup accept_data table for mysql database if it doesn't exist.
-	public void createAcceptData() {
-		try {
-			PreparedStatement statement = instance.getConnection().prepareStatement
-					("CREATE TABLE IF NOT EXISTS " + acceptData
-							+ " ( ID INT NOT NULL , OWNER TEXT NOT NULL , POINTS INT NOT NULL , UNIQUE (ID))");
-			statement.executeUpdate();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	//Setup area_data table for mysql database if it doesn't exist.
-	public void createAreaData() {
-		try {
-			PreparedStatement statement = instance.getConnection().prepareStatement
-					("CREATE TABLE IF NOT EXISTS " + areaData
-							+ " ( ID INT NOT NULL , NAME TEXT NOT NULL , TYPE TEXT NOT NULL , STATUS TEXT NOT NULL , UNIQUE (ID))");
-			statement.executeUpdate();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	//Setup area_data table for mysql database if it doesn't exist.
-	public void createSubmit() {
-		try {
-			PreparedStatement statement = instance.getConnection().prepareStatement
-					("CREATE TABLE IF NOT EXISTS " + submitData
-							+ " ( ID INT NOT NULL , UNIQUE (ID))");
-			statement.executeUpdate();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
 	}
 
 	//Returns the User ArrayList.
@@ -832,7 +750,7 @@ public class Main extends JavaPlugin {
 
 		hologram.clearLines();
 
-		LinkedHashMap<String, Integer> lead = PlayerData.pointsTop();
+		LinkedHashMap<String, Integer> lead = playerData.pointsTop();
 
 		if (lead == null || lead.size() == 0) {
 			return;
