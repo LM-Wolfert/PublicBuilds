@@ -6,6 +6,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
@@ -84,5 +85,14 @@ public class PlayerInteract implements Listener {
 			return;
 		}
 
+	}
+	
+	@EventHandler
+	public void swapHands(PlayerSwapHandItemsEvent e) {
+		
+		if (e.getOffHandItem().equals(Main.gui)) {
+			e.setCancelled(true);
+		}
+		
 	}
 }

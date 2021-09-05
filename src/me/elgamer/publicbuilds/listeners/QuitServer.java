@@ -52,9 +52,9 @@ public class QuitServer implements Listener {
 		playerData.updateTime(p.getUniqueId().toString());
 
 		//If the player is in a review, cancel it.
-		if (u.reviewing != 0) {
+		if (u.review.plot != 0) {
 
-			plotData.setStatus(u.reviewing, "submitted");
+			plotData.setStatus(u.review.plot, "submitted");
 
 		}
 

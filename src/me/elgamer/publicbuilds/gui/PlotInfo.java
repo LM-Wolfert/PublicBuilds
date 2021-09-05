@@ -47,7 +47,7 @@ public class PlotInfo {
 		
 		Utils.createItem(inv, Material.YELLOW_CONCRETE, 1, 14, ChatColor.AQUA + "" + ChatColor.BOLD + "Resize Plot",
 				Utils.chat("&fWith your current Selection Tool selection edit the area of your plot."),
-				Utils.chat("&fYour new selection must include all of the current area else it will not work."));
+				Utils.chat("&fYour new selection must include all of the existing plot."));
 
 		Utils.createItem(inv, Material.RED_CONCRETE, 1, 16, ChatColor.AQUA + "" + ChatColor.BOLD + "Remove Plot",
 				Utils.chat("&fCancels your plot and removes your progress."),

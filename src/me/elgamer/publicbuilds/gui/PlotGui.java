@@ -11,6 +11,8 @@ import org.bukkit.inventory.ItemStack;
 
 import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.mysql.PlotData;
+import me.elgamer.publicbuilds.reviewing.Review;
+import me.elgamer.publicbuilds.reviewing.ReviewGui;
 import me.elgamer.publicbuilds.utils.User;
 import me.elgamer.publicbuilds.utils.Utils;
 import net.md_5.bungee.api.ChatColor;
@@ -79,7 +81,7 @@ public class PlotGui {
 			}				
 		}
 		
-		if (Utils.isPlayerInGroup(u.player, "reviewer") && (u.reviewing != 0)) {
+		if (Utils.isPlayerInGroup(u.player, "reviewer") && (u.review == null)) {
 			Utils.createItem(inv, Material.YELLOW_STAINED_GLASS_PANE, 1, 41, ChatColor.AQUA + "" + ChatColor.BOLD + "Review Plot", 
 					Utils.chat("&fOpens the review menu."),
 					Utils.chat("&fAllows you to accept and deny"),
@@ -113,7 +115,7 @@ public class PlotGui {
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "New Review")) {
 			//If there is a plot available to review, create a new review and open the review gui.
 			if (plotData.reviewExists(u)) {
-				u.reviewing = plotData.newReview(u);
+				u.review = new Review(plotData.newReview(u));
 				p.closeInventory();
 				p.openInventory(ReviewGui.GUI(u));
 				return;

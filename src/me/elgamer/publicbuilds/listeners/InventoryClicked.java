@@ -7,17 +7,17 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 import me.elgamer.publicbuilds.Main;
-import me.elgamer.publicbuilds.gui.AcceptGui;
 import me.elgamer.publicbuilds.gui.ConfirmCancel;
-import me.elgamer.publicbuilds.gui.DenyGui;
 import me.elgamer.publicbuilds.gui.LocationGUI;
 import me.elgamer.publicbuilds.gui.MainGui;
 import me.elgamer.publicbuilds.gui.NavigationGUI;
 import me.elgamer.publicbuilds.gui.PlotGui;
 import me.elgamer.publicbuilds.gui.PlotInfo;
-import me.elgamer.publicbuilds.gui.ReviewGui;
 import me.elgamer.publicbuilds.gui.SwitchServerGUI;
 import me.elgamer.publicbuilds.gui.TutorialGui;
+import me.elgamer.publicbuilds.reviewing.AcceptGui;
+import me.elgamer.publicbuilds.reviewing.DenyGui;
+import me.elgamer.publicbuilds.reviewing.ReviewGui;
 import me.elgamer.publicbuilds.utils.User;
 
 public class InventoryClicked implements Listener {

@@ -7,6 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.mysql.PlayerData;
 import me.elgamer.publicbuilds.mysql.TutorialData;
+import me.elgamer.publicbuilds.reviewing.Review;
 import me.elgamer.publicbuilds.tutorial.Tutorial;
 
 public class User {
@@ -18,9 +19,6 @@ public class User {
 	public int buildingTime;
 	
 	public Plots plots;
-	public Accept accept;
-	public int reviewing = 0;
-	public String reasonType;
 	public int currentPlot = 0;
 	public String currentStatus = null;
 	
@@ -38,6 +36,8 @@ public class User {
 	
 	TutorialData tutorialData;
 	PlayerData playerData;
+	
+	public Review review = null;
 	
 	public User(Player player) {
 		

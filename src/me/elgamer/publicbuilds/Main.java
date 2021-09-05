@@ -47,28 +47,31 @@ import me.elgamer.publicbuilds.commands.OpenGui;
 //import me.elgamer.publicbuilds.commands.SkipTutorial;
 import me.elgamer.publicbuilds.commands.Spawn;
 import me.elgamer.publicbuilds.commands.TutorialHelp;
-import me.elgamer.publicbuilds.gui.AcceptGui;
 import me.elgamer.publicbuilds.gui.ConfirmCancel;
-import me.elgamer.publicbuilds.gui.DenyGui;
 import me.elgamer.publicbuilds.gui.LocationGUI;
 import me.elgamer.publicbuilds.gui.MainGui;
 import me.elgamer.publicbuilds.gui.NavigationGUI;
 import me.elgamer.publicbuilds.gui.PlotGui;
 import me.elgamer.publicbuilds.gui.PlotInfo;
-import me.elgamer.publicbuilds.gui.ReviewGui;
 import me.elgamer.publicbuilds.gui.SwitchServerGUI;
 import me.elgamer.publicbuilds.gui.TutorialGui;
-import me.elgamer.publicbuilds.listeners.ChatListener;
 import me.elgamer.publicbuilds.listeners.ClaimEnter;
 import me.elgamer.publicbuilds.listeners.InventoryClicked;
 import me.elgamer.publicbuilds.listeners.JoinServer;
 import me.elgamer.publicbuilds.listeners.PlayerInteract;
 import me.elgamer.publicbuilds.listeners.QuitServer;
+import me.elgamer.publicbuilds.mysql.AcceptData;
 import me.elgamer.publicbuilds.mysql.AreaData;
+import me.elgamer.publicbuilds.mysql.BookData;
+import me.elgamer.publicbuilds.mysql.DenyData;
+import me.elgamer.publicbuilds.mysql.MessageData;
 import me.elgamer.publicbuilds.mysql.PlayerData;
 import me.elgamer.publicbuilds.mysql.PlotData;
 import me.elgamer.publicbuilds.mysql.PlotMessage;
 import me.elgamer.publicbuilds.mysql.TutorialData;
+import me.elgamer.publicbuilds.reviewing.AcceptGui;
+import me.elgamer.publicbuilds.reviewing.DenyGui;
+import me.elgamer.publicbuilds.reviewing.ReviewGui;
 import me.elgamer.publicbuilds.tutorial.CommandListener;
 import me.elgamer.publicbuilds.tutorial.MoveEvent;
 import me.elgamer.publicbuilds.tutorial.Tutorial;
@@ -94,6 +97,10 @@ public class Main extends JavaPlugin {
 	public PlotMessage plotMessage;
 	public TutorialData tutorialData;
 	public AreaData areaData;
+	public DenyData denyData;
+	public AcceptData acceptData;
+	public BookData bookData;
+	public MessageData messageData;
 	
 
 	//Other
@@ -109,6 +116,8 @@ public class Main extends JavaPlugin {
 	List<BlockVector2> pt;
 	Location lo;
 	ArrayList<Integer> pls;
+	
+	int hasMessage;
 
 	public static StateFlag CREATE_PLOT_GUEST;
 	public static StateFlag CREATE_PLOT_APPRENTICE;
@@ -170,6 +179,10 @@ public class Main extends JavaPlugin {
 			plotMessage = new PlotMessage(dataSource);
 			tutorialData = new TutorialData(dataSource);
 			areaData = new AreaData(dataSource);
+			denyData = new DenyData(dataSource);
+			acceptData = new AcceptData(dataSource);
+			bookData = new BookData(dataSource);
+			messageData = new MessageData(dataSource);
 			
 		} catch (SQLException | IOException e) {
 			// TODO Auto-generated catch block
@@ -206,7 +219,6 @@ public class Main extends JavaPlugin {
 		new QuitServer(this, tutorialData, playerData, plotData);
 		new InventoryClicked(this);
 		new ClaimEnter(this, plotData, playerData);
-		new ChatListener(this, plotData, plotMessage);
 		new PlayerInteract(this, selectionTool);
 
 		//Tutorial listeners
@@ -454,7 +466,7 @@ public class Main extends JavaPlugin {
 
 							for (int i : pls) {
 
-								if (i == u.reviewing) {
+								if (i == u.review.plot) {
 									continue;
 								}
 								
@@ -472,9 +484,9 @@ public class Main extends JavaPlugin {
 					}
 
 					//If the player is reviewing a plot spawn particles in both the buildWorld and saveWorld.
-					if (u.reviewing != 0) {
+					if (u.review != null) {
 
-						pt = WorldGuardFunctions.getPoints(u.reviewing);
+						pt = WorldGuardFunctions.getPoints(u.review.plot);
 
 						for (BlockVector2 point : pt) {
 
@@ -500,24 +512,32 @@ public class Main extends JavaPlugin {
 					//Send deny or accept message if a plot has been accepted or denied that they own.
 					//Will not send if they are afk.
 					if (!(ess.getUser(u.player).isAfk())) {
-						if (plotMessage.hasAcceptMessage(u.uuid)) {
-							int plot = plotMessage.getAccept(u.uuid);
-							u.player.sendMessage(ChatColor.GREEN + "Your plot with ID " + plot + " has been accepted.");
-						}
-
-						if (plotMessage.hasDenyMessage(u.uuid)) {
-							int plot = plotMessage.getDenyPlot(u.uuid);
-							String reason = plotMessage.getDenyReason(plot);
-							String type = plotMessage.getDenyType(plot);
-							plotMessage.deleteDenyMessage(plot);
-
-							if (type.equals("claimed")) {
-								u.player.sendMessage(ChatColor.RED + "Your plot with ID " + plot + " has been denied and returned.");
-								u.player.sendMessage(ChatColor.RED + "Reason: " + reason);
-							} else if (type.equals("deleted")) {
-								u.player.sendMessage(ChatColor.RED + "Your plot with ID " + plot + " has been denied and removed.");
-								u.player.sendMessage(ChatColor.RED + "Reason: " + reason);
+						
+						hasMessage = messageData.hasMessage(u.uuid);
+						
+						if (hasMessage != 0) {
+							switch (messageData.getType(hasMessage)) {
+							
+							case "returned":
+								u.player.sendMessage(ChatColor.RED + "Your plot " + messageData.getPlot(hasMessage) + " was denied and returned, see feedback in the plot menu.");
+								break;
+							case "resized":
+								u.player.sendMessage(ChatColor.RED + "Your plot " + messageData.getPlot(hasMessage) + " was denied and resized, see feedback in the plot menu.");
+								break;
+							case "deleted":
+								u.player.sendMessage(ChatColor.RED + "Your plot " + messageData.getPlot(hasMessage) + " was denied and deleted, see feedback in the plot menu.");
+								break;
+							case "accepted":
+								u.player.sendMessage(ChatColor.GREEN + "Your plot " + messageData.getPlot(hasMessage) + " was accepted, see feedback in the plot menu.");
+								break;
+							case "inactive":
+								u.player.sendMessage(ChatColor.RED + "Your plot " + messageData.getPlot(hasMessage) + " has been deleted due to inactivity.");
+								break;
+							default:
+								break;							
 							}
+							
+							messageData.delete(hasMessage);
 						}
 					}
 
@@ -581,9 +601,9 @@ public class Main extends JavaPlugin {
 			playerData.updateTime(u.uuid);
 
 			//If the player is in a review, cancel it.
-			if (u.reviewing != 0) {
+			if (u.review.plot != 0) {
 
-				plotData.setStatus(u.reviewing, "submitted");
+				plotData.setStatus(u.review.plot, "submitted");
 
 			}
 			users.remove(u);

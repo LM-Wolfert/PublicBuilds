@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS tutorial_data
 
 CREATE TABLE IF NOT EXISTS plot_data
 (
-	id			INT				NOT NULL,
+	id			INT				AUTO_INCREMENT,
 	uuid		CHAR(36)		NOT NULL,
 	status		TEXT			NOT NULL,
 	last_enter	BIGINT			NOT NULL,
@@ -30,24 +30,33 @@ CREATE TABLE IF NOT EXISTS plot_data
 
 CREATE TABLE IF NOT EXISTS deny_data
 (
-	id			INT				NOT NULL
+	id			INT				AUTO_INCREMENT,
+	plot		INT				NOT NULL,
+	attempt		INT				NOT NULL,
 	uuid		CHAR(36)		NOT NULL,
-	feedback	TEXT			NOT NULL,
+	reviewer	CHAR(36)		NOT NULL,
+	feedback	INT				NOT NULL,
 	type		VARCHAR(20)		NOT NULL,
 	PRIMARY KEY (id)
-);
+);	
 
 CREATE TABLE IF NOT EXISTS accept_data
 (
-	id			INT				NOT NULL,
+	plot		INT				NOT NULL,
 	uuid		CHAR(36)		NOT NULL,
-	points		INT				NOT NULL, 
-	PRIMARY KEY (id)
+	reviewer	CHAR(36)		NOT NULL,
+	feedback	INT,
+	size		INT,			NOT NULL,
+	accuracy	INT,			NOT NULL,
+	quality		INT,			NOT NULL,
+	points		INT,			NOT NULL,
+	PRIMARY KEY (plot)
 );
+	
 
 CREATE TABLE IF NOT EXISTS area_data
 (
-	id			INT				NOT NULL,
+	id			INT				AUTO_INCREMENT,
 	name		VARCHAR(64)		NOT NULL,
 	type		VARCHAR(32)		NOT NULL,
 	status		VARCHAR(32)		NOT NULL,
@@ -57,5 +66,23 @@ CREATE TABLE IF NOT EXISTS area_data
 CREATE TABLE IF NOT EXISTS submit_data
 (
 	id			INT				NOT NULL,
+	PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS book_data
+(
+	id			INT				AUTO_INCREMENT,
+	book		INT				NOT NULL,
+	page		INT				NOT NULL,
+	text		TEXT			NOT NULL,
+	PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS message_data
+(
+	id			INT				AUTO_INCREMENT,
+	uuid		CHAR(36)		NOT NULL,
+	plot		INT				NOT NULL,
+	type		VARCHAR(20)		NOT NULL,
 	PRIMARY KEY (id)
 );
