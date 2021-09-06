@@ -55,6 +55,7 @@ public class QuitServer implements Listener {
 		if (u.review.plot != 0) {
 
 			plotData.setStatus(u.review.plot, "submitted");
+			u.review.editBook.unregister();
 
 		}
 

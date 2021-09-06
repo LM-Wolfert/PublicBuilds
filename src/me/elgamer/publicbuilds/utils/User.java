@@ -21,6 +21,7 @@ public class User {
 	public Plots plots;
 	public int currentPlot = 0;
 	public String currentStatus = null;
+	public int attempt;
 	
 	public int inPlot = 0;
 	public String plotOwner = null;

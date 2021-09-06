@@ -220,6 +220,7 @@ public class AcceptGui {
 			ClaimFunctions.removeClaim(u.review.plot);
 			
 			p.sendMessage(ChatColor.GREEN + "Plot " + u.review.plot + " accepted for " + buildingPoints + " building points.");
+			u.review.editBook.unregister();
 			u.review = null;
 
 			//If in the save world teleport back to the build world.

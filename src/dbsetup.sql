@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS deny_data
 	reviewer	CHAR(36)		NOT NULL,
 	feedback	INT				NOT NULL,
 	type		VARCHAR(20)		NOT NULL,
+	time		BIGINT			NOT NULL,
 	PRIMARY KEY (id)
 );	
 
@@ -46,10 +47,11 @@ CREATE TABLE IF NOT EXISTS accept_data
 	uuid		CHAR(36)		NOT NULL,
 	reviewer	CHAR(36)		NOT NULL,
 	feedback	INT,
-	size		INT,			NOT NULL,
-	accuracy	INT,			NOT NULL,
-	quality		INT,			NOT NULL,
-	points		INT,			NOT NULL,
+	size		INT				NOT NULL,
+	accuracy	INT				NOT NULL,
+	quality		INT				NOT NULL,
+	points		INT				NOT NULL,
+	time		BIGINT			NOT NULL,
 	PRIMARY KEY (plot)
 );
 	
@@ -86,3 +88,14 @@ CREATE TABLE IF NOT EXISTS message_data
 	type		VARCHAR(20)		NOT NULL,
 	PRIMARY KEY (id)
 );
+
+CREATE TABLE IF NOT EXISTS plot_points
+(
+	id			INT				AUTO_INCREMENT,
+	plot		INT				NOT NULL,
+	point		INT				NOT NULL,
+	x			INT				NOT NULL,
+	z			INT				NOT NULL,
+	PRIMARY KEY (id)
+);
+	

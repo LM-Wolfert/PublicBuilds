@@ -15,7 +15,6 @@ public class EditBook implements Listener {
 
 		Bukkit.getServer().getPluginManager().registerEvents(this, main);
 		this.review = review;
-			
 	}
 
 	@EventHandler
@@ -28,5 +27,9 @@ public class EditBook implements Listener {
 		
 		review.bookMeta = e.getNewBookMeta();
 		
+	}
+	
+	public void unregister() {
+		PlayerEditBookEvent.getHandlerList().unregister(this);
 	}
 }

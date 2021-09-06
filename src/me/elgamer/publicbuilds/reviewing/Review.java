@@ -17,6 +17,8 @@ public class Review {
 	public ItemStack book;
 	public BookMeta bookMeta;
 	
+	public EditBook editBook;
+	
 	public Review(int plot) {
 		
 		this.plot = plot;
@@ -24,7 +26,7 @@ public class Review {
 		book = new ItemStack(Material.WRITABLE_BOOK);
 		bookMeta = (BookMeta) book.getItemMeta();
 
-		new EditBook(Main.getInstance(), this);		
+		editBook = new EditBook(Main.getInstance(), this);	
 		
 	}
 

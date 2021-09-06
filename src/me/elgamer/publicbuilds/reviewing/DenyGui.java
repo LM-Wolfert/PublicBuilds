@@ -95,6 +95,7 @@ public class DenyGui {
 				messageData.addMessage(plotData.getOwner(u.review.plot), u.review.plot, "returned");
 				plotData.setStatus(u.review.plot, "claimed");
 				plotData.setLastVisit(u.review.plot);
+				u.review.editBook.unregister();
 				u.review = null;
 
 				//Teleport back to the build world if in the save world
@@ -147,6 +148,7 @@ public class DenyGui {
 				}
 				
 				u.plots.vector.clear();
+				u.review.editBook.unregister();
 				u.review = null;
 
 				//Teleport back to the build world if in the save world
@@ -189,6 +191,7 @@ public class DenyGui {
 				WorldEditor.updateWorld(WorldGuardFunctions.getPoints(u.review.plot), Bukkit.getWorld(config.getString("worlds.save")), Bukkit.getWorld(config.getString("worlds.build")));
 				ClaimFunctions.removeClaim(u.review.plot);
 				
+				u.review.editBook.unregister();
 				u.review = null;
 
 				//Teleport back to the build world if in the save world

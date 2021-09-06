@@ -1,0 +1,165 @@
+package me.elgamer.publicbuilds.reviewing;
+
+import java.util.ArrayList;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+
+import me.elgamer.publicbuilds.Main;
+import me.elgamer.publicbuilds.gui.PlotGui;
+import me.elgamer.publicbuilds.mysql.AcceptData;
+import me.elgamer.publicbuilds.mysql.DenyData;
+import me.elgamer.publicbuilds.mysql.PlayerData;
+import me.elgamer.publicbuilds.utils.Time;
+import me.elgamer.publicbuilds.utils.User;
+import me.elgamer.publicbuilds.utils.Utils;
+import net.md_5.bungee.api.ChatColor;
+
+public class FeedbackGui {
+
+	public static Inventory inv;
+	public static String inventory_name;
+	public static int inv_rows = 5 * 9;
+
+	public static void initialize() {
+		inventory_name = ChatColor.AQUA + "" + ChatColor.BOLD + "Feedback Menu";
+
+		inv = Bukkit.createInventory(null, inv_rows);
+
+	}
+
+	public static Inventory GUI (User u) {
+
+		AcceptData acceptData = Main.getInstance().acceptData;
+		DenyData denyData = Main.getInstance().denyData;
+		PlayerData playerData = Main.getInstance().playerData;
+
+		Inventory toReturn = Bukkit.createInventory(null, inv_rows, inventory_name);
+
+		inv.clear();
+
+		Utils.createItem(inv, Material.SPRUCE_DOOR, 1, 45, ChatColor.AQUA + "" + ChatColor.BOLD + "Return", Utils.chat("&fGo back to the plot menu."));
+		int i;
+		Material mat = Material.RED_CONCRETE;
+
+		if (acceptData.hasEntry(u.uuid)) {
+
+			ArrayList<Integer> accept = acceptData.getLatest(new ArrayList<Integer>(), u.uuid);
+			i = 12;
+
+			for (int plot: accept) {
+
+				if (acceptData.isBuilding(plot) && acceptData.hasFeedback(plot)) {
+					Utils.createItem(inv, Material.LIME_CONCRETE, 1, i, ChatColor.AQUA + "" + ChatColor.BOLD + "Plot: " + String.valueOf(plot),
+							Utils.chat("&fAccepted at: " + Time.getDate(acceptData.getTime(plot))),
+							Utils.chat("&fAccepted by: " + playerData.getName(acceptData.getReviewer(plot))),
+							Utils.chat("&fBuilding points received: " + acceptData.getPoints(plot)),
+							"",
+							Utils.chat("&fSize: &a" + acceptData.getSize(u.currentPlot) + " &f/&a5"),
+							Utils.chat("&fAccuracy: &a" + acceptData.getAccuracy(u.currentPlot) + " &f/&a5"),
+							Utils.chat("&fQuality: &a" + acceptData.getQuality(u.currentPlot) + " &f/&a5"),
+							"",
+							ChatColor.WHITE + "" + ChatColor.BOLD + "Click to view written feedback!");
+				} else if (acceptData.isBuilding(plot)) {
+					Utils.createItem(inv, Material.LIME_CONCRETE, 1, i, ChatColor.AQUA + "" + ChatColor.BOLD + "Plot: " + String.valueOf(plot),
+							Utils.chat("&fAccepted at: " + Time.getDate(acceptData.getTime(plot))),
+							Utils.chat("&fAccepted by: " + playerData.getName(acceptData.getReviewer(plot))),
+							Utils.chat("&fBuilding points received: " + acceptData.getPoints(plot)),
+							"",
+							Utils.chat("&fSize: &a" + acceptData.getSize(u.currentPlot) + " &f/&a5"),
+							Utils.chat("&fAccuracy: &a" + acceptData.getAccuracy(u.currentPlot) + " &f/&a5"),
+							Utils.chat("&fQuality: &a" + acceptData.getQuality(u.currentPlot) + " &f/&a5"));
+				} else if (acceptData.hasFeedback(plot)) {
+					Utils.createItem(inv, Material.LIME_CONCRETE, 1, i, ChatColor.AQUA + "" + ChatColor.BOLD + "Plot: " + String.valueOf(plot),
+							Utils.chat("&fAccepted at: " + Time.getDate(acceptData.getTime(plot))),
+							Utils.chat("&fAccepted by: " + playerData.getName(acceptData.getReviewer(plot))),
+							Utils.chat("&fBuilding points received: " + acceptData.getPoints(plot)),
+							"",
+							ChatColor.WHITE + "" + ChatColor.BOLD + "Click to view written feedback!");
+				} else {
+					Utils.createItem(inv, Material.LIME_CONCRETE, 1, i, ChatColor.AQUA + "" + ChatColor.BOLD + "Plot: " + String.valueOf(plot),
+							Utils.chat("&fAccepted at: " + Time.getDate(acceptData.getTime(plot))),
+							Utils.chat("&fAccepted by: " + playerData.getName(acceptData.getReviewer(plot))),
+							Utils.chat("&fBuilding points received: " + acceptData.getPoints(plot)));
+				}
+				i++;
+			}
+		}
+
+		if (denyData.hasEntry(u.uuid)) {
+
+			ArrayList<Integer> deny = denyData.getLatest(new ArrayList<Integer>(), u.uuid);
+			i = 30;
+
+			for (int id: deny) {
+
+				switch (denyData.getType(id)) {
+				case "returned":
+					mat = Material.ORANGE_CONCRETE;
+					break;
+				case "resized":
+					mat = Material.YELLOW_CONCRETE;
+					break;
+				case "deleted":
+					mat = Material.RED_CONCRETE;
+					break;				
+
+				}
+
+				Utils.createItem(inv, mat, 1, i, ChatColor.AQUA + "" + ChatColor.BOLD + "Plot: " + denyData.getPlot(id) + " attempt " + denyData.getAttempt(id),
+						Utils.chat("&fClick to open the feedback menu"),
+						Utils.chat("&ffor this denied plot."));
+				i++;
+
+			}
+
+		}
+
+		toReturn.setContents(inv.getContents());
+		return toReturn;
+	}
+
+	public static void clicked(User u, int slot, ItemStack clicked, Inventory inv) {
+
+		Player p = u.player;
+
+		if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Return")) {
+			inv.setContents(PlotGui.GUI(u).getContents());
+			p.updateInventory();
+			return;
+		}
+		
+		AcceptData acceptData = Main.getInstance().acceptData;
+		DenyData denyData = Main.getInstance().denyData;
+		
+		int plot;
+		int attempt;
+		String[] split;
+		String title = ChatColor.stripColor(clicked.getItemMeta().getDisplayName());
+		
+		if (clicked.getType().equals(Material.LIME_CONCRETE)) {
+			
+			title.replace("Plot: ", "");
+			plot = Integer.parseInt(title);
+			
+			if (acceptData.hasFeedback(plot)) {
+				p.openBook(acceptData.getBook(plot));
+			}
+			
+		} else {
+			
+			title.replace("Plot: ", "");
+			title.replace("attempt ", "");
+			
+			split = title.split(" ");
+			plot = Integer.parseInt(split[0]);
+			attempt = Integer.parseInt(split[1]);
+			
+			p.openBook(denyData.getBook(plot, attempt));
+			
+		}
+	}		
+}
