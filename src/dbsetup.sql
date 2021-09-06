@@ -89,7 +89,7 @@ CREATE TABLE IF NOT EXISTS message_data
 	PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS plot_points
+CREATE TABLE IF NOT EXISTS points_data
 (
 	id			INT				AUTO_INCREMENT,
 	plot		INT				NOT NULL,

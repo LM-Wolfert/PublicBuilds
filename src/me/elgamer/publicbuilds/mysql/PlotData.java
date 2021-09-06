@@ -307,6 +307,7 @@ public class PlotData {
 
 	}
 
+	//Sets the last time the owner entered and left their plot
 	public void setLastVisit(int plot) {
 
 		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
@@ -322,6 +323,13 @@ public class PlotData {
 
 	}
 
+	/*
+	 * The following 2 methods are for a different table
+	 * they log submitted to this database so that reviewers
+	 * can be notified on all server via a bungeecord plugin.
+	 */	
+	
+	//Adds a submit notification
 	public void newSubmit(int id) {
 
 		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
@@ -336,6 +344,8 @@ public class PlotData {
 
 	}
 
+	//Removed a submit notification
+	//Only for when a plot submission is retracted before the message is sent
 	public void removeSubmit(int id) {
 
 		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(

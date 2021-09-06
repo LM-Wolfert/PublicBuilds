@@ -19,6 +19,7 @@ import me.elgamer.publicbuilds.mysql.BookData;
 import me.elgamer.publicbuilds.mysql.MessageData;
 import me.elgamer.publicbuilds.mysql.PlayerData;
 import me.elgamer.publicbuilds.mysql.PlotData;
+import me.elgamer.publicbuilds.mysql.PointsData;
 import me.elgamer.publicbuilds.utils.Accept;
 import me.elgamer.publicbuilds.utils.ClaimFunctions;
 import me.elgamer.publicbuilds.utils.User;
@@ -166,10 +167,13 @@ public class AcceptGui {
 			BookData bookData = Main.getInstance().bookData;
 			AcceptData acceptData = Main.getInstance().acceptData;
 			MessageData messageData = Main.getInstance().messageData;
+			PointsData pointsData = Main.getInstance().pointsData;
 
 			FileConfiguration config = Main.getInstance().getConfig();
 			
 			p.closeInventory();
+			
+			int i;
 
 			//Calculate building points
 			int buildingPoints = config.getInt("points_base") + ac.size*config.getInt("size_multiplier") + ac.accuracy*config.getInt("accuracy_multiplier") + ac.quality*config.getInt("quality_multiplier");
@@ -178,7 +182,7 @@ public class AcceptGui {
 				//Get the feedback written in the book.
 				List<String> book = u.review.bookMeta.getPages();
 				int bookID = bookData.newBookID();
-				int i = 1;
+				i = 1;
 
 				//Insert all pages of feedback to the database so they can be retrieved later.
 				for(String text: book) {
@@ -216,6 +220,12 @@ public class AcceptGui {
 
 			Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Plot " + ChatColor.DARK_AQUA + u.review.plot + ChatColor.GREEN + " accepted for " + ChatColor.DARK_AQUA + buildingPoints + ChatColor.GREEN + " building points.");
 
+			i = 1;
+			//Log plot corners to the database
+			for (BlockVector2 corner: corners) {
+				pointsData.addPoint(u.review.plot, i, corner.getX(), corner.getZ());
+			}
+				
 			//Remove plot from worldguard
 			ClaimFunctions.removeClaim(u.review.plot);
 			

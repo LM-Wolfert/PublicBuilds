@@ -8,6 +8,11 @@ import java.util.ArrayList;
 
 import javax.sql.DataSource;
 
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BookMeta;
+
+import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.utils.Time;
 
 public class DenyData {
@@ -106,9 +111,9 @@ public class DenyData {
 		}
 
 	}
-	
+
 	public int getPlot(int id) {
-		
+
 		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
 				"SELECT plot FROM deny_data WHERE id= ?;"
 				)){
@@ -123,9 +128,9 @@ public class DenyData {
 			return 0;
 		}
 	}
-	
+
 	public int getAttempt(int id) {
-		
+
 		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
 				"SELECT attempt FROM deny_data WHERE id= ?;"
 				)){
@@ -140,9 +145,9 @@ public class DenyData {
 			return 0;
 		}
 	}
-	
+
 	public String getType(int id) {
-		
+
 		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
 				"SELECT type FROM deny_data WHERE id= ?;"
 				)){
@@ -155,6 +160,84 @@ public class DenyData {
 		} catch (SQLException sql) {
 			sql.printStackTrace();
 			return null;
+		}
+	}
+
+	public long getTime(int id) {
+
+		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
+				"SELECT time FROM deny_data WHERE id= ?;"
+				)){
+			statement.setInt(1, id);
+			ResultSet results = statement.executeQuery();
+			results.next();
+
+			return results.getLong("time");
+
+		} catch (SQLException sql) {
+			sql.printStackTrace();
+			return 0;
+		}
+	}
+
+	public String getReviewer(int id) {
+
+		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
+				"SELECT reviewer FROM deny_data WHERE id= ?;"
+				)){
+			statement.setInt(1, id);
+			ResultSet results = statement.executeQuery();
+			results.next();
+
+			return results.getString("reviewer");
+
+		} catch (SQLException sql) {
+			sql.printStackTrace();
+			return null;
+		}
+	}
+
+	public ItemStack getBook(int plot, int attempt) {
+
+		BookData bookData = Main.getInstance().bookData;
+		ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
+		BookMeta bookMeta = (BookMeta) book.getItemMeta();
+
+		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
+				"SELECT feedback FROM deny_data WHERE id = ?;"
+				)){
+			statement.setInt(1, getID(plot, attempt));
+			ResultSet results = statement.executeQuery();
+
+			results.next();
+			bookMeta.setPages(bookData.getPages(results.getInt("feedback")));
+			bookMeta.setTitle("Plot " + plot + " attempt " + attempt);
+
+			book.setItemMeta(bookMeta);
+			return book;			
+
+		} catch (SQLException sql) {
+			sql.printStackTrace();
+			return null;
+		}
+
+	}
+	
+	public int getID(int plot, int attempt) {
+		
+		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
+				"SELECT id FROM deny_data WHERE plot= ? AND attempt = ?;"
+				)){
+			statement.setInt(1, plot);
+			statement.setInt(2, attempt);
+			ResultSet results = statement.executeQuery();
+			results.next();
+
+			return results.getInt("id");
+
+		} catch (SQLException sql) {
+			sql.printStackTrace();
+			return 1;
 		}
 	}
 

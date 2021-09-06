@@ -6,8 +6,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import com.sk89q.worldedit.math.BlockVector2;
+
 import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.mysql.PlotData;
+import me.elgamer.publicbuilds.mysql.PointsData;
 
 public class Inactive {
 
@@ -15,6 +18,8 @@ public class Inactive {
 
 		//Get config.
 		FileConfiguration config = Main.getInstance().getConfig();	
+		
+		PointsData pointsData = Main.getInstance().pointsData;
 
 		//Get all plots claimed by inactive players.
 
@@ -30,11 +35,20 @@ public class Inactive {
 		if (inactivePlots == null || inactivePlots.isEmpty()) {
 			return;
 		}
+		
+		int i;
 
 		//Iterate through all inactive plots and cancel them.
 		for (int plot : inactivePlots) {
 
-			WorldEditor.updateWorld(WorldGuardFunctions.getPoints(plot), Bukkit.getWorld(config.getString("worlds.save")), Bukkit.getWorld(config.getString("worlds.build")));
+			List<BlockVector2> corners = WorldGuardFunctions.getPoints(plot);
+			i = 1;
+			//Log plot corners to the database
+			for (BlockVector2 corner: corners) {
+				pointsData.addPoint(plot, i, corner.getX(), corner.getZ());
+			}
+			
+			WorldEditor.updateWorld(corners, Bukkit.getWorld(config.getString("worlds.save")), Bukkit.getWorld(config.getString("worlds.build")));
 			ClaimFunctions.removeClaim(plot);
 			plotData.setStatus(plot, "cancelled");
 			Bukkit.broadcastMessage(ChatColor.RED + "Plot " + plot + " has been removed due to inactivity!");

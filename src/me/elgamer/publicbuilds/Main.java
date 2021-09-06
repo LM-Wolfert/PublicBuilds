@@ -67,7 +67,7 @@ import me.elgamer.publicbuilds.mysql.DenyData;
 import me.elgamer.publicbuilds.mysql.MessageData;
 import me.elgamer.publicbuilds.mysql.PlayerData;
 import me.elgamer.publicbuilds.mysql.PlotData;
-import me.elgamer.publicbuilds.mysql.PlotMessage;
+import me.elgamer.publicbuilds.mysql.PointsData;
 import me.elgamer.publicbuilds.mysql.TutorialData;
 import me.elgamer.publicbuilds.reviewing.AcceptGui;
 import me.elgamer.publicbuilds.reviewing.DenyGui;
@@ -94,13 +94,13 @@ public class Main extends JavaPlugin {
 	private DataSource dataSource;
 	public PlayerData playerData;
 	public PlotData plotData;
-	public PlotMessage plotMessage;
 	public TutorialData tutorialData;
 	public AreaData areaData;
 	public DenyData denyData;
 	public AcceptData acceptData;
 	public BookData bookData;
 	public MessageData messageData;
+	public PointsData pointsData;
 	
 
 	//Other
@@ -176,13 +176,13 @@ public class Main extends JavaPlugin {
 			
 			playerData = new PlayerData(dataSource);
 			plotData = new PlotData(dataSource);
-			plotMessage = new PlotMessage(dataSource);
 			tutorialData = new TutorialData(dataSource);
 			areaData = new AreaData(dataSource);
 			denyData = new DenyData(dataSource);
 			acceptData = new AcceptData(dataSource);
 			bookData = new BookData(dataSource);
 			messageData = new MessageData(dataSource);
+			pointsData = new PointsData(dataSource);
 			
 		} catch (SQLException | IOException e) {
 			// TODO Auto-generated catch block

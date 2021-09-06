@@ -99,19 +99,34 @@ public class FeedbackGui {
 				switch (denyData.getType(id)) {
 				case "returned":
 					mat = Material.ORANGE_CONCRETE;
+					Utils.createItem(inv, mat, 1, i, ChatColor.AQUA + "" + ChatColor.BOLD + "Plot: " + denyData.getPlot(id) + " attempt " + denyData.getAttempt(id),
+							Utils.chat("&fThe plot was denied and returned to you."),
+							Utils.chat("&fDenied at: " + Time.getDate(denyData.getTime(id))),
+							Utils.chat("&fDenied by: " + playerData.getName(denyData.getReviewer(id))),
+							"",
+							ChatColor.WHITE + "" + ChatColor.BOLD + "Click to view feedback!");
 					break;
 				case "resized":
 					mat = Material.YELLOW_CONCRETE;
+					Utils.createItem(inv, mat, 1, i, ChatColor.AQUA + "" + ChatColor.BOLD + "Plot: " + denyData.getPlot(id) + " attempt " + denyData.getAttempt(id),
+							Utils.chat("&fThe plot was denied, resized and returned to you."),
+							Utils.chat("&fDenied at: " + Time.getDate(denyData.getTime(id))),
+							Utils.chat("&fDenied by: " + playerData.getName(denyData.getReviewer(id))),
+							"",
+							ChatColor.WHITE + "" + ChatColor.BOLD + "Click to view feedback!");
 					break;
 				case "deleted":
 					mat = Material.RED_CONCRETE;
+					Utils.createItem(inv, mat, 1, i, ChatColor.AQUA + "" + ChatColor.BOLD + "Plot: " + denyData.getPlot(id) + " attempt " + denyData.getAttempt(id),
+							Utils.chat("&fThe plot was denied and removed."),
+							Utils.chat("&fDenied at: " + Time.getDate(denyData.getTime(id))),
+							Utils.chat("&fDenied by: " + playerData.getName(denyData.getReviewer(id))),
+							"",
+							ChatColor.WHITE + "" + ChatColor.BOLD + "Click to view feedback!");
 					break;				
 
 				}
-
-				Utils.createItem(inv, mat, 1, i, ChatColor.AQUA + "" + ChatColor.BOLD + "Plot: " + denyData.getPlot(id) + " attempt " + denyData.getAttempt(id),
-						Utils.chat("&fClick to open the feedback menu"),
-						Utils.chat("&ffor this denied plot."));
+		
 				i++;
 
 			}

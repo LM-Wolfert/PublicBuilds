@@ -10,11 +10,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import com.sk89q.worldedit.math.BlockVector2;
+
 import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.mysql.BookData;
 import me.elgamer.publicbuilds.mysql.DenyData;
 import me.elgamer.publicbuilds.mysql.MessageData;
 import me.elgamer.publicbuilds.mysql.PlotData;
+import me.elgamer.publicbuilds.mysql.PointsData;
 import me.elgamer.publicbuilds.utils.ClaimFunctions;
 import me.elgamer.publicbuilds.utils.User;
 import me.elgamer.publicbuilds.utils.Utils;
@@ -166,6 +169,7 @@ public class DenyGui {
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Remove Plot")) {
 
 			p.closeInventory();
+			PointsData pointsData = Main.getInstance().pointsData;
 
 			//Get the feedback written in the book.
 			List<String> book = u.review.bookMeta.getPages();
@@ -187,8 +191,16 @@ public class DenyGui {
 				plotData.setStatus(u.review.plot, "deleted");
 				plotData.setLastVisit(u.review.plot);
 				
+				
+				List<BlockVector2> corners = WorldGuardFunctions.getPoints(u.review.plot);
+				i = 1;
+				//Log plot corners to the database
+				for (BlockVector2 corner: corners) {
+					pointsData.addPoint(u.review.plot, i, corner.getX(), corner.getZ());
+				}
+				
 				//Remove the plot contents
-				WorldEditor.updateWorld(WorldGuardFunctions.getPoints(u.review.plot), Bukkit.getWorld(config.getString("worlds.save")), Bukkit.getWorld(config.getString("worlds.build")));
+				WorldEditor.updateWorld(corners, Bukkit.getWorld(config.getString("worlds.save")), Bukkit.getWorld(config.getString("worlds.build")));
 				ClaimFunctions.removeClaim(u.review.plot);
 				
 				u.review.editBook.unregister();
