@@ -66,7 +66,7 @@ public class BookData {
 		public List<String> getPages(int id) {
 
 			try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
-					"SELECT text FROM book_data WHERE id = ?;"
+					"SELECT text FROM book_data WHERE book = ?;"
 					)){
 				statement.setInt(1, id);
 

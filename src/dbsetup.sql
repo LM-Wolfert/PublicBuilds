@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS plot_data
 (
 	id			INT				AUTO_INCREMENT,
 	uuid		CHAR(36)		NOT NULL,
-	status		TEXT			NOT NULL,
+	status		VARCHAR(20)		NOT NULL,
 	last_enter	BIGINT			NOT NULL,
 	PRIMARY KEY (id)
 );
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS accept_data
 	plot		INT				NOT NULL,
 	uuid		CHAR(36)		NOT NULL,
 	reviewer	CHAR(36)		NOT NULL,
-	feedback	INT,
+	feedback	INT				NOT NULL,
 	size		INT				NOT NULL,
 	accuracy	INT				NOT NULL,
 	quality		INT				NOT NULL,

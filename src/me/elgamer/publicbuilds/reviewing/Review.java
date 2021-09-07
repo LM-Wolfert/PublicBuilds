@@ -1,5 +1,6 @@
 package me.elgamer.publicbuilds.reviewing;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
@@ -17,6 +18,8 @@ public class Review {
 	public ItemStack book;
 	public BookMeta bookMeta;
 	
+	public ItemStack previousItem;
+	
 	public EditBook editBook;
 	
 	public Review(int plot) {
@@ -25,6 +28,7 @@ public class Review {
 		
 		book = new ItemStack(Material.WRITABLE_BOOK);
 		bookMeta = (BookMeta) book.getItemMeta();
+		bookMeta.setDisplayName(ChatColor.GREEN + "Feedback");
 
 		editBook = new EditBook(Main.getInstance(), this);	
 		

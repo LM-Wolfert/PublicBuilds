@@ -71,6 +71,7 @@ import me.elgamer.publicbuilds.mysql.PointsData;
 import me.elgamer.publicbuilds.mysql.TutorialData;
 import me.elgamer.publicbuilds.reviewing.AcceptGui;
 import me.elgamer.publicbuilds.reviewing.DenyGui;
+import me.elgamer.publicbuilds.reviewing.FeedbackGui;
 import me.elgamer.publicbuilds.reviewing.ReviewGui;
 import me.elgamer.publicbuilds.tutorial.CommandListener;
 import me.elgamer.publicbuilds.tutorial.MoveEvent;
@@ -90,7 +91,7 @@ public class Main extends JavaPlugin {
 	//MySQL
 	public String host, database, username, password;
 	public int port;
-	
+
 	private DataSource dataSource;
 	public PlayerData playerData;
 	public PlotData plotData;
@@ -101,7 +102,7 @@ public class Main extends JavaPlugin {
 	public BookData bookData;
 	public MessageData messageData;
 	public PointsData pointsData;
-	
+
 
 	//Other
 	public static Permission perms = null;
@@ -116,14 +117,14 @@ public class Main extends JavaPlugin {
 	List<BlockVector2> pt;
 	Location lo;
 	ArrayList<Integer> pls;
-	
+
 	int hasMessage;
 
 	public static StateFlag CREATE_PLOT_GUEST;
 	public static StateFlag CREATE_PLOT_APPRENTICE;
 	public static StateFlag CREATE_PLOT_JRBUILDER;
 	public static StateFlag NO_PLOT;
-	
+
 	public static ItemStack selectionTool;
 	public static ItemStack gui;
 	public static ItemStack tutorialSkip;
@@ -173,7 +174,7 @@ public class Main extends JavaPlugin {
 		try {
 			dataSource = mysqlSetup();
 			initDb();
-			
+
 			playerData = new PlayerData(dataSource);
 			plotData = new PlotData(dataSource);
 			tutorialData = new TutorialData(dataSource);
@@ -183,7 +184,7 @@ public class Main extends JavaPlugin {
 			bookData = new BookData(dataSource);
 			messageData = new MessageData(dataSource);
 			pointsData = new PointsData(dataSource);
-			
+
 		} catch (SQLException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -240,7 +241,7 @@ public class Main extends JavaPlugin {
 
 		//Tab Completer
 		getCommand("tutorial").setTabCompleter(new TutorialTabCompleter());
-		
+
 		//Get essentials
 		ess = (Essentials) Bukkit.getServer().getPluginManager().getPlugin("Essentials");	
 
@@ -256,6 +257,7 @@ public class Main extends JavaPlugin {
 		NavigationGUI.initialize();
 		SwitchServerGUI.initialize();
 		TutorialGui.initialize();
+		FeedbackGui.initialize();
 
 		//Locations
 		spawn = new Location(Bukkit.getWorld("Lobby"), 
@@ -373,7 +375,7 @@ public class Main extends JavaPlugin {
 				config.getDouble("tutorial_8.start.z"),
 				(float) config.getDouble("tutorial_8.start.yaw"),
 				(float) config.getDouble("tutorial_8.start.pitch"));
-		*/
+		 */
 		TUTORIAL_9_START = new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), 
 				config.getDouble("tutorial_9.start.x"),
 				config.getDouble("tutorial_9.start.y"),
@@ -466,10 +468,12 @@ public class Main extends JavaPlugin {
 
 							for (int i : pls) {
 
-								if (i == u.review.plot) {
-									continue;
+								if (u.review != null) {
+									if (i == u.review.plot) {
+										continue;
+									}
 								}
-								
+
 								pt = WorldGuardFunctions.getPoints(i);
 
 								for (BlockVector2 point : pt) {
@@ -512,12 +516,12 @@ public class Main extends JavaPlugin {
 					//Send deny or accept message if a plot has been accepted or denied that they own.
 					//Will not send if they are afk.
 					if (!(ess.getUser(u.player).isAfk())) {
-						
+
 						hasMessage = messageData.hasMessage(u.uuid);
-						
+
 						if (hasMessage != 0) {
 							switch (messageData.getType(hasMessage)) {
-							
+
 							case "returned":
 								u.player.sendMessage(ChatColor.RED + "Your plot " + messageData.getPlot(hasMessage) + " was denied and returned, see feedback in the plot menu.");
 								break;
@@ -536,13 +540,13 @@ public class Main extends JavaPlugin {
 							default:
 								break;							
 							}
-							
+
 							messageData.delete(hasMessage);
 						}
 					}
 
 					Ranks.checkRankup(u);
-					
+
 					u.slot5 = u.player.getInventory().getItem(4);
 					u.slot9 = u.player.getInventory().getItem(8);
 
@@ -570,7 +574,7 @@ public class Main extends JavaPlugin {
 						if (!(u.slot5 == null)) {
 							if (u.slot5.equals(tutorialSkip)) {
 								u.player.getInventory().setItem(4, null);
-								
+
 							}
 						}
 					}
@@ -601,14 +605,16 @@ public class Main extends JavaPlugin {
 			playerData.updateTime(u.uuid);
 
 			//If the player is in a review, cancel it.
-			if (u.review.plot != 0) {
+			if (u.review != null) {
 
 				plotData.setStatus(u.review.plot, "submitted");
+				u.review.editBook.unregister();
+				u.player.getInventory().setItem(4, u.review.previousItem);
+				u.review = null;
 
 			}
-			users.remove(u);
 		}
-		
+
 		Bukkit.getConsoleSender().sendMessage("Disabled publicbuilds");
 	}
 
@@ -620,20 +626,20 @@ public class Main extends JavaPlugin {
 		database = config.getString("MySQL_database");
 		username = config.getString("MySQL_username");
 		password = config.getString("MySQL_password");
-		
+
 		MysqlDataSource dataSource = new MysqlConnectionPoolDataSource();
-		
+
 		dataSource.setServerName(host);
 		dataSource.setPortNumber(port);
-		dataSource.setDatabaseName(database);
+		dataSource.setDatabaseName(database + "?&useSSL=false&");
 		dataSource.setUser(username);
 		dataSource.setPassword(password);
-		
+
 		testDataSource(dataSource);
 		return dataSource;
 
 	}
-	
+
 	private void testDataSource(DataSource dataSource) throws SQLException{
 		try (Connection connection = dataSource.getConnection()) {
 			if (!connection.isValid(1000)) {
@@ -641,33 +647,33 @@ public class Main extends JavaPlugin {
 			}
 		}
 	}
-	
+
 	private void initDb() throws SQLException, IOException {
-	    // first lets read our setup file.
-	    // This file contains statements to create our inital tables.
-	    // it is located in the resources.
-	    String setup;
-	    try (InputStream in = getClassLoader().getResourceAsStream("dbsetup.sql")) {
-	        // Legacy way
-	        setup = new BufferedReader(new InputStreamReader(in)).lines().collect(Collectors.joining("\n"));
-	    } catch (IOException e) {
-	        getLogger().log(Level.SEVERE, "Could not read db setup file.", e);
-	        throw e;
-	    }
-	    // Mariadb can only handle a single query per statement. We need to split at ;.
-	    String[] queries = setup.split(";");
-	    // execute each query to the database.
-	    for (String query : queries) {
-	        // If you use the legacy way you have to check for empty queries here.
-	        if (query.isEmpty()) continue;
-	        try (Connection conn = dataSource.getConnection();
-	             PreparedStatement stmt = conn.prepareStatement(query)) {
-	            stmt.execute();
-	        }
-	    }
-	    getLogger().info("§2Database setup complete.");
+		// first lets read our setup file.
+		// This file contains statements to create our inital tables.
+		// it is located in the resources.
+		String setup;
+		try (InputStream in = getClassLoader().getResourceAsStream("dbsetup.sql")) {
+			// Legacy way
+			setup = new BufferedReader(new InputStreamReader(in)).lines().collect(Collectors.joining("\n"));
+		} catch (IOException e) {
+			getLogger().log(Level.SEVERE, "Could not read db setup file.", e);
+			throw e;
+		}
+		// Mariadb can only handle a single query per statement. We need to split at ;.
+		String[] queries = setup.split(";");
+		// execute each query to the database.
+		for (String query : queries) {
+			// If you use the legacy way you have to check for empty queries here.
+			if (query.trim().isEmpty()) continue;
+			try (Connection conn = dataSource.getConnection();
+					PreparedStatement stmt = conn.prepareStatement(query)) {
+				stmt.execute();
+			}
+		}
+		getLogger().info("§2Database setup complete.");
 	}
-	
+
 	//Returns an instance of the plugin.
 	public static Main getInstance() {
 		return instance;

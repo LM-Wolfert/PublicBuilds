@@ -46,6 +46,7 @@ public class Inactive {
 			//Log plot corners to the database
 			for (BlockVector2 corner: corners) {
 				pointsData.addPoint(plot, i, corner.getX(), corner.getZ());
+				i++;
 			}
 			
 			WorldEditor.updateWorld(corners, Bukkit.getWorld(config.getString("worlds.save")), Bukkit.getWorld(config.getString("worlds.build")));

@@ -199,7 +199,7 @@ public class AcceptGui {
 				}
 
 			} else {
-				if (!(acceptData.insert(u.review.plot, plotData.getOwner(u.review.plot), u.uuid, ac.size, ac.accuracy, ac.quality, buildingPoints))) {
+				if (!(acceptData.insert(u.review.plot, plotData.getOwner(u.review.plot), u.uuid, 0, ac.size, ac.accuracy, ac.quality, buildingPoints))) {
 					p.sendMessage(ChatColor.RED + "An error occured, please notify an admin.");
 					return;
 				}
@@ -224,6 +224,7 @@ public class AcceptGui {
 			//Log plot corners to the database
 			for (BlockVector2 corner: corners) {
 				pointsData.addPoint(u.review.plot, i, corner.getX(), corner.getZ());
+				i++;
 			}
 				
 			//Remove plot from worldguard
@@ -231,6 +232,7 @@ public class AcceptGui {
 			
 			p.sendMessage(ChatColor.GREEN + "Plot " + u.review.plot + " accepted for " + buildingPoints + " building points.");
 			u.review.editBook.unregister();
+			u.player.getInventory().setItem(4, u.review.previousItem);
 			u.review = null;
 
 			//If in the save world teleport back to the build world.

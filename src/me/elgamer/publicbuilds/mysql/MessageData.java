@@ -30,6 +30,7 @@ public class MessageData {
 			statement.setString(1, uuid);
 			statement.setInt(2, plot);
 			statement.setString(3, type);
+			statement.executeUpdate();
 			
 			return true;
 			

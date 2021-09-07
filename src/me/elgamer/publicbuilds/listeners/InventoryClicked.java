@@ -17,6 +17,7 @@ import me.elgamer.publicbuilds.gui.SwitchServerGUI;
 import me.elgamer.publicbuilds.gui.TutorialGui;
 import me.elgamer.publicbuilds.reviewing.AcceptGui;
 import me.elgamer.publicbuilds.reviewing.DenyGui;
+import me.elgamer.publicbuilds.reviewing.FeedbackGui;
 import me.elgamer.publicbuilds.reviewing.ReviewGui;
 import me.elgamer.publicbuilds.utils.User;
 
@@ -134,6 +135,15 @@ public class InventoryClicked implements Listener {
 			}
 			if (title.equals(TutorialGui.inventory_name)) {
 				TutorialGui.clicked(u, e.getSlot(), e.getCurrentItem(), e.getInventory());
+			}
+		}
+		else if (title.equals(FeedbackGui.inventory_name)) {
+			e.setCancelled(true);
+			if (e.getCurrentItem() == null){
+				return;
+			}
+			if (title.equals(FeedbackGui.inventory_name)) {
+				FeedbackGui.clicked(u, e.getSlot(), e.getCurrentItem(), e.getInventory());
 			}
 		}
 		else if (e.getCurrentItem().equals(Main.gui)) {

@@ -2,7 +2,7 @@ package me.elgamer.publicbuilds.utils;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
-import java.util.Locale;
+import java.util.TimeZone;
 
 public class Time {
 	
@@ -13,7 +13,8 @@ public class Time {
 	
 	public static String getDate(long time) {
 		
-		SimpleDateFormat formatter = new SimpleDateFormat("dd:HH:mm", Locale.UK);
+		SimpleDateFormat formatter = new SimpleDateFormat("dd-M-yyyy hh:mm a");
+		formatter.setTimeZone(TimeZone.getTimeZone("Europe/London"));
 		Date date = new Date(time);
 		return formatter.format(date);
 	}

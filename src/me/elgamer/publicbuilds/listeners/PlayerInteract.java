@@ -36,6 +36,16 @@ public class PlayerInteract implements Listener {
 		    return;
 		}
 		
+		if (e.getPlayer().getInventory().getItemInMainHand().equals(Main.gui)) {
+			e.setCancelled(true);
+			e.getPlayer().closeInventory();
+			e.getPlayer().openInventory(MainGui.GUI(u));
+		} else if (e.getPlayer().getInventory().getItemInMainHand().equals(Main.tutorialSkip)) {
+			e.setCancelled(true);
+			u.tutorial.skipStage(u);
+			return;
+		}
+		
 		if (e.getPlayer().getInventory().getItemInMainHand().equals(Main.selectionTool)) {
 			if (e.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
 
@@ -74,15 +84,6 @@ public class PlayerInteract implements Listener {
 			}
 
 
-		}
-		
-		if (e.getPlayer().getInventory().getItemInMainHand().equals(Main.gui)) {
-			e.setCancelled(true);
-			e.getPlayer().openInventory(MainGui.GUI(u));
-		} else if (e.getPlayer().getInventory().getItemInMainHand().equals(Main.tutorialSkip)) {
-			e.setCancelled(true);
-			u.tutorial.skipStage(u);
-			return;
 		}
 
 	}

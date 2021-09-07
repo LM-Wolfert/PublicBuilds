@@ -99,6 +99,8 @@ public class DenyGui {
 				plotData.setStatus(u.review.plot, "claimed");
 				plotData.setLastVisit(u.review.plot);
 				u.review.editBook.unregister();
+				u.player.getInventory().setItem(4, u.review.previousItem);
+				p.sendMessage(ChatColor.GREEN + "Plot " + u.review.plot + " denied and returned to the plot owner.");	
 				u.review = null;
 
 				//Teleport back to the build world if in the save world
@@ -107,8 +109,7 @@ public class DenyGui {
 					l.setWorld(Bukkit.getWorld(config.getString("worlds.build")));
 					p.teleport(l);
 				}
-
-				p.sendMessage(ChatColor.GREEN + "Plot " + u.review.plot + " denied and returned to the plot owner.");				
+			
 			} else {
 				p.sendMessage(ChatColor.RED + "An error occured, please notify an admin.");
 			}
@@ -152,6 +153,8 @@ public class DenyGui {
 				
 				u.plots.vector.clear();
 				u.review.editBook.unregister();
+				u.player.getInventory().setItem(4, u.review.previousItem);
+				p.sendMessage(ChatColor.GREEN + "Plot " + u.review.plot + " denied and returned to the plot owner.");	
 				u.review = null;
 
 				//Teleport back to the build world if in the save world
@@ -160,8 +163,7 @@ public class DenyGui {
 					l.setWorld(Bukkit.getWorld(config.getString("worlds.build")));
 					p.teleport(l);
 				}
-
-				p.sendMessage(ChatColor.GREEN + "Plot " + u.review.plot + " denied and returned to the plot owner.");				
+		
 			} else {
 				p.sendMessage(ChatColor.RED + "An error occured, please notify an admin.");
 			}
@@ -197,6 +199,7 @@ public class DenyGui {
 				//Log plot corners to the database
 				for (BlockVector2 corner: corners) {
 					pointsData.addPoint(u.review.plot, i, corner.getX(), corner.getZ());
+					i++;
 				}
 				
 				//Remove the plot contents
@@ -204,6 +207,8 @@ public class DenyGui {
 				ClaimFunctions.removeClaim(u.review.plot);
 				
 				u.review.editBook.unregister();
+				u.player.getInventory().setItem(4, u.review.previousItem);
+				p.sendMessage(ChatColor.GREEN + "Plot " + u.review.plot + " denied and deleted.");	
 				u.review = null;
 
 				//Teleport back to the build world if in the save world
@@ -212,8 +217,7 @@ public class DenyGui {
 					l.setWorld(Bukkit.getWorld(config.getString("worlds.build")));
 					p.teleport(l);
 				}
-
-				p.sendMessage(ChatColor.GREEN + "Plot " + u.review.plot + " denied and deleted.");				
+				
 			} else {
 				p.sendMessage(ChatColor.RED + "An error occured, please notify an admin.");
 			}

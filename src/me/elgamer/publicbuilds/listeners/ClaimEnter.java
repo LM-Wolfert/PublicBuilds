@@ -33,6 +33,7 @@ public class ClaimEnter implements Listener{
 
 		Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
 		this.plotData = plotData;
+		this.playerData = playerData;
 	}
 
 	@EventHandler

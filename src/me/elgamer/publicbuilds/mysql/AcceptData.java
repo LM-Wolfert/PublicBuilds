@@ -54,30 +54,6 @@ public class AcceptData {
 
 	}
 
-	public boolean insert(int plot, String uuid, String reviewer, int size, int accuracy, int quality, int points) {
-
-		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
-				"INSERT INTO accept_data(plot, uuid, reviewer, size, accuracy, quality, points, time) VALUES(?, ?, ?, ?, ?, ?, ?, ?);"
-				)){
-			statement.setInt(1, plot);
-			statement.setString(2, uuid);
-			statement.setString(3, reviewer);
-			statement.setInt(4, size);
-			statement.setInt(5, accuracy);
-			statement.setInt(6, quality);
-			statement.setInt(7, points);
-			statement.setLong(8, Time.currentTime());
-			statement.executeUpdate();
-
-			return true;
-
-		} catch (SQLException sql) {
-			sql.printStackTrace();
-			return false;
-		}
-
-	}
-
 	public boolean hasEntry(String uuid) {
 
 		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(

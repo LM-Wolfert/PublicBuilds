@@ -52,7 +52,7 @@ public class ReviewGui {
 		Utils.createItem(inv, Material.RED_CONCRETE, 1, 17, ChatColor.AQUA + "" + ChatColor.BOLD + "Deny Plot",
 				Utils.chat("&fOpens the deny gui."));
 		
-		Utils.createItem(inv, Material.WRITABLE_BOOK, 1, 5, ChatColor.AQUA + "" + ChatColor.BOLD + "Feedback",
+		Utils.createItem(inv, Material.WRITABLE_BOOK, 1, 23, ChatColor.AQUA + "" + ChatColor.BOLD + "Feedback",
 				Utils.chat("&fOpens the feedback book."),
 				Utils.chat("&fWrite your feedback in here."),
 				Utils.chat("&fFor denying this is manditory,"),
@@ -91,7 +91,11 @@ public class ReviewGui {
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Feedback")) {
 					
 			u.review.book.setItemMeta(u.review.bookMeta);
-			p.openBook(u.review.book);
+			u.review.previousItem = p.getInventory().getItem(4);
+			
+			p.getInventory().setItem(4, u.review.book);
+			p.closeInventory();
+			p.sendMessage(ChatColor.GREEN + "Please write the feedback in the book.");
 			
 		} else {}
 	}

@@ -57,9 +57,10 @@ public class DenyData {
 		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
 				"SELECT MAX(attempt) as attempt FROM deny_data WHERE plot = ?;"
 				)){
+			statement.setInt(1, plot);
 			ResultSet results = statement.executeQuery();
 			if (results.next()) {
-				return results.getInt("attempt");
+				return results.getInt("attempt") + 1;
 			} else {
 				return 1;
 			}
@@ -89,7 +90,7 @@ public class DenyData {
 	public ArrayList<Integer> getLatest(ArrayList<Integer> deny, String uuid){
 
 		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
-				"SELECT id FROM accept_data WHERE uuid = ? ORDER BY id DESC;"
+				"SELECT id FROM deny_data WHERE uuid = ? ORDER BY id DESC;"
 				)){
 			statement.setString(1, uuid);
 			ResultSet results = statement.executeQuery();
@@ -212,6 +213,7 @@ public class DenyData {
 			results.next();
 			bookMeta.setPages(bookData.getPages(results.getInt("feedback")));
 			bookMeta.setTitle("Plot " + plot + " attempt " + attempt);
+			bookMeta.setAuthor("Magic");
 
 			book.setItemMeta(bookMeta);
 			return book;			

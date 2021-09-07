@@ -22,6 +22,9 @@ public class QuitServer implements Listener {
 	public QuitServer(Main plugin, TutorialData tutorialData, PlayerData playerData, PlotData plotData) {
 
 		Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
+		this.tutorialData = tutorialData;
+		this.playerData = playerData;
+		this.plotData = plotData;
 
 	}
 
@@ -52,10 +55,11 @@ public class QuitServer implements Listener {
 		playerData.updateTime(p.getUniqueId().toString());
 
 		//If the player is in a review, cancel it.
-		if (u.review.plot != 0) {
+		if (u.review != null) {
 
 			plotData.setStatus(u.review.plot, "submitted");
 			u.review.editBook.unregister();
+			u.player.getInventory().setItem(4, u.review.previousItem);
 
 		}
 

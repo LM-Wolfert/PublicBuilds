@@ -142,8 +142,8 @@ public class FeedbackGui {
 		Player p = u.player;
 
 		if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Return")) {
-			inv.setContents(PlotGui.GUI(u).getContents());
-			p.updateInventory();
+			p.closeInventory();
+			p.openInventory(PlotGui.GUI(u));
 			return;
 		}
 		
@@ -157,22 +157,21 @@ public class FeedbackGui {
 		
 		if (clicked.getType().equals(Material.LIME_CONCRETE)) {
 			
-			title.replace("Plot: ", "");
-			plot = Integer.parseInt(title);
+			split = title.split(" ");
+			plot = Integer.parseInt(split[1]);
 			
 			if (acceptData.hasFeedback(plot)) {
+				p.closeInventory();
 				p.openBook(acceptData.getBook(plot));
 			}
 			
 		} else {
 			
-			title.replace("Plot: ", "");
-			title.replace("attempt ", "");
-			
 			split = title.split(" ");
-			plot = Integer.parseInt(split[0]);
-			attempt = Integer.parseInt(split[1]);
+			plot = Integer.parseInt(split[1]);
+			attempt = Integer.parseInt(split[3]);
 			
+			p.closeInventory();
 			p.openBook(denyData.getBook(plot, attempt));
 			
 		}

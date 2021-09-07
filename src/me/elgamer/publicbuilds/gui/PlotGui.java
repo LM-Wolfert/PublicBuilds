@@ -87,7 +87,7 @@ public class PlotGui {
 			}				
 		}
 		
-		if (Utils.isPlayerInGroup(u.player, "reviewer") && (u.review == null)) {
+		if (Utils.isPlayerInGroup(u.player, "reviewer") && (u.review != null)) {
 			Utils.createItem(inv, Material.YELLOW_STAINED_GLASS_PANE, 1, 41, ChatColor.AQUA + "" + ChatColor.BOLD + "Review Plot", 
 					Utils.chat("&fOpens the review menu."),
 					Utils.chat("&fAllows you to accept and deny"),
@@ -101,7 +101,7 @@ public class PlotGui {
 		}
 		
 		if (acceptData.hasEntry(u.uuid) || denyData.hasEntry(u.uuid)) {
-			Utils.createItem(inv, Material.YELLOW_STAINED_GLASS_PANE, 1, 4, ChatColor.AQUA + "" + ChatColor.BOLD + "Plot Feedback", 
+			Utils.createItem(inv, Material.GREEN_STAINED_GLASS_PANE, 1, 5, ChatColor.AQUA + "" + ChatColor.BOLD + "Plot Feedback", 
 					Utils.chat("&fOpens the feedback menu for"),
 					Utils.chat("&fyour 5 most recently accepted and"),
 					Utils.chat("&f5 most recenty denied plots."));
@@ -117,20 +117,20 @@ public class PlotGui {
 		Player p = u.player;
 
 		if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Return")) {
-			inv.setContents(MainGui.GUI(u).getContents());
-			p.updateInventory();
+			p.closeInventory();
+			p.openInventory(MainGui.GUI(u));
 			return;
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Review Plot")) {
 			//Open the review gui.
-			inv.setContents(ReviewGui.GUI(u).getContents());
-			p.updateInventory();
+			p.closeInventory();
+			p.openInventory(ReviewGui.GUI(u));
 			return;
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "New Review")) {
 			//If there is a plot available to review, create a new review and open the review gui.
 			if (plotData.reviewExists(u)) {
 				u.review = new Review(plotData.newReview(u));
-				inv.setContents(ReviewGui.GUI(u).getContents());
-				p.updateInventory();
+				p.closeInventory();
+				p.openInventory(ReviewGui.GUI(u));
 				return;
 			} else {
 				p.closeInventory();
@@ -139,8 +139,9 @@ public class PlotGui {
 			}
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Plot Feedback")) {
 			//Open the feedback gui
-			inv.setContents(FeedbackGui.GUI(u).getContents());
-			p.updateInventory();
+			p.closeInventory();
+			p.openInventory(FeedbackGui.GUI(u));
+			return;
 			
 		}
 
@@ -156,7 +157,7 @@ public class PlotGui {
 			u.currentStatus = "submitted";
 		}
 
-		inv.setContents(PlotInfo.GUI(u).getContents());
-		p.updateInventory();
+		p.closeInventory();
+		p.openInventory(PlotInfo.GUI(u));
 	}		
 }
