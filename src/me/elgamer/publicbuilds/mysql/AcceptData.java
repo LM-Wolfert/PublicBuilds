@@ -41,7 +41,7 @@ public class AcceptData {
 			statement.setInt(5, size);
 			statement.setInt(6, accuracy);
 			statement.setInt(7, quality);
-			statement.setInt(8, quality);
+			statement.setInt(8, points);
 			statement.setLong(9, Time.currentTime());
 			statement.executeUpdate();
 

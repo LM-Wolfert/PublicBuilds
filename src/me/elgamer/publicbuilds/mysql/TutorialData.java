@@ -78,7 +78,7 @@ public class TutorialData {
 			ResultSet results = statement.executeQuery();
 
 			results.next();
-			return (results.getInt("TUTORIAL_TYPE"));
+			return (results.getInt("type"));
 
 
 		} catch (SQLException sql) {
@@ -97,7 +97,7 @@ public class TutorialData {
 			ResultSet results = statement.executeQuery();
 
 			results.next();
-			return (results.getInt("TUTORIAL_STAGE"));
+			return (results.getInt("stage"));
 
 
 		} catch (SQLException sql) {
@@ -116,7 +116,7 @@ public class TutorialData {
 			ResultSet results = statement.executeQuery();
 
 			results.next();
-			return (results.getBoolean("FIRST_TIME"));
+			return (results.getBoolean("first_time"));
 
 
 		} catch (SQLException sql) {
