@@ -48,7 +48,7 @@ public class SwitchServerGUI {
 				ChatColor.WHITE + "Supports 1.12.2 - 1.16.5.");	
 
 		Utils.createItem(inv, Material.SPRUCE_DOOR, 1, 27, ChatColor.AQUA + "" + ChatColor.BOLD + "Return", 
-				Utils.chat("&fGo back to the navigation menu."));	
+				Utils.chat("&fGo back to the building menu."));	
 
 		toReturn.setContents(inv.getContents());
 		return toReturn;
@@ -67,7 +67,7 @@ public class SwitchServerGUI {
 			p.sendPluginMessage(Main.getInstance(), "BungeeCord", out.toByteArray());
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Return")) {
 			p.closeInventory();
-			p.openInventory(NavigationGUI.GUI(u));
+			p.openInventory(MainGui.GUI(u));
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Earth Server")) {
 			ByteArrayDataOutput out = ByteStreams.newDataOutput();
 			out.writeUTF("Connect");

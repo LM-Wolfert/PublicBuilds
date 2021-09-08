@@ -102,6 +102,13 @@ public class DenyGui {
 				u.player.getInventory().setItem(4, u.review.previousItem);
 				p.sendMessage(ChatColor.GREEN + "Plot " + u.review.plot + " denied and returned to the plot owner.");	
 				u.review = null;
+				if (plotData.reviewExists(u)) {
+					if (plotData.reviewCount(u) == 1) {
+						p.sendMessage(ChatColor.GREEN + "There is 1 plot available for review.");
+					} else {
+						p.sendMessage(ChatColor.GREEN + "There are " + plotData.reviewCount(u) + " plots available for review.");
+					}
+				}
 
 				//Teleport back to the build world if in the save world
 				if (p.getWorld().equals(Bukkit.getWorld(config.getString("worlds.save")))) {
@@ -156,6 +163,13 @@ public class DenyGui {
 				u.player.getInventory().setItem(4, u.review.previousItem);
 				p.sendMessage(ChatColor.GREEN + "Plot " + u.review.plot + " denied and returned to the plot owner.");	
 				u.review = null;
+				if (plotData.reviewExists(u)) {
+					if (plotData.reviewCount(u) == 1) {
+						p.sendMessage(ChatColor.GREEN + "There is 1 plot available for review.");
+					} else {
+						p.sendMessage(ChatColor.GREEN + "There are " + plotData.reviewCount(u) + " plots available for review.");
+					}
+				}
 
 				//Teleport back to the build world if in the save world
 				if (p.getWorld().equals(Bukkit.getWorld(config.getString("worlds.save")))) {
@@ -210,6 +224,13 @@ public class DenyGui {
 				u.player.getInventory().setItem(4, u.review.previousItem);
 				p.sendMessage(ChatColor.GREEN + "Plot " + u.review.plot + " denied and deleted.");	
 				u.review = null;
+				if (plotData.reviewExists(u)) {
+					if (plotData.reviewCount(u) == 1) {
+						p.sendMessage(ChatColor.GREEN + "There is 1 plot available for review.");
+					} else {
+						p.sendMessage(ChatColor.GREEN + "There are " + plotData.reviewCount(u) + " plots available for review.");
+					}
+				}
 
 				//Teleport back to the build world if in the save world
 				if (p.getWorld().equals(Bukkit.getWorld(config.getString("worlds.save")))) {

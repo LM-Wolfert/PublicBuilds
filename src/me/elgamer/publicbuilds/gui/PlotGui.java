@@ -10,12 +10,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import me.elgamer.publicbuilds.Main;
-import me.elgamer.publicbuilds.mysql.AcceptData;
-import me.elgamer.publicbuilds.mysql.DenyData;
 import me.elgamer.publicbuilds.mysql.PlotData;
-import me.elgamer.publicbuilds.reviewing.FeedbackGui;
-import me.elgamer.publicbuilds.reviewing.Review;
-import me.elgamer.publicbuilds.reviewing.ReviewGui;
 import me.elgamer.publicbuilds.utils.User;
 import me.elgamer.publicbuilds.utils.Utils;
 import net.md_5.bungee.api.ChatColor;
@@ -36,8 +31,6 @@ public class PlotGui {
 	public static Inventory GUI (User u) {
 
 		PlotData plotData = Main.getInstance().plotData;
-		AcceptData acceptData = Main.getInstance().acceptData;
-		DenyData denyData = Main.getInstance().denyData;
 		
 		Inventory toReturn = Bukkit.createInventory(null, inv_rows, inventory_name);
 
@@ -86,26 +79,6 @@ public class PlotGui {
 				j += 1;
 			}				
 		}
-		
-		if (Utils.isPlayerInGroup(u.player, "reviewer") && (u.review != null)) {
-			Utils.createItem(inv, Material.YELLOW_STAINED_GLASS_PANE, 1, 41, ChatColor.AQUA + "" + ChatColor.BOLD + "Review Plot", 
-					Utils.chat("&fOpens the review menu."),
-					Utils.chat("&fAllows you to accept and deny"),
-					Utils.chat("&fas well as teleport to the before and after view."));
-		}
-
-		else if (Utils.isPlayerInGroup(u.player, "reviewer") && plotData.reviewExists(u)) {
-			Utils.createItem(inv, Material.LIME_STAINED_GLASS_PANE, 1, 41, ChatColor.AQUA + "" + ChatColor.BOLD + "New Review", 
-					Utils.chat("&fStart reviewing a new plot."),
-					Utils.chat("&fWill instantly open the review menu."));
-		}
-		
-		if (acceptData.hasEntry(u.uuid) || denyData.hasEntry(u.uuid)) {
-			Utils.createItem(inv, Material.GREEN_STAINED_GLASS_PANE, 1, 5, ChatColor.AQUA + "" + ChatColor.BOLD + "Plot Feedback", 
-					Utils.chat("&fOpens the feedback menu for"),
-					Utils.chat("&fyour 5 most recently accepted and"),
-					Utils.chat("&f5 most recenty denied plots."));
-		}
 
 		toReturn.setContents(inv.getContents());
 		return toReturn;
@@ -113,36 +86,12 @@ public class PlotGui {
 
 	public static void clicked(User u, int slot, ItemStack clicked, Inventory inv) {
 		
-		PlotData plotData = Main.getInstance().plotData;
 		Player p = u.player;
 
 		if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Return")) {
 			p.closeInventory();
 			p.openInventory(MainGui.GUI(u));
 			return;
-		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Review Plot")) {
-			//Open the review gui.
-			p.closeInventory();
-			p.openInventory(ReviewGui.GUI(u));
-			return;
-		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "New Review")) {
-			//If there is a plot available to review, create a new review and open the review gui.
-			if (plotData.reviewExists(u)) {
-				u.review = new Review(plotData.newReview(u));
-				p.closeInventory();
-				p.openInventory(ReviewGui.GUI(u));
-				return;
-			} else {
-				p.closeInventory();
-				p.sendMessage(Utils.chat("&cThere are no plots available for review!"));
-				return;
-			}
-		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Plot Feedback")) {
-			//Open the feedback gui
-			p.closeInventory();
-			p.openInventory(FeedbackGui.GUI(u));
-			return;
-			
 		}
 
 		//Get plot id and status of the clicked plot in the gui, set that as the players current plot.

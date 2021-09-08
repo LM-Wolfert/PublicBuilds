@@ -9,7 +9,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import me.elgamer.publicbuilds.Main;
-import me.elgamer.publicbuilds.gui.PlotGui;
+import me.elgamer.publicbuilds.gui.MainGui;
 import me.elgamer.publicbuilds.mysql.AcceptData;
 import me.elgamer.publicbuilds.mysql.DenyData;
 import me.elgamer.publicbuilds.mysql.PlayerData;
@@ -41,7 +41,7 @@ public class FeedbackGui {
 
 		inv.clear();
 
-		Utils.createItem(inv, Material.SPRUCE_DOOR, 1, 45, ChatColor.AQUA + "" + ChatColor.BOLD + "Return", Utils.chat("&fGo back to the plot menu."));
+		Utils.createItem(inv, Material.SPRUCE_DOOR, 1, 45, ChatColor.AQUA + "" + ChatColor.BOLD + "Return", Utils.chat("&fGo back to the building menu."));
 		int i;
 		Material mat = Material.RED_CONCRETE;
 
@@ -58,9 +58,9 @@ public class FeedbackGui {
 							Utils.chat("&fAccepted by: " + playerData.getName(acceptData.getReviewer(plot))),
 							Utils.chat("&fBuilding points received: " + acceptData.getPoints(plot)),
 							"",
-							Utils.chat("&fSize: &a" + acceptData.getSize(u.currentPlot) + " &f/&a5"),
-							Utils.chat("&fAccuracy: &a" + acceptData.getAccuracy(u.currentPlot) + " &f/&a5"),
-							Utils.chat("&fQuality: &a" + acceptData.getQuality(u.currentPlot) + " &f/&a5"),
+							Utils.chat("&fSize: &a" + acceptData.getSize(plot) + " &f/&a5"),
+							Utils.chat("&fAccuracy: &a" + acceptData.getAccuracy(plot) + " &f/&a5"),
+							Utils.chat("&fQuality: &a" + acceptData.getQuality(plot) + " &f/&a5"),
 							"",
 							ChatColor.WHITE + "" + ChatColor.BOLD + "Click to view written feedback!");
 				} else if (acceptData.isBuilding(plot)) {
@@ -69,9 +69,9 @@ public class FeedbackGui {
 							Utils.chat("&fAccepted by: " + playerData.getName(acceptData.getReviewer(plot))),
 							Utils.chat("&fBuilding points received: " + acceptData.getPoints(plot)),
 							"",
-							Utils.chat("&fSize: &a" + acceptData.getSize(u.currentPlot) + " &f/&a5"),
-							Utils.chat("&fAccuracy: &a" + acceptData.getAccuracy(u.currentPlot) + " &f/&a5"),
-							Utils.chat("&fQuality: &a" + acceptData.getQuality(u.currentPlot) + " &f/&a5"));
+							Utils.chat("&fSize: &a" + acceptData.getSize(plot) + " &f/&a5"),
+							Utils.chat("&fAccuracy: &a" + acceptData.getAccuracy(plot) + " &f/&a5"),
+							Utils.chat("&fQuality: &a" + acceptData.getQuality(plot) + " &f/&a5"));
 				} else if (acceptData.hasFeedback(plot)) {
 					Utils.createItem(inv, Material.LIME_CONCRETE, 1, i, ChatColor.AQUA + "" + ChatColor.BOLD + "Plot: " + String.valueOf(plot),
 							Utils.chat("&fAccepted at: " + Time.getDate(acceptData.getTime(plot))),
@@ -143,7 +143,7 @@ public class FeedbackGui {
 
 		if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Return")) {
 			p.closeInventory();
-			p.openInventory(PlotGui.GUI(u));
+			p.openInventory(MainGui.GUI(u));
 			return;
 		}
 		

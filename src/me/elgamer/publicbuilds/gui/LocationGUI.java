@@ -1,6 +1,7 @@
 package me.elgamer.publicbuilds.gui;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -9,7 +10,6 @@ import org.bukkit.inventory.ItemStack;
 import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.utils.User;
 import me.elgamer.publicbuilds.utils.Utils;
-import net.md_5.bungee.api.ChatColor;
 
 public class LocationGUI {
 	
@@ -40,7 +40,7 @@ public class LocationGUI {
 		Utils.createItem(inv, Material.ACACIA_FENCE, 1, 15, ChatColor.AQUA + "" + ChatColor.BOLD + "Coming Soon!");
 		
 		Utils.createItem(inv, Material.SPRUCE_DOOR, 1, 27, ChatColor.AQUA + "" + ChatColor.BOLD + "Return", 
-				Utils.chat("&fGo back to the navigation menu."));	
+				Utils.chat("&fGo back to the building menu."));	
 		
 		toReturn.setContents(inv.getContents());
 		return toReturn;
@@ -56,7 +56,7 @@ public class LocationGUI {
 			p.teleport(Main.cranham);
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Return")) {
 			p.closeInventory();
-			p.openInventory(NavigationGUI.GUI(u));
+			p.openInventory(MainGui.GUI(u));
 		}
 	}
 

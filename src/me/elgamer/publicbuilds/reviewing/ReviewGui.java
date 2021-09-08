@@ -7,7 +7,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import me.elgamer.publicbuilds.Main;
-import me.elgamer.publicbuilds.gui.PlotGui;
+import me.elgamer.publicbuilds.gui.MainGui;
 import me.elgamer.publicbuilds.mysql.PlayerData;
 import me.elgamer.publicbuilds.mysql.PlotData;
 import me.elgamer.publicbuilds.utils.Accept;
@@ -37,7 +37,7 @@ public class ReviewGui {
 
 		inv.clear();
 
-		Utils.createItem(inv, Material.SPRUCE_DOOR, 1, 27, ChatColor.AQUA + "" + ChatColor.BOLD + "Return", Utils.chat("&fGo back to the plot menu."));
+		Utils.createItem(inv, Material.SPRUCE_DOOR, 1, 27, ChatColor.AQUA + "" + ChatColor.BOLD + "Return", Utils.chat("&fGo back to the building menu."));
 		
 		Utils.createItem(inv, Material.BOOK, 1, 5, ChatColor.AQUA + "" + ChatColor.BOLD + "Plot Info",
 				Utils.chat("&fPlot ID: " + u.review.plot),
@@ -67,7 +67,7 @@ public class ReviewGui {
 		Player p = u.player;
 		if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Return")) {
 			p.closeInventory();
-			p.openInventory(PlotGui.GUI(u));
+			p.openInventory(MainGui.GUI(u));
 			return;
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Before View")) {
 			//Get the plot that is being reviewed and teleport the player do the plot in the saveWorld.

@@ -101,65 +101,65 @@ public class AcceptGui {
 			return;
 			//Set the value in the acceptgui based on the button that is clicked.
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Size: 1")) {
-			p.closeInventory();
 			ac.size = 1;
-			p.openInventory(GUI(u));
+			p.getInventory().setContents(AcceptGui.GUI(u).getContents());
+			p.updateInventory();
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Size: 2")) {	
-			p.closeInventory();
 			ac.size = 2;
-			p.openInventory(GUI(u));
+			p.getInventory().setContents(AcceptGui.GUI(u).getContents());
+			p.updateInventory();
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Size: 3")) {
-			p.closeInventory();
 			ac.size = 3;
-			p.openInventory(GUI(u));
+			p.getInventory().setContents(AcceptGui.GUI(u).getContents());
+			p.updateInventory();
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Size: 4")) {
-			p.closeInventory();
 			ac.size = 4;
-			p.openInventory(GUI(u));
+			p.getInventory().setContents(AcceptGui.GUI(u).getContents());
+			p.updateInventory();
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Size: 5")) {
-			p.closeInventory();
 			ac.size = 5;
-			p.openInventory(GUI(u));
+			p.getInventory().setContents(AcceptGui.GUI(u).getContents());
+			p.updateInventory();
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Accuracy: 1")) {
-			p.closeInventory();
 			ac.accuracy = 1;
-			p.openInventory(GUI(u));
+			p.getInventory().setContents(AcceptGui.GUI(u).getContents());
+			p.updateInventory();
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Accuracy: 2")) {	
-			p.closeInventory();
 			ac.accuracy = 2;
-			p.openInventory(GUI(u));
+			p.getInventory().setContents(AcceptGui.GUI(u).getContents());
+			p.updateInventory();
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Accuracy: 3")) {
-			p.closeInventory();
 			ac.accuracy = 3;
-			p.openInventory(GUI(u));
+			p.getInventory().setContents(AcceptGui.GUI(u).getContents());
+			p.updateInventory();
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Accuracy: 4")) {
-			p.closeInventory();
 			ac.accuracy = 4;
-			p.openInventory(GUI(u));
+			p.getInventory().setContents(AcceptGui.GUI(u).getContents());
+			p.updateInventory();
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Accuracy: 5")) {
-			p.closeInventory();
 			ac.accuracy = 5;
-			p.openInventory(GUI(u));
+			p.getInventory().setContents(AcceptGui.GUI(u).getContents());
+			p.updateInventory();
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Quality: 1")) {
-			p.closeInventory();
 			ac.quality = 1;
-			p.openInventory(GUI(u));
+			p.getInventory().setContents(AcceptGui.GUI(u).getContents());
+			p.updateInventory();
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Quality: 2")) {
-			p.closeInventory();
 			ac.quality = 2;
-			p.openInventory(GUI(u));
+			p.getInventory().setContents(AcceptGui.GUI(u).getContents());
+			p.updateInventory();
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Quality: 3")) {
-			p.closeInventory();
 			ac.quality = 3;
-			p.openInventory(GUI(u));
+			p.getInventory().setContents(AcceptGui.GUI(u).getContents());
+			p.updateInventory();
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Quality: 4")) {
-			p.closeInventory();
 			ac.quality = 4;
-			p.openInventory(GUI(u));
+			p.getInventory().setContents(AcceptGui.GUI(u).getContents());
+			p.updateInventory();
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Quality: 5")) {
-			p.closeInventory();
 			ac.quality = 5;
-			p.openInventory(GUI(u));
+			p.getInventory().setContents(AcceptGui.GUI(u).getContents());
+			p.updateInventory();
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Submit")) {
 
 			PlayerData playerData = Main.getInstance().playerData;
@@ -205,14 +205,14 @@ public class AcceptGui {
 				}
 			}
 
-			messageData.addMessage(plotData.getOwner(u.review.plot), u.review.plot, "returned");			
+			messageData.addMessage(plotData.getOwner(u.review.plot), u.review.plot, "completed");			
 
 			//Add building points and normal points
 			playerData.addPoints(plotData.getOwner(u.review.plot), buildingPoints);
 			me.elgamer.btepoints.utils.Points.addPoints(plotData.getOwner(u.review.plot), buildingPoints*config.getInt("points_multiplier"));
 
 			//Remove reviewing status
-			plotData.setStatus(u.review.plot, "completed");
+			plotData.setStatus(u.review.plot, "accepted");
 
 			//Add plot to saveWorld
 			List<BlockVector2> corners = WorldGuardFunctions.getPoints(u.review.plot);
@@ -231,6 +231,13 @@ public class AcceptGui {
 			ClaimFunctions.removeClaim(u.review.plot);
 			
 			p.sendMessage(ChatColor.GREEN + "Plot " + u.review.plot + " accepted for " + buildingPoints + " building points.");
+			if (plotData.reviewExists(u)) {
+				if (plotData.reviewCount(u) == 1) {
+					p.sendMessage(ChatColor.GREEN + "There is 1 plot available for review.");
+				} else {
+					p.sendMessage(ChatColor.GREEN + "There are " + plotData.reviewCount(u) + " plots available for review.");
+				}
+			}
 			u.review.editBook.unregister();
 			u.player.getInventory().setItem(4, u.review.previousItem);
 			u.review = null;
