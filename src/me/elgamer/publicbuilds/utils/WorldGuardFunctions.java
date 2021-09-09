@@ -126,7 +126,7 @@ public class WorldGuardFunctions {
 
 	}
 
-	public static ArrayList<Integer> getNearbyPlots(User u) {
+	public static ApplicableRegionSet getPlots(BlockVector3 min, BlockVector3 max, int radius) {
 
 		//Get plugin instance and config.
 		Main instance = Main.getInstance();
@@ -142,19 +142,28 @@ public class WorldGuardFunctions {
 		RegionContainer container = wg.getPlatform().getRegionContainer();
 		RegionManager saveRegions = container.get(BukkitAdapter.adapt(saveWorld));
 
-		//Create HashMap
-		ArrayList<Integer> list = new ArrayList<Integer>();
-
 		//Create region
-		ProtectedCuboidRegion region = new ProtectedCuboidRegion(u.name, 
-				BlockVector3.at(u.player.getLocation().getX()-100, 1, u.player.getLocation().getZ()-100),
-				BlockVector3.at(u.player.getLocation().getX()+100, 256, u.player.getLocation().getZ()+100));
+		ProtectedCuboidRegion region = new ProtectedCuboidRegion("check", 
+				BlockVector3.at(min.getX()-radius, 1, min.getZ()-radius),
+				BlockVector3.at(max.getX()+radius, 256, max.getZ()+radius));
 
 		//Check whether the region overlaps an existing plot, if true stop the process.
 		ApplicableRegionSet set = saveRegions.getApplicableRegions(region);
 
+		return set;
+	}
+
+	public static ArrayList<Integer> getNearbyPlots(User u) {
+
+		//Create HashMap
+		ArrayList<Integer> list = new ArrayList<Integer>();
+
+		BlockVector3 pos = BlockVector3.at(u.player.getLocation().getX(), u.player.getLocation().getY(), u.player.getLocation().getZ());
+
+		ApplicableRegionSet set = getPlots(pos, pos, 100);
+
 		if (set.size() == 0) {
-			return null;
+			return list;
 		}
 
 		for (ProtectedRegion entry : set) {
@@ -163,39 +172,18 @@ public class WorldGuardFunctions {
 			}
 		}
 
-
 		return list;
 	}
 
 	public static ArrayList<Integer> getNearbyPlots(ProtectedPolygonalRegion check) {
 
-		//Get plugin instance and config.
-		Main instance = Main.getInstance();
-		FileConfiguration config = instance.getConfig();
-
-		//Get worlds.
-		World saveWorld = Bukkit.getWorld(config.getString("worlds.save"));
-
-		//Get instance of WorldGuard.
-		WorldGuard wg = WorldGuard.getInstance();
-
-		//Get regions.
-		RegionContainer container = wg.getPlatform().getRegionContainer();
-		RegionManager saveRegions = container.get(BukkitAdapter.adapt(saveWorld));
-
 		//Create HashMap
 		ArrayList<Integer> list = new ArrayList<Integer>();
 
-		//Create region
-		ProtectedCuboidRegion region = new ProtectedCuboidRegion("check", 
-				BlockVector3.at(check.getMinimumPoint().getX()-5, 1, check.getMinimumPoint().getZ()-5),
-				BlockVector3.at(check.getMaximumPoint().getX()+5, 256, check.getMaximumPoint().getZ()+5));
-
-		//Check whether the region overlaps an existing plot, if true stop the process.
-		ApplicableRegionSet set = saveRegions.getApplicableRegions(region);
+		ApplicableRegionSet set = getPlots(check.getMinimumPoint(), check.getMaximumPoint(), 5);
 
 		if (set.size() == 0) {
-			return null;
+			return list;
 		}
 
 		for (ProtectedRegion entry : set) {

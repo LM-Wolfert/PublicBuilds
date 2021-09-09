@@ -24,7 +24,7 @@ public class MainGui {
 
 	public static Inventory inv;
 	public static String inventory_name;
-	public static int inv_rows = 5 * 9;
+	public static int inv_rows = 3 * 9;
 
 	public static void initialize() {
 		inventory_name = ChatColor.AQUA + "" + ChatColor.BOLD + "Building Menu";
@@ -51,22 +51,22 @@ public class MainGui {
 		Utils.createItem(inv, Material.ENDER_EYE, 1, 25, ChatColor.AQUA + "" + ChatColor.BOLD + "Switch Server",
 				Utils.chat("&fTeleport to a different server."));	
 
-		Utils.createItem(inv, Material.GRASS_BLOCK, 1, 21, ChatColor.AQUA + "" + ChatColor.BOLD + "Spawn",
+		Utils.createItem(inv, Material.GRASS_BLOCK, 1, 1, ChatColor.AQUA + "" + ChatColor.BOLD + "Spawn",
 				Utils.chat("&fTeleport to spawn."));
 
-		Utils.createItem(inv, Material.WRITABLE_BOOK, 1, 23, ChatColor.AQUA + "" + ChatColor.BOLD + "Tutorials", 
+		Utils.createItem(inv, Material.WRITABLE_BOOK, 1, 24, ChatColor.AQUA + "" + ChatColor.BOLD + "Tutorials", 
 				Utils.chat("&fPick a tutorial you want to do."),
 				Utils.chat("&fYou can leave it at any time."));	
 
-		Utils.createItem(inv, Material.EMERALD, 1, 38, ChatColor.AQUA + "" + ChatColor.BOLD + "Create Plot",
+		Utils.createItem(inv, Material.EMERALD, 1, 10, ChatColor.AQUA + "" + ChatColor.BOLD + "Create Plot",
 				Utils.chat("&fWill create a plot with the points you have selected."),
 				Utils.chat("&fA minimum of 3 points are required for a valid plot."));
 
-		Utils.createItem(inv, Material.BLAZE_ROD, 1, 42, ChatColor.AQUA + "" + ChatColor.BOLD + "Selection Tool", 
+		Utils.createItem(inv, Material.BLAZE_ROD, 1, 19, ChatColor.AQUA + "" + ChatColor.BOLD + "Selection Tool", 
 				Utils.chat("&fGives you the selection tool."),
 				Utils.chat("&fIt is used to create your plot outline."));
 
-		Utils.createItem(inv, Material.CHEST, 1, 40, ChatColor.AQUA + "" + ChatColor.BOLD + "Plot Menu", 
+		Utils.createItem(inv, Material.CHEST, 1, 22, ChatColor.AQUA + "" + ChatColor.BOLD + "Plot Menu", 
 				Utils.chat("&fShows all your current active plots."),
 				Utils.chat("&fThis is where you can submit, remove"),
 				Utils.chat("&fand teleport to your plot."));
@@ -75,26 +75,26 @@ public class MainGui {
 				Utils.chat("&fBuilding Points: " + playerData.getPoints(u.uuid)),
 				Utils.chat("&fCompleted Plots: " + plotData.completedPlots(u.uuid)));
 
-		Utils.createItem(inv, Material.WHITE_BANNER, 1, 43, ChatColor.AQUA + "" + ChatColor.BOLD + "Banner Maker", 
+		Utils.createItem(inv, Material.WHITE_BANNER, 1, 27, ChatColor.AQUA + "" + ChatColor.BOLD + "Banner Maker", 
 				Utils.chat("&fOpens the Banner Maker!"));
 
-		Utils.createItem(inv, Material.SKELETON_SKULL, 1, 44, ChatColor.AQUA + "" + ChatColor.BOLD + "Head Database", 
+		Utils.createItem(inv, Material.SKELETON_SKULL, 1, 18, ChatColor.AQUA + "" + ChatColor.BOLD + "Head Database", 
 				Utils.chat("&fOpens the Head Database!"));
 
 		if (Utils.isPlayerInGroup(u.player, "reviewer") && (u.review != null)) {
-			Utils.createItem(inv, Material.ORANGE_STAINED_GLASS_PANE, 1, 41, ChatColor.AQUA + "" + ChatColor.BOLD + "Review Plot", 
+			Utils.createItem(inv, Material.ORANGE_STAINED_GLASS_PANE, 1, 23, ChatColor.AQUA + "" + ChatColor.BOLD + "Review Plot", 
 					Utils.chat("&fOpens the review menu."),
 					Utils.chat("&fAllows you to accept and deny"),
 					Utils.chat("&fas well as teleport to the before and after view."));
 		}
 
 		else if (Utils.isPlayerInGroup(u.player, "reviewer") && plotData.reviewExists(u)) {
-			Utils.createItem(inv, Material.LIME_STAINED_GLASS_PANE, 1, 41, ChatColor.AQUA + "" + ChatColor.BOLD + "New Review", 
+			Utils.createItem(inv, Material.LIME_STAINED_GLASS_PANE, 1, 23, ChatColor.AQUA + "" + ChatColor.BOLD + "New Review", 
 					Utils.chat("&fStart reviewing a new plot."),
 					Utils.chat("&fWill instantly open the review menu."));
 		}
 
-		Utils.createItem(inv, Material.BOOK, 1, 39, ChatColor.AQUA + "" + ChatColor.BOLD + "Plot Feedback", 
+		Utils.createItem(inv, Material.BOOK, 1, 21, ChatColor.AQUA + "" + ChatColor.BOLD + "Plot Feedback", 
 				Utils.chat("&fOpens the feedback menu for"),
 				Utils.chat("&fyour 5 most recently accepted and"),
 				Utils.chat("&f5 most recenty denied plots."));

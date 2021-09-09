@@ -20,6 +20,7 @@ import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.world.World;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.managers.storage.StorageException;
@@ -108,6 +109,9 @@ public class CreateArea implements CommandExecutor {
 		} else {
 			return false;
 		}
+		
+		polyregion.setFlag(Flags.EXIT, StateFlag.State.DENY);
+		polyregion.setFlag(Flags.EXIT_VIA_TELEPORT, StateFlag.State.ALLOW);
 		
 		if (!(Main.getInstance().areaData.newArea(args[0], args[1]))) {
 			p.sendMessage(ChatColor.RED + "An error occured!");

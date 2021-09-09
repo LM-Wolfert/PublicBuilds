@@ -205,14 +205,14 @@ public class AcceptGui {
 				}
 			}
 
-			messageData.addMessage(plotData.getOwner(u.review.plot), u.review.plot, "completed");			
+			messageData.addMessage(plotData.getOwner(u.review.plot), u.review.plot, "accepted");			
 
 			//Add building points and normal points
 			playerData.addPoints(plotData.getOwner(u.review.plot), buildingPoints);
 			me.elgamer.btepoints.utils.Points.addPoints(plotData.getOwner(u.review.plot), buildingPoints*config.getInt("points_multiplier"));
 
 			//Remove reviewing status
-			plotData.setStatus(u.review.plot, "accepted");
+			plotData.setStatus(u.review.plot, "completed");
 
 			//Add plot to saveWorld
 			List<BlockVector2> corners = WorldGuardFunctions.getPoints(u.review.plot);

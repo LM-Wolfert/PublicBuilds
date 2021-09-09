@@ -122,7 +122,6 @@ public class Main extends JavaPlugin {
 	public static StateFlag CREATE_PLOT_GUEST;
 	public static StateFlag CREATE_PLOT_APPRENTICE;
 	public static StateFlag CREATE_PLOT_JRBUILDER;
-	public static StateFlag NO_PLOT;
 
 	public static ItemStack selectionTool;
 	public static ItemStack gui;
@@ -745,23 +744,6 @@ public class Main extends JavaPlugin {
 			Flag<?> existing = registry.get("create-plot-jrbuilder");
 			if (existing instanceof StateFlag) {
 				CREATE_PLOT_JRBUILDER = (StateFlag) existing;
-			} else {
-				Bukkit.broadcastMessage("Plugin Conflict Error with PublicBuilds");
-			}
-
-		}
-
-		try {
-
-			StateFlag flag = new StateFlag("no-plot", true);
-			registry.register(flag);
-			NO_PLOT = flag;
-
-		} catch (FlagConflictException e) {
-
-			Flag<?> existing = registry.get("no-plot");
-			if (existing instanceof StateFlag) {
-				NO_PLOT = (StateFlag) existing;
 			} else {
 				Bukkit.broadcastMessage("Plugin Conflict Error with PublicBuilds");
 			}
