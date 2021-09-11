@@ -47,7 +47,7 @@ public class ClaimFunctions {
 		RegionManager buildRegions = container.get(buildWorld);
 
 		PlotData plotData = Main.getInstance().plotData;
-		
+
 		//Create new id
 		int plotID = plotData.getNewID();
 
@@ -65,13 +65,13 @@ public class ClaimFunctions {
 		for (BlockVector2 bv : vector) {
 
 			set = buildRegions.getApplicableRegions(BlockVector3.at(bv.getX(), 64, bv.getZ()));
-			
+
 			if ((!(set.testState(null, Main.CREATE_PLOT_GUEST))) &&
 					(!(set.testState(null, Main.CREATE_PLOT_APPRENTICE))) &&
-							(!(set.testState(null, Main.CREATE_PLOT_JRBUILDER)))) {
+					(!(set.testState(null, Main.CREATE_PLOT_JRBUILDER)))) {
 				return (ChatColor.RED + "You can not create a plot here!");
 			}
-			
+
 			if (set.testState(null, Main.CREATE_PLOT_GUEST)) {
 				continue;
 
@@ -83,46 +83,41 @@ public class ClaimFunctions {
 
 			} 
 		}	
-		
+
 		//Check if any plots are within 2 metre of the plot you're trying to create. 
 		Point pt = new Point();
 		ArrayList<Integer> nearby = WorldGuardFunctions.getNearbyPlots(region);
 		ProtectedRegion rg;
-		List<BlockVector2> pts;
+		ArrayList<BlockVector2> pts = new ArrayList<BlockVector2>();
 		BlockVector2 pt1;
 		BlockVector2 pt2;
 		BlockVector2 pt3;
 		BlockVector2 pt4;
 		int size;
-		
+		int size2 = vector.size();
+		vector.add(vector.get(0));
+
 		//Iterate through all nearby plots
 		for (int i : nearby) {
 			rg = saveRegions.getRegion(String.valueOf(i));
-			pts = rg.getPoints();
+			pts.clear();
+			pts.addAll(rg.getPoints());
 			size = pts.size();
-			
+			pts.add(pts.get(0));
+
 			//For each line between 2 points of that plot
 			for (int j = 0; j<size; j++) {
 				//Get the 2 points
-				if (j+1 == size) {
-					pt1 = pts.get(j);
-					pt2 = pts.get(0);
-				} else {
-					pt1 = pts.get(j);
-					pt2 = pts.get(j+1);
-				}
-				
+				pt1 = pts.get(j);
+				pt2 = pts.get(j+1);
+
 				//Compare to all lines of the plot the player is trying to create
-				for (int k = 0; k<vector.size(); k++) {
+				for (int k = 0; k<size2; k++) {
 					//Get the 2 points
-					if (k+1 == vector.size()) {
-						pt3 = vector.get(k);
-						pt4 = vector.get(0);
-					} else {
-						pt3 = vector.get(k);
-						pt4 = vector.get(k+1);
-					}
-					
+					pt3 = vector.get(k);
+					pt4 = vector.get(k+1);
+
+
 					//If the shortest distance between the 2 lines is less than 2 metres then the plot is being
 					//created too close to an existing plot and the plot creation process will be aborted.
 					if (pt.getShortestDistance(pt1, pt2, pt3, pt4) <= 2) {
@@ -130,9 +125,6 @@ public class ClaimFunctions {
 					}
 				}
 			}
-			
-			
-			
 		}
 
 		//Create an entry in the database for the plot.
@@ -400,42 +392,42 @@ public class ClaimFunctions {
 		return true;
 	}
 
-public static String removeClaim(int id) {
+	public static String removeClaim(int id) {
 
-	//Get instance of plugin and config
-	Main instance = Main.getInstance();
-	FileConfiguration config = instance.getConfig();
+		//Get instance of plugin and config
+		Main instance = Main.getInstance();
+		FileConfiguration config = instance.getConfig();
 
-	//Get worlds.
-	World saveWorld = BukkitAdapter.adapt(Bukkit.getWorld(config.getString("worlds.save")));
-	World buildWorld = BukkitAdapter.adapt(Bukkit.getWorld(config.getString("worlds.build")));
+		//Get worlds.
+		World saveWorld = BukkitAdapter.adapt(Bukkit.getWorld(config.getString("worlds.save")));
+		World buildWorld = BukkitAdapter.adapt(Bukkit.getWorld(config.getString("worlds.build")));
 
-	//Get instance of WorldGuard.
-	WorldGuard wg = WorldGuard.getInstance();
+		//Get instance of WorldGuard.
+		WorldGuard wg = WorldGuard.getInstance();
 
-	//Get regions.
-	RegionContainer container = wg.getPlatform().getRegionContainer();
-	RegionManager saveRegions = container.get(saveWorld);
-	RegionManager buildRegions = container.get(buildWorld);
+		//Get regions.
+		RegionContainer container = wg.getPlatform().getRegionContainer();
+		RegionManager saveRegions = container.get(saveWorld);
+		RegionManager buildRegions = container.get(buildWorld);
 
-	//If the regions exist continue
-	if (!(saveRegions.hasRegion(String.valueOf(id)))) {
-		return (ChatColor.RED + "This region does not exist!");
+		//If the regions exist continue
+		if (!(saveRegions.hasRegion(String.valueOf(id)))) {
+			return (ChatColor.RED + "This region does not exist!");
+		}
+
+		//Remove the regions from the worlds
+		saveRegions.removeRegion(String.valueOf(id));
+		buildRegions.removeRegion(String.valueOf(id));
+
+		//Save the removed regions
+		try {
+			saveRegions.save();
+			buildRegions.save();
+		} catch (StorageException e1) {
+			e1.printStackTrace();
+		}
+
+		return (ChatColor.GREEN + "Plot " + ChatColor.DARK_AQUA + id + ChatColor.GREEN + " removed!");
 	}
-
-	//Remove the regions from the worlds
-	saveRegions.removeRegion(String.valueOf(id));
-	buildRegions.removeRegion(String.valueOf(id));
-
-	//Save the removed regions
-	try {
-		saveRegions.save();
-		buildRegions.save();
-	} catch (StorageException e1) {
-		e1.printStackTrace();
-	}
-
-	return (ChatColor.GREEN + "Plot " + ChatColor.DARK_AQUA + id + ChatColor.GREEN + " removed!");
-}
 
 }

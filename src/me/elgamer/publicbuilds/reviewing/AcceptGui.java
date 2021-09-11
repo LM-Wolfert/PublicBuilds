@@ -102,63 +102,63 @@ public class AcceptGui {
 			//Set the value in the acceptgui based on the button that is clicked.
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Size: 1")) {
 			ac.size = 1;
-			p.getInventory().setContents(AcceptGui.GUI(u).getContents());
+			p.getOpenInventory().getTopInventory().setContents(AcceptGui.GUI(u).getContents());
 			p.updateInventory();
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Size: 2")) {	
 			ac.size = 2;
-			p.getInventory().setContents(AcceptGui.GUI(u).getContents());
+			p.getOpenInventory().getTopInventory().setContents(AcceptGui.GUI(u).getContents());
 			p.updateInventory();
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Size: 3")) {
 			ac.size = 3;
-			p.getInventory().setContents(AcceptGui.GUI(u).getContents());
+			p.getOpenInventory().getTopInventory().setContents(AcceptGui.GUI(u).getContents());
 			p.updateInventory();
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Size: 4")) {
 			ac.size = 4;
-			p.getInventory().setContents(AcceptGui.GUI(u).getContents());
+			p.getOpenInventory().getTopInventory().setContents(AcceptGui.GUI(u).getContents());
 			p.updateInventory();
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Size: 5")) {
 			ac.size = 5;
-			p.getInventory().setContents(AcceptGui.GUI(u).getContents());
+			p.getOpenInventory().getTopInventory().setContents(AcceptGui.GUI(u).getContents());
 			p.updateInventory();
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Accuracy: 1")) {
 			ac.accuracy = 1;
-			p.getInventory().setContents(AcceptGui.GUI(u).getContents());
+			p.getOpenInventory().getTopInventory().setContents(AcceptGui.GUI(u).getContents());
 			p.updateInventory();
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Accuracy: 2")) {	
 			ac.accuracy = 2;
-			p.getInventory().setContents(AcceptGui.GUI(u).getContents());
+			p.getOpenInventory().getTopInventory().setContents(AcceptGui.GUI(u).getContents());
 			p.updateInventory();
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Accuracy: 3")) {
 			ac.accuracy = 3;
-			p.getInventory().setContents(AcceptGui.GUI(u).getContents());
+			p.getOpenInventory().getTopInventory().setContents(AcceptGui.GUI(u).getContents());
 			p.updateInventory();
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Accuracy: 4")) {
 			ac.accuracy = 4;
-			p.getInventory().setContents(AcceptGui.GUI(u).getContents());
+			p.getOpenInventory().getTopInventory().setContents(AcceptGui.GUI(u).getContents());
 			p.updateInventory();
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Accuracy: 5")) {
 			ac.accuracy = 5;
-			p.getInventory().setContents(AcceptGui.GUI(u).getContents());
+			p.getOpenInventory().getTopInventory().setContents(AcceptGui.GUI(u).getContents());
 			p.updateInventory();
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Quality: 1")) {
 			ac.quality = 1;
-			p.getInventory().setContents(AcceptGui.GUI(u).getContents());
+			p.getOpenInventory().getTopInventory().setContents(AcceptGui.GUI(u).getContents());
 			p.updateInventory();
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Quality: 2")) {
 			ac.quality = 2;
-			p.getInventory().setContents(AcceptGui.GUI(u).getContents());
+			p.getOpenInventory().getTopInventory().setContents(AcceptGui.GUI(u).getContents());
 			p.updateInventory();
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Quality: 3")) {
 			ac.quality = 3;
-			p.getInventory().setContents(AcceptGui.GUI(u).getContents());
+			p.getOpenInventory().getTopInventory().setContents(AcceptGui.GUI(u).getContents());
 			p.updateInventory();
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Quality: 4")) {
 			ac.quality = 4;
-			p.getInventory().setContents(AcceptGui.GUI(u).getContents());
+			p.getOpenInventory().getTopInventory().setContents(AcceptGui.GUI(u).getContents());
 			p.updateInventory();
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Quality: 5")) {
 			ac.quality = 5;
-			p.getInventory().setContents(AcceptGui.GUI(u).getContents());
+			p.getOpenInventory().getTopInventory().setContents(AcceptGui.GUI(u).getContents());
 			p.updateInventory();
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Submit")) {
 

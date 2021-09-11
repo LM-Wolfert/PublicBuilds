@@ -32,12 +32,12 @@ public class LocationGUI {
 		
 		Utils.createItem(inv, Material.SPRUCE_FENCE, 1, 13, ChatColor.AQUA + "" + ChatColor.BOLD + "London, Cranham",
 				Utils.chat("&fCranham is a residential area of east London"),
-				Utils.chat("&fin the London Borough of Havering."),
-				Utils.chat("&fHistorically a rural village in Essex,"),
-				Utils.chat("&fnow it is peripheral to London"),
-				Utils.chat("&fforming the eastern edge of the urban sprawl."));
+				Utils.chat("&fin the London Borough of Havering."));
 		
-		Utils.createItem(inv, Material.ACACIA_FENCE, 1, 15, ChatColor.AQUA + "" + ChatColor.BOLD + "Coming Soon!");
+		Utils.createItem(inv, Material.ACACIA_FENCE, 1, 15, ChatColor.AQUA + "" + ChatColor.BOLD + "Solihull, Monkspath",
+				Utils.chat("&fMonkspath is a residential area of Solihull."),
+				Utils.chat("&fSituated near the M42/A34 junction"),
+				Utils.chat("&fSolihull is a large town in the West Midlands."));
 		
 		Utils.createItem(inv, Material.SPRUCE_DOOR, 1, 27, ChatColor.AQUA + "" + ChatColor.BOLD + "Return", 
 				Utils.chat("&fGo back to the building menu."));	
@@ -54,6 +54,10 @@ public class LocationGUI {
 			
 			//Will teleport the player to the map for this location.
 			p.teleport(Main.cranham);
+		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Solihull, Monkspath")) {
+			
+			//Will teleport the player to the map for this location.
+			p.teleport(Main.monkspath);
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Return")) {
 			p.closeInventory();
 			p.openInventory(MainGui.GUI(u));

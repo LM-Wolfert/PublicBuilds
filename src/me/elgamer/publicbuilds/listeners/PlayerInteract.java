@@ -5,6 +5,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -92,6 +93,15 @@ public class PlayerInteract implements Listener {
 	public void swapHands(PlayerSwapHandItemsEvent e) {
 		
 		if (e.getOffHandItem().equals(Main.gui)) {
+			e.setCancelled(true);
+		}
+		
+	}
+	
+	@EventHandler
+	public void dropItem(PlayerDropItemEvent e) {
+		
+		if (e.getItemDrop().getItemStack().equals(Main.gui)) {
 			e.setCancelled(true);
 		}
 		

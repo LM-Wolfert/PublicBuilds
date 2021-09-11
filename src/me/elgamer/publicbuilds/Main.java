@@ -132,6 +132,7 @@ public class Main extends JavaPlugin {
 	//Locations
 	public static Location spawn;
 	public static Location cranham;
+	public static Location monkspath;
 
 	//Tutorial
 	public static Location TUTORIAL_1_START, TUTORIAL_1_YES, TUTORIAL_1_NO;	
@@ -265,6 +266,11 @@ public class Main extends JavaPlugin {
 				config.getDouble("location.cranham.map.x"),
 				config.getDouble("location.cranham.map.y"),
 				config.getDouble("location.cranham.map.z"),
+				180f, 45f);
+		monkspath = new Location(Bukkit.getWorld(config.getString("worlds.build")), 
+				config.getDouble("location.monkspath.map.x"),
+				config.getDouble("location.monkspath.map.y"),
+				config.getDouble("location.monkspath.map.z"),
 				180f, 45f);
 
 		//Tutorial
