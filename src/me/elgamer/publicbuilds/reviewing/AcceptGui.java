@@ -47,42 +47,85 @@ public class AcceptGui {
 		inv.clear();
 		Accept ac = u.review.accept;
 
-		int i;
-		int j;
+		if (ac.type == 1) {
+			int i;
+			int j;
 
-		for (j = 1; j<=3; j++) {			
-			for (i = 1; i<=5; i++) {
+			for (j = 1; j<=3; j++) {			
+				for (i = 1; i<=5; i++) {
 
-				if (j == 1) {
-					if (ac.size<i) {
-						Utils.createItem(inv, Material.RED_CONCRETE, 1, 2*9+i+2, ChatColor.AQUA + "" + ChatColor.BOLD + "Size: " + i);
-					} else {
-						Utils.createItem(inv, Material.LIME_CONCRETE, 1, 2*9+i+2, ChatColor.AQUA + "" + ChatColor.BOLD + "Size: " + i);
+					if (j == 1) {
+						if (ac.size<i) {
+							Utils.createItem(inv, Material.RED_CONCRETE, 1, 2*9+i+2, ChatColor.AQUA + "" + ChatColor.BOLD + "Size: " + i);
+						} else {
+							Utils.createItem(inv, Material.LIME_CONCRETE, 1, 2*9+i+2, ChatColor.AQUA + "" + ChatColor.BOLD + "Size: " + i);
+						}
 					}
-				}
 
-				if (j == 2) {
-					if (ac.accuracy<i) {
-						Utils.createItem(inv, Material.RED_CONCRETE, 1, 3*9+i+2, ChatColor.AQUA + "" + ChatColor.BOLD + "Accuracy: " + i);
-					} else {
-						Utils.createItem(inv, Material.LIME_CONCRETE, 1, 3*9+i+2, ChatColor.AQUA + "" + ChatColor.BOLD + "Accuracy: " + i);
+					if (j == 2) {
+						if (ac.accuracy<i) {
+							Utils.createItem(inv, Material.RED_CONCRETE, 1, 3*9+i+2, ChatColor.AQUA + "" + ChatColor.BOLD + "Accuracy: " + i);
+						} else {
+							Utils.createItem(inv, Material.LIME_CONCRETE, 1, 3*9+i+2, ChatColor.AQUA + "" + ChatColor.BOLD + "Accuracy: " + i);
+						}
 					}
-				}
 
-				if (j == 3) {
-					if (ac.quality<i) {
-						Utils.createItem(inv, Material.RED_CONCRETE, 1, 4*9+i+2, ChatColor.AQUA + "" + ChatColor.BOLD + "Quality: " + i);
-					} else {
-						Utils.createItem(inv, Material.LIME_CONCRETE, 1, 4*9+i+2, ChatColor.AQUA + "" + ChatColor.BOLD + "Quality: " + i);
+					if (j == 3) {
+						if (ac.quality<i) {
+							Utils.createItem(inv, Material.RED_CONCRETE, 1, 4*9+i+2, ChatColor.AQUA + "" + ChatColor.BOLD + "Quality: " + i);
+						} else {
+							Utils.createItem(inv, Material.LIME_CONCRETE, 1, 4*9+i+2, ChatColor.AQUA + "" + ChatColor.BOLD + "Quality: " + i);
+						}
 					}
-				}
 
+				}
 			}
+
+			Utils.createItem(inv, Material.MAGENTA_GLAZED_TERRACOTTA, 1, 46, ChatColor.AQUA + "" + ChatColor.BOLD + "Other Plot",
+					Utils.chat("&fSwitches accept menu to that of plot"),
+					Utils.chat("&fthat does not include at least 1 building"),
+					Utils.chat("&fthe size of a small house."));
+			Utils.createItem(inv, Material.DIAMOND, 1, 5, ChatColor.AQUA + "" + ChatColor.BOLD + "Submit", Utils.chat("&fAccept the plot with the current settings."));
+			Utils.createItem(inv, Material.SPRUCE_DOOR, 1, 54, ChatColor.AQUA + "" + ChatColor.BOLD + "Return", Utils.chat("&fGo back to the review gui."));
+		} else if (ac.type == 2) {
+
+			int i = 1;
+			int slot = 21;
+
+			while (i <= 10) {
+
+				if (ac.points<i) {
+					Utils.createItem(inv, Material.RED_CONCRETE, 1, slot, ChatColor.AQUA + "" + ChatColor.BOLD + "Points: " + i);
+				} else {
+					Utils.createItem(inv, Material.LIME_CONCRETE, 1, slot, ChatColor.AQUA + "" + ChatColor.BOLD + "Points: " + i);
+				}
+
+				if (i == 5) {
+					slot = 30;
+					i += 1;
+				} else {
+					slot += 1;
+					i += 1;
+				}
+			}
+
+			Utils.createItem(inv, Material.MAGENTA_GLAZED_TERRACOTTA, 1, 46, ChatColor.AQUA + "" + ChatColor.BOLD + "Building Plot",
+					Utils.chat("&fSwitches accept menu to that of plot"),
+					Utils.chat("&fthat includes at least 1 building"),
+					Utils.chat("&fthe size of a small house."));
+			Utils.createItem(inv, Material.DIAMOND, 1, 5, ChatColor.AQUA + "" + ChatColor.BOLD + "Submit", Utils.chat("&fAccept the plot with the current settings."));
+			Utils.createItem(inv, Material.SPRUCE_DOOR, 1, 54, ChatColor.AQUA + "" + ChatColor.BOLD + "Return", Utils.chat("&fGo back to the review gui."));
+		} else if (ac.type == 0) {
+
+			Utils.createItem(inv, Material.BRICKS, 1, 21, ChatColor.AQUA + "" + ChatColor.BOLD + "Building Plot",
+					Utils.chat("&fThe plot includes at least 1 building"),
+					Utils.chat("&fthe size of a small house."));
+
+			Utils.createItem(inv, Material.OAK_LEAVES, 1, 25, ChatColor.AQUA + "" + ChatColor.BOLD + "Other Plot",
+					Utils.chat("&fThe plot does not include a building"),
+					Utils.chat("&fat least the size of a small house."));
+			Utils.createItem(inv, Material.SPRUCE_DOOR, 1, 54, ChatColor.AQUA + "" + ChatColor.BOLD + "Return", Utils.chat("&fGo back to the review gui."));
 		}
-
-		Utils.createItem(inv, Material.DIAMOND, 1, 5, ChatColor.AQUA + "" + ChatColor.BOLD + "Submit", Utils.chat("&fAccept the plot with the current settings."));
-		Utils.createItem(inv, Material.SPRUCE_DOOR, 1, 54, ChatColor.AQUA + "" + ChatColor.BOLD + "Return", Utils.chat("&fGo back to the review gui."));
-
 
 
 		toReturn.setContents(inv.getContents());
@@ -100,6 +143,14 @@ public class AcceptGui {
 			p.openInventory(ReviewGui.GUI(u));
 			return;
 			//Set the value in the acceptgui based on the button that is clicked.
+		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Building Plot")) {
+			ac.type = 1;
+			p.getOpenInventory().getTopInventory().setContents(AcceptGui.GUI(u).getContents());
+			p.updateInventory();
+		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Other Plot")) {
+			ac.type = 2;
+			p.getOpenInventory().getTopInventory().setContents(AcceptGui.GUI(u).getContents());
+			p.updateInventory();
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Size: 1")) {
 			ac.size = 1;
 			p.getOpenInventory().getTopInventory().setContents(AcceptGui.GUI(u).getContents());
@@ -160,6 +211,86 @@ public class AcceptGui {
 			ac.quality = 5;
 			p.getOpenInventory().getTopInventory().setContents(AcceptGui.GUI(u).getContents());
 			p.updateInventory();
+		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Points: 1")) {
+			if (ac.points == 1) {
+				ac.points = 0;
+			} else {
+				ac.points = 1;
+			}
+			p.getOpenInventory().getTopInventory().setContents(AcceptGui.GUI(u).getContents());
+			p.updateInventory();
+		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Points: 2")) {
+			if (ac.points == 2) {
+				ac.points = 0;
+			} else {
+				ac.points = 2;
+			}
+			p.getOpenInventory().getTopInventory().setContents(AcceptGui.GUI(u).getContents());
+			p.updateInventory();
+		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Points: 3")) {
+			if (ac.points == 3) {
+				ac.points = 0;
+			} else {
+				ac.points = 3;
+			}
+			p.getOpenInventory().getTopInventory().setContents(AcceptGui.GUI(u).getContents());
+			p.updateInventory();
+		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Points: 4")) {
+			if (ac.points == 4) {
+				ac.points = 0;
+			} else {
+				ac.points = 4;
+			}
+			p.getOpenInventory().getTopInventory().setContents(AcceptGui.GUI(u).getContents());
+			p.updateInventory();
+		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Points: 5")) {
+			if (ac.points == 5) {
+				ac.points = 0;
+			} else {
+				ac.points = 5;
+			}
+			p.getOpenInventory().getTopInventory().setContents(AcceptGui.GUI(u).getContents());
+			p.updateInventory();
+		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Points: 6")) {
+			if (ac.points == 6) {
+				ac.points = 0;
+			} else {
+				ac.points = 6;
+			}
+			p.getOpenInventory().getTopInventory().setContents(AcceptGui.GUI(u).getContents());
+			p.updateInventory();
+		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Points: 7")) {
+			if (ac.points == 7) {
+				ac.points = 0;
+			} else {
+				ac.points = 7;
+			}
+			p.getOpenInventory().getTopInventory().setContents(AcceptGui.GUI(u).getContents());
+			p.updateInventory();
+		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Points: 8")) {
+			if (ac.points == 8) {
+				ac.points = 0;
+			} else {
+				ac.points = 8;
+			}
+			p.getOpenInventory().getTopInventory().setContents(AcceptGui.GUI(u).getContents());
+			p.updateInventory();
+		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Points: 9")) {
+			if (ac.points == 9) {
+				ac.points = 0;
+			} else {
+				ac.points = 9;
+			}
+			p.getOpenInventory().getTopInventory().setContents(AcceptGui.GUI(u).getContents());
+			p.updateInventory();
+		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Points: 10")) {
+			if (ac.points == 10) {
+				ac.points = 0;
+			} else {
+				ac.points = 10;
+			}
+			p.getOpenInventory().getTopInventory().setContents(AcceptGui.GUI(u).getContents());
+			p.updateInventory();
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Submit")) {
 
 			PlayerData playerData = Main.getInstance().playerData;
@@ -170,14 +301,22 @@ public class AcceptGui {
 			PointsData pointsData = Main.getInstance().pointsData;
 
 			FileConfiguration config = Main.getInstance().getConfig();
-			
+
 			p.closeInventory();
-			
+
 			int i;
+			int buildingPoints;
 
 			//Calculate building points
-			int buildingPoints = config.getInt("points_base") + ac.size*config.getInt("size_multiplier") + ac.accuracy*config.getInt("accuracy_multiplier") + ac.quality*config.getInt("quality_multiplier");
-
+			if (ac.type == 1) {
+				buildingPoints = config.getInt("points_base") + ac.size*config.getInt("size_multiplier") + ac.accuracy*config.getInt("accuracy_multiplier") + ac.quality*config.getInt("quality_multiplier");
+			} else {
+				ac.size = 0;
+				ac.accuracy = 0;
+				ac.quality = 0;
+				buildingPoints = ac.points;
+			}
+			
 			if (u.review.bookMeta.hasPages()) {
 				//Get the feedback written in the book.
 				List<String> book = u.review.bookMeta.getPages();
@@ -226,10 +365,10 @@ public class AcceptGui {
 				pointsData.addPoint(u.review.plot, i, corner.getX(), corner.getZ());
 				i++;
 			}
-				
+
 			//Remove plot from worldguard
 			ClaimFunctions.removeClaim(u.review.plot);
-			
+
 			p.sendMessage(ChatColor.GREEN + "Plot " + u.review.plot + " accepted for " + buildingPoints + " building points.");
 			if (plotData.reviewExists(u)) {
 				if (plotData.reviewCount(u) == 1) {

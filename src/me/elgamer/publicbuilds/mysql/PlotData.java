@@ -117,7 +117,7 @@ public class PlotData {
 
 			ResultSet results = statement.executeQuery();
 			results.next();
-			return results.getInt("1");
+			return results.getInt(1);
 
 
 		} catch (SQLException sql) {

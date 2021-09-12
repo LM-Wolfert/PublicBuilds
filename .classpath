@@ -36,9 +36,9 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/Laurens/Downloads/FastAsyncWorldEdit-1.16-603.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Laurens/Downloads/EssentialsX.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Laurens/Downloads/HolographicDisplays.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Laurens/Desktop/BTEPoints.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Laurens/Downloads/FastAsyncWorldEdit-Bukkit-1.16-657.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -26,6 +26,8 @@ public class Review {
 		
 		this.plot = plot;
 		
+		accept = new Accept();
+		
 		book = new ItemStack(Material.WRITABLE_BOOK);
 		bookMeta = (BookMeta) book.getItemMeta();
 		bookMeta.setDisplayName(ChatColor.GREEN + "Feedback");
