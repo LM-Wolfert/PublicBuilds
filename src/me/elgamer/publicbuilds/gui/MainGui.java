@@ -18,6 +18,7 @@ import me.elgamer.publicbuilds.utils.Plots;
 import me.elgamer.publicbuilds.utils.RankValues;
 import me.elgamer.publicbuilds.utils.User;
 import me.elgamer.publicbuilds.utils.Utils;
+import me.elgamer.publicbuilds.utils.WorldGuardFunctions;
 import net.md_5.bungee.api.ChatColor;
 
 public class MainGui {
@@ -246,6 +247,7 @@ public class MainGui {
 			//If there is a plot available to review, create a new review and open the review gui.
 			if (plotData.reviewExists(u)) {
 				u.review = new Review(plotData.newReview(u));
+				WorldGuardFunctions.addMember(u.review.plot, u.uuid);
 				p.closeInventory();
 				p.openInventory(ReviewGui.GUI(u));
 				return;

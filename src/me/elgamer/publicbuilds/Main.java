@@ -610,6 +610,7 @@ public class Main extends JavaPlugin {
 			//If the player is in a review, cancel it.
 			if (u.review != null) {
 
+				WorldGuardFunctions.removeMember(u.review.plot, u.uuid);
 				plotData.setStatus(u.review.plot, "submitted");
 				u.review.editBook.unregister();
 				u.player.getInventory().setItem(4, u.review.previousItem);

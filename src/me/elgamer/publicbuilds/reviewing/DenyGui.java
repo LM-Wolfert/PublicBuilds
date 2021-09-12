@@ -95,13 +95,21 @@ public class DenyGui {
 
 			//If the feedback was stored successfully log the plot deny.
 			if (denyData.insert(u.review.plot, plotData.getOwner(u.review.plot), u.uuid, bookID, "returned")) {
+				//Add message for the plot owner.
 				messageData.addMessage(plotData.getOwner(u.review.plot), u.review.plot, "returned");
+				//Set the status back to claimed
 				plotData.setStatus(u.review.plot, "claimed");
+				//Set the last enter time to now to prevent inactivity delete.
 				plotData.setLastVisit(u.review.plot);
-				u.review.editBook.unregister();
+				//Remove the reviewer from the plot
+				WorldGuardFunctions.removeMember(u.review.plot, u.uuid);
+				//Unregister the book listener and reset the feedback book inventory slot to previous item.
+				u.review.editBook.unregister();				
 				u.player.getInventory().setItem(4, u.review.previousItem);
+				//Send feedback and clear review.
 				p.sendMessage(ChatColor.GREEN + "Plot " + u.review.plot + " denied and returned to the plot owner.");	
 				u.review = null;
+				//If another plot is submitted tell the reviewer.
 				if (plotData.reviewExists(u)) {
 					if (plotData.reviewCount(u) == 1) {
 						p.sendMessage(ChatColor.GREEN + "There is 1 plot available for review.");
@@ -147,9 +155,14 @@ public class DenyGui {
 
 			//If the feedback was stored successfully log the plot deny.
 			if (denyData.insert(u.review.plot, plotData.getOwner(u.review.plot), u.uuid, bookID, "resized")) {
+				//Add message for the plot owner.
 				messageData.addMessage(plotData.getOwner(u.review.plot), u.review.plot, "resized");
+				//Set status back to claimed
 				plotData.setStatus(u.review.plot, "claimed");
+				//Set last enter to now to prevent inactivity deletion
 				plotData.setLastVisit(u.review.plot);
+				//Remove the reviewer from the plot.
+				WorldGuardFunctions.removeMember(u.review.plot, u.uuid);
 				
 				//Attempt to resize the plot.
 				if (!(ClaimFunctions.resizePlot(u.review.plot, plotData.getOwner(u.review.plot), u.plots.vector))) {
@@ -158,11 +171,16 @@ public class DenyGui {
 					p.sendMessage(ChatColor.GREEN + "Plot resized successfully!");
 				}
 				
+				//Reset plot selection.
 				u.plots.vector.clear();
+				//Remove book listener
 				u.review.editBook.unregister();
+				//Reset inventory slot where feedback book was.
 				u.player.getInventory().setItem(4, u.review.previousItem);
+				//Send feedback to player and clear review.
 				p.sendMessage(ChatColor.GREEN + "Plot " + u.review.plot + " denied and returned to the plot owner.");	
 				u.review = null;
+				//If another plot is submitted tell the player.
 				if (plotData.reviewExists(u)) {
 					if (plotData.reviewCount(u) == 1) {
 						p.sendMessage(ChatColor.GREEN + "There is 1 plot available for review.");

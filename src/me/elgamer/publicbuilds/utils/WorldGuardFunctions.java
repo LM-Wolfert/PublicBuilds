@@ -15,6 +15,7 @@ import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.managers.RegionManager;
+import com.sk89q.worldguard.protection.managers.storage.StorageException;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedPolygonalRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
@@ -237,6 +238,69 @@ public class WorldGuardFunctions {
 		//Return true after all the check have been run.
 		return true;
 
+	}
+
+	public static boolean addMember(int plot, String uuid) {
+
+		//Get plugin instance and config.
+		Main instance = Main.getInstance();
+		FileConfiguration config = instance.getConfig();
+
+		//Get world.
+		World buildWorld = Bukkit.getServer().getWorld(config.getString("worlds.build"));
+
+		//Get instance of WorldGuard.
+		WorldGuard wg = WorldGuard.getInstance();
+
+		//Get regions.
+		RegionContainer container = wg.getPlatform().getRegionContainer();
+		RegionManager buildRegions = container.get(BukkitAdapter.adapt(buildWorld));
+
+		//Add the member to the region.
+		buildRegions.getRegion(String.valueOf(plot)).getMembers().addPlayer(UUID.fromString(uuid));
+
+		//Save the changes
+		try {
+			buildRegions.saveChanges();
+			return true;
+		} catch (StorageException e1) {
+			e1.printStackTrace();
+			return false;
+		}
+	}
+	
+	public static boolean removeMember(int plot, String uuid) {
+
+		//Get plugin instance and config.
+		Main instance = Main.getInstance();
+		FileConfiguration config = instance.getConfig();
+
+		//Get world.
+		World buildWorld = Bukkit.getServer().getWorld(config.getString("worlds.build"));
+
+		//Get instance of WorldGuard.
+		WorldGuard wg = WorldGuard.getInstance();
+
+		//Get regions.
+		RegionContainer container = wg.getPlatform().getRegionContainer();
+		RegionManager buildRegions = container.get(BukkitAdapter.adapt(buildWorld));
+
+		//Check if the member is in the region.
+		if (buildRegions.getRegion(String.valueOf(plot)).getMembers().contains(UUID.fromString(uuid))) {
+			//Remove the member to the region.
+			buildRegions.getRegion(String.valueOf(plot)).getMembers().removePlayer(UUID.fromString(uuid));
+		} else {
+			return false;
+		}
+
+		//Save the changes
+		try {
+			buildRegions.saveChanges();
+			return true;
+		} catch (StorageException e1) {
+			e1.printStackTrace();
+			return false;
+		}
 	}
 
 }
