@@ -1,5 +1,6 @@
 package me.elgamer.publicbuilds.utils;
 
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -59,7 +60,7 @@ public class User {
 		//Continue the tutorial from where they last were.
 		if (!(tutorialData.tutorialComplete(uuid))) {
 			tutorial = new Tutorial(this);
-			tutorial.continueTutorial(this);
+			Bukkit.getScheduler().runTaskLater (Main.getInstance(), () -> tutorial.continueTutorial(this), 20);
 		} else {
 			tutorial = new Tutorial(this, true);
 		}

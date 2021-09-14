@@ -165,13 +165,13 @@ public class MainGui {
 
 				if (u.tutorial.stage9Corners(u)) {
 
-					u.player.teleport(Main.spawn);
 					Utils.spawnFireWork(u.player);
 					u.player.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Tutorial Complete", "Good luck building!", 10, 100, 50);
 					u.tutorial.tutorial_type = 10;
 					u.tutorial.tutorial_stage = 0;
 					u.tutorial.first_time = false;
 					u.tutorial.complete = true;
+					u.player.teleport(Main.spawn);
 					u.plots = new Plots();
 					return;
 				} else {

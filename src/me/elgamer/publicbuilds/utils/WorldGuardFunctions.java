@@ -46,7 +46,7 @@ public class WorldGuardFunctions {
 
 		BlockVector2 bv = Point.getAveragePoint(region.getPoints());
 
-		Location l = new Location(buildWorld, bv.getX(), buildWorld.getHighestBlockYAt(bv.getX(), bv.getZ()), bv.getZ());
+		Location l = new Location(buildWorld, bv.getX(), Utils.getHighestYAt(buildWorld, bv.getX(), bv.getZ()), bv.getZ());
 
 		return(l);
 
@@ -72,7 +72,7 @@ public class WorldGuardFunctions {
 
 		BlockVector2 bv = Point.getAveragePoint(region.getPoints());
 
-		Location l = new Location(saveWorld, bv.getX(), saveWorld.getHighestBlockYAt(bv.getX(), bv.getZ()), bv.getZ());
+		Location l = new Location(saveWorld, bv.getX(), Utils.getHighestYAt(saveWorld, bv.getX(), bv.getZ()), bv.getZ());
 
 		return(l);
 

@@ -7,6 +7,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.FireworkEffect.Type;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
@@ -80,5 +81,15 @@ public class Utils {
 		f.setFireworkMeta(fm);
 		
 		
+	}
+	
+	public static int getHighestYAt(World w, int x, int z) {
+		
+		for (int i = 255; i >= 0; i--) {
+			if (w.getBlockAt(x, i, z).getType() != Material.AIR) {
+				return i+1;
+			}
+		}		
+		return 0;			
 	}
 }

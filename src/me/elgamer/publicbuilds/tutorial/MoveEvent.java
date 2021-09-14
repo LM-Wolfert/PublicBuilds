@@ -5,7 +5,7 @@ import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
-
+import org.bukkit.event.player.PlayerTeleportEvent;
 
 import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.utils.User;
@@ -76,6 +76,34 @@ public class MoveEvent implements Listener {
 			}
 			
 		} else if (u.tutorial.tutorial_type == 2) {
+			if (!(u.world.equals(Bukkit.getWorld(Main.getInstance().getConfig().getString("worlds.tutorial"))))) {
+				return;
+			}
+			if (e.getTo().distance(Main.TUTORIAL_2_START) >= 75) {
+				e.setCancelled(true);
+				u.player.sendMessage(ChatColor.RED + "You may not leave this area!");
+				return;
+			}
+			
+		} else if (u.tutorial.tutorial_type == 9) {
+			if (!(u.world.equals(Bukkit.getWorld(Main.getInstance().getConfig().getString("worlds.tutorial"))))) {
+				return;
+			}
+			if (e.getTo().distance(Main.TUTORIAL_9_START) >= 70) {
+				e.setCancelled(true);
+				u.player.sendMessage(ChatColor.RED + "You may not leave this area!");
+				return;
+			}
+			
+		}
+	}
+	
+	@EventHandler
+	public void onPlayerTeleport(PlayerTeleportEvent e) {
+		
+		User u = Main.getInstance().getUser(e.getPlayer());
+			
+		if (u.tutorial.tutorial_type == 2) {
 			if (!(u.world.equals(Bukkit.getWorld(Main.getInstance().getConfig().getString("worlds.tutorial"))))) {
 				return;
 			}
