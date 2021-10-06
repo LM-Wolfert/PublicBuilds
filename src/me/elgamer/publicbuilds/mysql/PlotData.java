@@ -300,7 +300,7 @@ public class PlotData {
 
 		//Get all plots that are owned by players that are inactive, only active plots will be counted, not submitted ones.
 		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
-				"SELECT id FROM plot_data WHERE last_enter = ? AND status = ?;"
+				"SELECT id FROM plot_data WHERE last_enter < ? AND status = ?;"
 				)){
 			statement.setLong(1, time);
 			statement.setString(2, "claimed");
