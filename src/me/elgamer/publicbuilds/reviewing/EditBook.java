@@ -21,6 +21,10 @@ public class EditBook implements Listener {
 	@EventHandler
 	public void onBookEdit(PlayerEditBookEvent e) {
 		
+		if (Main.getInstance().getUser(e.getPlayer()).review.plot != review.plot) {
+			return;
+		}
+		
 		if (e.isSigning()) {
 			e.getPlayer().closeInventory();
 			e.getPlayer().openInventory(ReviewGui.GUI(Main.getInstance().getUser(e.getPlayer())));

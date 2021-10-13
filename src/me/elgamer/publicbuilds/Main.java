@@ -591,6 +591,12 @@ public class Main extends JavaPlugin {
 			public void run() {
 
 				updateHologram();
+				try {
+					testDataSource(dataSource);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
 			}
 		}, 0L, 1200L);
