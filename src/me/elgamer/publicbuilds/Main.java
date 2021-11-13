@@ -625,7 +625,7 @@ public class Main extends JavaPlugin {
 			}
 		}
 
-		Bukkit.getConsoleSender().sendMessage("Disabled publicbuilds");
+		Bukkit.getConsoleSender().sendMessage("Disabled PublicBuilds");
 	}
 
 	//Creates the mysql connection.

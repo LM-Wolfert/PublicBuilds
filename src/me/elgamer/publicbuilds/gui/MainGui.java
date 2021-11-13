@@ -16,6 +16,7 @@ import me.elgamer.publicbuilds.tutorial.TutorialGui;
 import me.elgamer.publicbuilds.utils.ClaimFunctions;
 import me.elgamer.publicbuilds.utils.Plots;
 import me.elgamer.publicbuilds.utils.RankValues;
+import me.elgamer.publicbuilds.utils.Ranks;
 import me.elgamer.publicbuilds.utils.User;
 import me.elgamer.publicbuilds.utils.Utils;
 import me.elgamer.publicbuilds.utils.WorldGuardFunctions;
@@ -171,6 +172,7 @@ public class MainGui {
 					u.tutorial.tutorial_stage = 0;
 					u.tutorial.first_time = false;
 					u.tutorial.complete = true;
+					Ranks.applicant(u);
 					u.player.teleport(Main.spawn);
 					u.plots = new Plots();
 					return;

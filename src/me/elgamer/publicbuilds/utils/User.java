@@ -63,6 +63,7 @@ public class User {
 			Bukkit.getScheduler().runTaskLater (Main.getInstance(), () -> tutorial.continueTutorial(this), 20);
 		} else {
 			tutorial = new Tutorial(this, true);
+			Ranks.applicant(this);
 		}
 		
 		//Create plots map.
@@ -83,6 +84,8 @@ public class User {
 			role = "jrbuilder";
 		} else if (player.hasPermission("group.apprentice")) {
 			role = "apprentice";
+		} else if (player.hasPermission("group.applicant")) {
+			role = "applicant";
 		} else {
 			role = "guest";
 		}

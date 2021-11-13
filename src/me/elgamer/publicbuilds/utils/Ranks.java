@@ -13,15 +13,15 @@ public class Ranks {
 	public static void checkRankup(User u) {
 
 		PlayerData playerData = Main.getInstance().playerData;
-		
+
 		int points = playerData.getPoints(u.uuid);
 		FileConfiguration config = Main.getInstance().getConfig();
-		
+
 		if (points >= config.getInt("rankup.builder") && u.role.equals("jrbuilder")) {
 			u.role = "builder";
 		} else if (points >= config.getInt("rankup.jrbuilder") && u.role.equals("apprentice")) {
 			u.role = "jrbuilder";
-		} else if (points >= config.getInt("rankup.apprentice") && u.role.equals("guest")) {
+		} else if (points >= config.getInt("rankup.apprentice") && u.role.equals("applicant")) {
 			u.role = "apprentice";
 		} else {
 			return;
@@ -29,12 +29,33 @@ public class Ranks {
 
 		//Promote the player
 		ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
-		
+
 		String command = "lp user " + u.name + " promote builder";
 		Bukkit.dispatchCommand(console, command);
 		Bukkit.broadcastMessage(ChatColor.GREEN + u.name + " has been promoted to " + u.role);
 		playerData.updateRole(u.uuid, u.role);
 		checkRankup(u);
+	}
+
+	public static void applicant(User u) {
+
+		PlayerData playerData = Main.getInstance().playerData;
+		
+		if (u.role.equals("guest")) {
+			u.role = "applicant";
+		} else {
+			return;
+		}
+
+		//Promote the player
+		ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
+
+		String command = "lp user " + u.name + " promote builder";
+		Bukkit.dispatchCommand(console, command);
+		Bukkit.broadcastMessage(ChatColor.GREEN + u.name + " has been promoted to " + u.role);
+		playerData.updateRole(u.uuid, u.role);
+		checkRankup(u);
+
 	}
 
 }
