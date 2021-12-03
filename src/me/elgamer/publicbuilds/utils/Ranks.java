@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import me.elgamer.UKnetUtilities.sql.Announcements;
 import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.mysql.PlayerData;
 import net.md_5.bungee.api.ChatColor;
@@ -52,7 +53,15 @@ public class Ranks {
 
 		String command = "lp user " + u.name + " promote builder";
 		Bukkit.dispatchCommand(console, command);
-		Bukkit.broadcastMessage(ChatColor.GREEN + u.name + " has been promoted to " + u.role);
+		
+		//Create a new announcement using the utils plugin
+		//If the utils plugins is disabled in config then it'll default to console.
+		if (Main.getInstance().getConfig().getBoolean("UKUtils")) {
+			Announcements.newAnnouncement(u.name + " has been promoted to " + u.role, "GREEN");
+		} else {
+			Bukkit.broadcastMessage(ChatColor.GREEN + u.name + " has been promoted to " + u.role);
+		}
+		
 		playerData.updateRole(u.uuid, u.role);
 		checkRankup(u);
 
