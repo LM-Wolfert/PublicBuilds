@@ -122,6 +122,7 @@ public class MainGui {
 			p.openInventory(LocationGUI.GUI(u));
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Switch Server")) {
 			p.closeInventory();
+			u.previousGui = "main";
 			p.openInventory(SwitchServerGUI.GUI(u));
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Spawn")) {
 			if (u.tutorial.tutorial_type <= 9 && u.tutorial.first_time) {

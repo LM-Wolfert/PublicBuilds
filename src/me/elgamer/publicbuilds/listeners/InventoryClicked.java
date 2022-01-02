@@ -141,11 +141,11 @@ public class InventoryClicked implements Listener {
 			u.player.closeInventory();
 			u.player.openInventory(MainGui.GUI(u));
 		}
-		else if (e.getCurrentItem().equals(Main.tutorialSkip)) {
+		else if (e.getCurrentItem().equals(Main.tutorialGui)) {
 			e.setCancelled(true);
 			u.player.closeInventory();
-			u.tutorial.skipStage(u);
-			return;
+			u.previousGui = "none";
+			u.player.openInventory(TutorialGui.GUI(u));
 		}
 		else {
 			

@@ -36,6 +36,8 @@ public class User {
 	
 	public Tutorial tutorial;
 	
+	public String previousGui;
+	
 	TutorialData tutorialData;
 	PlayerData playerData;
 	

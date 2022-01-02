@@ -55,6 +55,7 @@ import me.elgamer.publicbuilds.gui.PlotInfo;
 import me.elgamer.publicbuilds.gui.SwitchServerGUI;
 import me.elgamer.publicbuilds.listeners.ClaimEnter;
 import me.elgamer.publicbuilds.listeners.InventoryClicked;
+import me.elgamer.publicbuilds.listeners.ItemSpawn;
 import me.elgamer.publicbuilds.listeners.JoinServer;
 import me.elgamer.publicbuilds.listeners.PlayerInteract;
 import me.elgamer.publicbuilds.listeners.QuitServer;
@@ -126,7 +127,7 @@ public class Main extends JavaPlugin {
 
 	public static ItemStack selectionTool;
 	public static ItemStack gui;
-	public static ItemStack tutorialSkip;
+	public static ItemStack tutorialGui;
 
 	int interval;
 
@@ -199,10 +200,10 @@ public class Main extends JavaPlugin {
 		gui.setItemMeta(meta2);
 
 		//Create tutorial type skip item				
-		tutorialSkip = new ItemStack(Material.MAGENTA_GLAZED_TERRACOTTA);
+		tutorialGui = new ItemStack(Material.WRITABLE_BOOK);
 		ItemMeta meta3 = gui.getItemMeta();
-		meta3.setDisplayName(ChatColor.AQUA + "" + ChatColor.BOLD + "Skip Tutorial Stage");
-		tutorialSkip.setItemMeta(meta3);
+		meta3.setDisplayName(ChatColor.AQUA + "" + ChatColor.BOLD + "Tutorial Menu");
+		tutorialGui.setItemMeta(meta3);
 
 		//Listeners
 		new JoinServer(this);
@@ -210,6 +211,8 @@ public class Main extends JavaPlugin {
 		new InventoryClicked(this);
 		new ClaimEnter(this, plotData, playerData);
 		new PlayerInteract(this, selectionTool);
+		
+		new ItemSpawn(this);
 
 		//Tutorial listeners
 		new CommandListener(this);
@@ -262,7 +265,7 @@ public class Main extends JavaPlugin {
 				config.getDouble("location.monkspath.map.y"),
 				config.getDouble("location.monkspath.map.z"),
 				180f, 45f);
-		
+
 		//Setup Tutorial Constants
 		new TutorialConstants(config);
 
@@ -434,7 +437,6 @@ public class Main extends JavaPlugin {
 
 					if (!(u.slot9 == null)) {
 						if (u.slot9.equals(gui)) {
-
 						} else {
 							u.player.getInventory().setItem(8, gui);
 						}
@@ -442,22 +444,20 @@ public class Main extends JavaPlugin {
 						u.player.getInventory().setItem(8, gui);
 					}
 
-					if (u.tutorial.first_time && u.tutorial.complete==false && u.tutorial.tutorial_type <= 8 && u.tutorial.tutorial_type >= 4) {
+					if (u.tutorial.complete) {
 						if (!(u.slot5 == null)) {
-							if (u.slot5.equals(tutorialSkip)) {
-
+							if (u.slot5.equals(tutorialGui)) {
+								u.player.getInventory().setItem(4, null);
+							}
+						}
+					} else {
+						if (!(u.slot5 == null)) {
+							if (u.slot5.equals(tutorialGui)) {
 							} else {
-								u.player.getInventory().setItem(4, tutorialSkip);
+								u.player.getInventory().setItem(4, tutorialGui);
 							}
 						} else {
-							u.player.getInventory().setItem(4, tutorialSkip);
-						}	
-					} else if (!(u.tutorial.tutorial_type >= 4 && u.tutorial.tutorial_type <= 8)) {
-						if (!(u.slot5 == null)) {
-							if (u.slot5.equals(tutorialSkip)) {
-								u.player.getInventory().setItem(4, null);
-
-							}
+							u.player.getInventory().setItem(8, tutorialGui);
 						}
 					}
 				}

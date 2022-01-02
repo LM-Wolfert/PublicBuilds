@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.gui.MainGui;
 import me.elgamer.publicbuilds.tutorial.Tutorial;
+import me.elgamer.publicbuilds.tutorial.TutorialGui;
 import me.elgamer.publicbuilds.utils.Plots;
 import me.elgamer.publicbuilds.utils.User;
 import me.elgamer.publicbuilds.utils.Utils;
@@ -41,10 +42,11 @@ public class PlayerInteract implements Listener {
 			e.setCancelled(true);
 			e.getPlayer().closeInventory();
 			e.getPlayer().openInventory(MainGui.GUI(u));
-		} else if (e.getPlayer().getInventory().getItemInMainHand().equals(Main.tutorialSkip)) {
+		} else if (e.getPlayer().getInventory().getItemInMainHand().equals(Main.tutorialGui)) {
 			e.setCancelled(true);
-			u.tutorial.skipStage(u);
-			return;
+			u.player.closeInventory();
+			u.previousGui = "none";
+			u.player.openInventory(TutorialGui.GUI(u));
 		}
 		
 		if (e.getPlayer().getInventory().getItemInMainHand().equals(Main.selectionTool)) {
@@ -92,7 +94,7 @@ public class PlayerInteract implements Listener {
 	@EventHandler
 	public void swapHands(PlayerSwapHandItemsEvent e) {
 		
-		if (e.getOffHandItem().equals(Main.gui)) {
+		if (e.getOffHandItem().equals(Main.gui) || e.getOffHandItem().equals(Main.tutorialGui)) {
 			e.setCancelled(true);
 		}
 		
@@ -101,7 +103,7 @@ public class PlayerInteract implements Listener {
 	@EventHandler
 	public void dropItem(PlayerDropItemEvent e) {
 		
-		if (e.getItemDrop().getItemStack().equals(Main.gui)) {
+		if (e.getItemDrop().getItemStack().equals(Main.gui) || e.getItemDrop().getItemStack().equals(Main.tutorialGui)) {
 			e.setCancelled(true);
 		}
 		

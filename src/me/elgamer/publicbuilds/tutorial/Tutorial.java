@@ -126,8 +126,7 @@ public class Tutorial {
 		corner_2 = false;
 		corner_3 = false;
 		corner_4 = false;
-		corner_sum = 0;
-		
+		corner_sum = 0;		
 		
 	}
 	
