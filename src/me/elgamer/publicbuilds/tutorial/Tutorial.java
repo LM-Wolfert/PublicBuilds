@@ -53,12 +53,12 @@ public class Tutorial {
 	public void continueTutorial(User u) {
 
 		if (u.tutorial.tutorial_type == 1) {
-			u.player.teleport(Main.TUTORIAL_1_START);
+			u.player.teleport(TutorialConstants.TUTORIAL_1_TELEPORT);
 		} else if (u.tutorial.tutorial_type == 2) {
-			u.player.teleport(Main.TUTORIAL_2_START);
+			u.player.teleport(TutorialConstants.TUTORIAL_2_START);
 			startStage2(u);
 		} else if (u.tutorial.tutorial_type == 3) {
-			u.player.teleport(Main.TUTORIAL_3_START);
+			u.player.teleport(TutorialConstants.TUTORIAL_3_START);
 		} else if (u.tutorial.tutorial_type == 4) {
 			
 		} else if (u.tutorial.tutorial_type == 5) {
@@ -70,7 +70,7 @@ public class Tutorial {
 		} else if (u.tutorial.tutorial_type == 8) {
 			
 		} else if (u.tutorial.tutorial_type == 9) {
-			u.player.teleport(Main.TUTORIAL_9_START);
+			u.player.teleport(TutorialConstants.TUTORIAL_9_START);
 			startStage9(u);
 		} 
 		
@@ -121,13 +121,19 @@ public class Tutorial {
 */
 	public void startStage2(User u) {
 
-		u.player.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Tpll Tutorial", "/tpll is the most important command in this project", 10, 75, 10);
+		u.player.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Tpll Tutorial", "Good luck, this tutorial has 3 steps.", 10, 75, 10);
 		corner_1 = false;
 		corner_2 = false;
 		corner_3 = false;
 		corner_4 = false;
 		corner_sum = 0;
 		
+		
+	}
+	
+	public void continueStage2(User u) {
+		
+		u.player.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Outlines", "Thaaaawfawfwfatfor step is to create building outlines.", 10, 75, 10);
 		
 	}
 	
@@ -140,7 +146,7 @@ public class Tutorial {
 		
 		Location l = new Location(world, coords[0], 143, coords[1]);
 		
-		if (l.distance(Main.TUTORIAL_2_CORNER_1) <= 1) {
+		if (l.distance(TutorialConstants.TUTORIAL_2_CORNER_1) <= 1) {
 			if (corner_1) {
 				return (ChatColor.RED + "You have already teleported to this corner, you have " + (4-corner_sum) + " corners left.");
 			} else {
@@ -148,7 +154,7 @@ public class Tutorial {
 				corner_sum += 1;
 				return (ChatColor.GREEN + "Correct, you now have " + (4-corner_sum) + " corners left.");
 			}
-		} else if (l.distance(Main.TUTORIAL_2_CORNER_2) <= 1) {
+		} else if (l.distance(TutorialConstants.TUTORIAL_2_CORNER_2) <= 1) {
 			if (corner_2) {
 				return (ChatColor.RED + "You have already teleported to this corner, you have " + (4-corner_sum) + " corners left.");
 			} else {
@@ -156,7 +162,7 @@ public class Tutorial {
 				corner_sum += 1;
 				return (ChatColor.GREEN + "Correct, you now have " + (4-corner_sum) + " corners left.");
 			}
-		} else if (l.distance(Main.TUTORIAL_2_CORNER_3) <= 1) {
+		} else if (l.distance(TutorialConstants.TUTORIAL_2_CORNER_3) <= 1) {
 			if (corner_3) {
 				return (ChatColor.RED + "You have already teleported to this corner, you have " + (4-corner_sum) + " corners left.");
 			} else {
@@ -164,7 +170,7 @@ public class Tutorial {
 				corner_sum += 1;
 				return (ChatColor.GREEN + "Correct, you now have " + (4-corner_sum) + " corners left.");
 			}
-		} else if (l.distance(Main.TUTORIAL_2_CORNER_4) <= 1) {
+		} else if (l.distance(TutorialConstants.TUTORIAL_2_CORNER_4) <= 1) {
 			if (corner_4) {
 				return (ChatColor.RED + "You have already teleported to this corner, you have " + (4-corner_sum) + " corners left.");
 			} else {
