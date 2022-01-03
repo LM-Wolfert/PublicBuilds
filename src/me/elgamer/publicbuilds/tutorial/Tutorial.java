@@ -5,6 +5,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import com.sk89q.worldedit.math.BlockVector2;
 import com.sk89q.worldguard.protection.regions.ProtectedPolygonalRegion;
 
@@ -20,7 +21,7 @@ public class Tutorial {
 
 	public boolean first_time;
 	public boolean complete;
-	
+
 	public boolean corner_1;
 	public boolean corner_2;
 	public boolean corner_3;
@@ -30,7 +31,7 @@ public class Tutorial {
 	public Tutorial(User u) {
 
 		TutorialData tutorialData = Main.getInstance().tutorialData;
-		
+
 		tutorial_type = tutorialData.getType(u.uuid);
 		tutorial_stage = tutorialData.getStage(u.uuid);
 
@@ -48,35 +49,40 @@ public class Tutorial {
 		this.complete = complete;
 	}
 
-
-
 	public void continueTutorial(User u) {
 
 		if (u.tutorial.tutorial_type == 1) {
 			u.player.teleport(TutorialConstants.TUTORIAL_1_TELEPORT);
 		} else if (u.tutorial.tutorial_type == 2) {
-			u.player.teleport(TutorialConstants.TUTORIAL_2_START);
-			startStage2(u);
+
+			if (u.tutorial.tutorial_stage == 1) {						
+				startStage2_1(u);
+			} else if (u.tutorial.tutorial_stage == 2) {
+				startStage2_2(u);
+			} else if (u.tutorial.tutorial_stage == 3) {
+				startStage2_3(u);
+			}
+			
 		} else if (u.tutorial.tutorial_type == 3) {
 			u.player.teleport(TutorialConstants.TUTORIAL_3_START);
 		} else if (u.tutorial.tutorial_type == 4) {
-			
+
 		} else if (u.tutorial.tutorial_type == 5) {
-			
+
 		} else if (u.tutorial.tutorial_type == 6) {
-			
+
 		} else if (u.tutorial.tutorial_type == 7) {
-			
+
 		} else if (u.tutorial.tutorial_type == 8) {
-			
+
 		} else if (u.tutorial.tutorial_type == 9) {
 			u.player.teleport(TutorialConstants.TUTORIAL_9_START);
 			startStage9(u);
 		} 
-		
+
 
 	}
-	
+
 	public void skipStage(User u) {
 		if (u.tutorial.tutorial_type == 1) {
 		} else if (u.tutorial.tutorial_type == 2) {
@@ -85,15 +91,15 @@ public class Tutorial {
 			u.tutorial.continueTutorial(u);
 		} else if (u.tutorial.tutorial_type == 3) {
 		} else if (u.tutorial.tutorial_type == 4) {
-			
+
 		} else if (u.tutorial.tutorial_type == 5) {
-			
+
 		} else if (u.tutorial.tutorial_type == 6) {
-			
+
 		} else if (u.tutorial.tutorial_type == 7) {
-			
+
 		} else if (u.tutorial.tutorial_type == 8) {
-			
+
 		} else if (u.tutorial.tutorial_type == 9) {
 			u.player.teleport(Main.spawn);
 			u.tutorial.tutorial_type = 10;
@@ -118,33 +124,42 @@ public class Tutorial {
 		p.sendMessage(Utils.chat("&fTry it out and continue the tutorial."));
 
 	}
-*/
-	public void startStage2(User u) {
+	 */
+	public void startStage2_1(User u) {
+		
+		u.player.teleport(TutorialConstants.TUTORIAL_2_START);
+		u.player.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Tpll Tutorial", "Good luck, this tutorial has 3 steps.", 10, 75, 10);	
 
-		u.player.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Tpll Tutorial", "Good luck, this tutorial has 3 steps.", 10, 75, 10);
+	}
+	
+	public void startStage2_2(User u) {
+		
+		u.player.teleport(TutorialConstants.TUTORIAL_2_START);
 		corner_1 = false;
 		corner_2 = false;
 		corner_3 = false;
 		corner_4 = false;
-		corner_sum = 0;		
+		corner_sum = 0;	
+		
+		
 		
 	}
-	
-	public void continueStage2(User u) {
-		
-		u.player.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Outlines", "Thaaaawfawfwfatfor step is to create building outlines.", 10, 75, 10);
-		
+
+	public void startStage2_3(User u) {
+
+		u.player.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Outlines", "Time to create building outlines.", 10, 75, 10);
+
 	}
-	
+
 	public void startStage9(User u) {
-		
+
 		u.player.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Plot Tutorial", "Before you can build, you need to create plot", 10, 75, 10);
 	}
-	
+
 	public String stage2Corner(double[] coords, World world) {
-		
+
 		Location l = new Location(world, coords[0], 143, coords[1]);
-		
+
 		if (l.distance(TutorialConstants.TUTORIAL_2_CORNER_1) <= 1) {
 			if (corner_1) {
 				return (ChatColor.RED + "You have already teleported to this corner, you have " + (4-corner_sum) + " corners left.");
@@ -178,30 +193,30 @@ public class Tutorial {
 				return (ChatColor.GREEN + "Correct, you now have " + (4-corner_sum) + " corners left.");
 			}
 		}
-		
+
 		return (ChatColor.RED + "This is not close enough to the corner of the building.");
-		
-		
+
+
 	}
-	
+
 	public boolean stage9Corners(User u) {
 		//Checks whether the corners the player has set include all 4 corners of the minimum plot size.
-				FileConfiguration config = Main.getInstance().getConfig();
-				ProtectedPolygonalRegion region = new ProtectedPolygonalRegion("testregion", u.plots.vector, 1, 256);
+		FileConfiguration config = Main.getInstance().getConfig();
+		ProtectedPolygonalRegion region = new ProtectedPolygonalRegion("testregion", u.plots.vector, 1, 256);
 
-				BlockVector2 pos1 = BlockVector2.at(config.getInt("tutorial_9.corner_1.x"), config.getInt("tutorial_9.corner_1.z"));
-				BlockVector2 pos2 = BlockVector2.at(config.getInt("tutorial_9.corner_2.x"), config.getInt("tutorial_9.corner_2.z"));
-				BlockVector2 pos3 = BlockVector2.at(config.getInt("tutorial_9.corner_3.x"), config.getInt("tutorial_9.corner_3.z"));
-				BlockVector2 pos4 = BlockVector2.at(config.getInt("tutorial_9.corner_4.x"), config.getInt("tutorial_9.corner_4.z"));
+		BlockVector2 pos1 = BlockVector2.at(config.getInt("tutorial_9.corner_1.x"), config.getInt("tutorial_9.corner_1.z"));
+		BlockVector2 pos2 = BlockVector2.at(config.getInt("tutorial_9.corner_2.x"), config.getInt("tutorial_9.corner_2.z"));
+		BlockVector2 pos3 = BlockVector2.at(config.getInt("tutorial_9.corner_3.x"), config.getInt("tutorial_9.corner_3.z"));
+		BlockVector2 pos4 = BlockVector2.at(config.getInt("tutorial_9.corner_4.x"), config.getInt("tutorial_9.corner_4.z"));
 
-				if (region.contains(pos1) && region.contains(pos2) && region.contains(pos3) && region.contains(pos4)) {
-					return true;
-				} else {
-					return false;
-				}
-		
+		if (region.contains(pos1) && region.contains(pos2) && region.contains(pos3) && region.contains(pos4)) {
+			return true;
+		} else {
+			return false;
+		}
+
 	}
-/*
+	/*
 	public static void stage3(User u) {
 
 		Player p = u.player;
@@ -249,7 +264,7 @@ public class Tutorial {
 		u.tutorialStage = 7;
 
 	}
-	*/
+	 */
 
 	public static boolean containsCorners(User u) {
 

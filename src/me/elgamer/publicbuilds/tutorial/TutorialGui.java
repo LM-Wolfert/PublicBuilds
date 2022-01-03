@@ -31,6 +31,30 @@ public class TutorialGui {
 
 		inv.clear();
 
+		if (u.tutorial.tutorial_type == 2) {
+
+			if (u.tutorial.tutorial_stage == 1) {
+				Utils.createItem(inv, Material.BOOK, 1, inv_rows, ChatColor.AQUA + "" + ChatColor.BOLD + "Tutorial Step Info",
+						Utils.chat("&fTeleport to a tutorial on the server."));
+			} else if (u.tutorial.tutorial_stage == 2) {
+				Utils.createItem(inv, Material.BOOK, 1, inv_rows, ChatColor.AQUA + "" + ChatColor.BOLD + "Tutorial Step Info",
+						Utils.chat("&fTeleport to a tutorial on the server."));
+			} else if (u.tutorial.tutorial_stage == 3) {
+				Utils.createItem(inv, Material.BOOK, 1, inv_rows, ChatColor.AQUA + "" + ChatColor.BOLD + "Tutorial Step Info",
+						Utils.chat("&fTeleport to a tutorial on the server."));
+			}
+
+		}
+
+		if (u.tutorial.tutorial_stage >= 2) {
+			Utils.createItem(inv, Material.BOOK, 1, inv_rows, ChatColor.AQUA + "" + ChatColor.BOLD + "Redo Previous Step",
+					Utils.chat("&fWill take you back to the previous step of this tutorial."));
+		} 
+		if (u.tutorial.tutorial_type > 1) {
+			Utils.createItem(inv, Material.BOOK, 1, inv_rows, ChatColor.AQUA + "" + ChatColor.BOLD + "Previous Tutorial",
+					Utils.chat("&fWill take you back to the previous tutorial, this includes lobbies."));
+		}
+
 		Utils.createItem(inv, Material.WOODEN_AXE, 1, inv_rows, ChatColor.AQUA + "" + ChatColor.BOLD + "Tutorials",
 				Utils.chat("&fTeleport to a tutorial on the server."));
 
@@ -38,8 +62,7 @@ public class TutorialGui {
 				Utils.chat("&fWatch a tutorial video to help progress."),
 				Utils.chat("&fIncludes tutorial walkthroughs and building guides."));
 
-		Utils.createItem(inv, Material.ENDER_EYE, 1, inv_rows, ChatColor.AQUA + "" + ChatColor.BOLD + "Switch Server",
-				Utils.chat("&fSwitch to another server."));
+		Utils.createItem(inv, Material.ENDER_EYE, 1, inv_rows, ChatColor.AQUA + "" + ChatColor.BOLD + "Switch Server");
 
 		if (u.previousGui.equals("main")) {
 			Utils.createItem(inv, Material.SPRUCE_DOOR, 1, 27, ChatColor.AQUA + "" + ChatColor.BOLD + "Return", 
@@ -67,6 +90,19 @@ public class TutorialGui {
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Return")) {
 			p.closeInventory();
 			p.openInventory(MainGui.GUI(u));
+		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Redo Previous Step")) {
+			p.closeInventory();
+
+			u.tutorial.tutorial_stage -= 1;
+			
+			u.tutorial.continueTutorial(u);
+		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Previous Tutorial")) {
+			p.closeInventory();
+
+			u.tutorial.tutorial_type -= 1;
+			u.tutorial.tutorial_stage = 1;
+			
+			u.tutorial.continueTutorial(u);
 		}
 	}
 }

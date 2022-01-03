@@ -31,6 +31,7 @@ public class CommandListener implements Listener {
 			if (u.tutorial.tutorial_stage == 1 && e.getMessage().startsWith("/ll")) {
 				u.tutorial.tutorial_stage = 2;
 				u.player.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Step 1 Complete", "/tpll is next, the most useful command.", 10, 75, 10);
+				u.tutorial.continueTutorial(u);
 				return;
 			} else if (u.tutorial.tutorial_stage == 2 && e.getMessage().startsWith("/tpll")) {
 				
@@ -90,7 +91,7 @@ public class CommandListener implements Listener {
 					u.tutorial.tutorial_stage = 3;
 					u.player.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Step 2 Complete", "Well Done, just one more.", 10, 75, 10);
 					u.tutorial.corner_sum = 0;
-					u.tutorial.continueStage2(u);
+					u.tutorial.continueTutorial(u);
 					return;
 					
 				}

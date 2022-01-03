@@ -98,4 +98,22 @@ CREATE TABLE IF NOT EXISTS points_data
 	z			INT				NOT NULL,
 	PRIMARY KEY (id)
 );
-	
+
+CREATE TABLE IF NOT EXISTS hologram_data
+(
+	name			VARCHAR(16)			NOT NULL,
+	x			DOUBLE				NOT NULL,
+	y			DOUBLE				NOT NULL,
+	z			DOUBLE				NOT NULL,
+	visible			TINYINT(1)			NOT NULL,
+	PRIMARY KEY(name)
+);
+
+CREATE TABLE IF NOT EXISTS hologram_text
+(
+	id			INT				AUTO_INCREMENT,
+	hologram_name		VARCHAR(16)			NOT NULL,
+	line			INT				NOT NULL,
+	text			TEXT				NOT NULL,
+	PRIMARY KEY(id)
+);

@@ -43,6 +43,7 @@ import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import me.elgamer.publicbuilds.commands.BuildingPoints;
 //import me.elgamer.publicbuilds.commands.Corner;
 import me.elgamer.publicbuilds.commands.CreateArea;
+import me.elgamer.publicbuilds.commands.CustomHolo;
 import me.elgamer.publicbuilds.commands.OpenGui;
 //import me.elgamer.publicbuilds.commands.SkipTutorial;
 import me.elgamer.publicbuilds.commands.Spawn;
@@ -63,6 +64,8 @@ import me.elgamer.publicbuilds.mysql.AcceptData;
 import me.elgamer.publicbuilds.mysql.AreaData;
 import me.elgamer.publicbuilds.mysql.BookData;
 import me.elgamer.publicbuilds.mysql.DenyData;
+import me.elgamer.publicbuilds.mysql.HologramData;
+import me.elgamer.publicbuilds.mysql.HologramText;
 import me.elgamer.publicbuilds.mysql.MessageData;
 import me.elgamer.publicbuilds.mysql.PlayerData;
 import me.elgamer.publicbuilds.mysql.PlotData;
@@ -103,6 +106,8 @@ public class Main extends JavaPlugin {
 	public BookData bookData;
 	public MessageData messageData;
 	public PointsData pointsData;
+	public HologramData hologramData;
+	public HologramText hologramText;
 
 
 	//Other
@@ -174,6 +179,8 @@ public class Main extends JavaPlugin {
 			bookData = new BookData(dataSource);
 			messageData = new MessageData(dataSource);
 			pointsData = new PointsData(dataSource);
+			hologramData = new HologramData(dataSource);
+			hologramText = new HologramText(dataSource);
 
 		} catch (SQLException | IOException e) {
 			// TODO Auto-generated catch block
@@ -230,6 +237,8 @@ public class Main extends JavaPlugin {
 		//getCommand("apply").setExecutor(new Apply());
 		//getCommand("converttutorial").setExecutor(new ConvertTutorial());
 		getCommand("tutorialhelp").setExecutor(new TutorialHelp());
+		
+		getCommand("customholo").setExecutor(new CustomHolo(hologramData, hologramText));
 
 		//Tab Completer
 		getCommand("tutorial").setTabCompleter(new TutorialTabCompleter());

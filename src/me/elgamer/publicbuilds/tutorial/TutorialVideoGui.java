@@ -30,20 +30,7 @@ public class TutorialVideoGui {
 		Inventory toReturn = Bukkit.createInventory(null, inv_rows, inventory_name);
 
 		inv.clear();
-
-		Utils.createItem(inv, Material.WOODEN_AXE, 1, inv_rows, ChatColor.AQUA + "" + ChatColor.BOLD + "Tutorials",
-				Utils.chat("&fTeleport to a tutorial on the server."));
-
-		Utils.createItem(inv, Material.LECTERN, 1, inv_rows, ChatColor.AQUA + "" + ChatColor.BOLD + "Videos",
-				Utils.chat("&fWatch a tutorial video to help progress."),
-				Utils.chat("&fIncludes tutorial walkthroughs and building guides."));
-
-		Utils.createItem(inv, Material.ENDER_EYE, 1, inv_rows, ChatColor.AQUA + "" + ChatColor.BOLD + "Switch Server");
-
-		if (u.previousGui.equals("main")) {
-			Utils.createItem(inv, Material.SPRUCE_DOOR, 1, 27, ChatColor.AQUA + "" + ChatColor.BOLD + "Return", 
-					Utils.chat("&fGo back to the building menu."));	
-		}
+		
 
 
 
@@ -67,7 +54,7 @@ public class TutorialVideoGui {
 			p.openInventory(TutorialVideoGui.GUI(u));
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Return")) {
 			p.closeInventory();
-			p.openInventory(MainGui.GUI(u));
+			p.openInventory(TutorialGui.GUI(u));
 		}
 	}
 
