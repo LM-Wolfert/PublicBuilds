@@ -7,8 +7,6 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
-import me.elgamer.publicbuilds.utils.Time;
-
 public class HologramText {
 	
 	DataSource dataSource;
@@ -23,20 +21,14 @@ public class HologramText {
 		return dataSource.getConnection();
 	}
 
-	public boolean insert(int plot, String uuid, String reviewer, int feedback, int size, int accuracy, int quality, int points) {
+	public boolean addLine(String name, int line, String text) {
 
 		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
-				"INSERT INTO accept_data(plot, uuid, reviewer, feedback, size, accuracy, quality, points, time) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?);"
+				"INSERT INTO hologram_text(hologram_name, line, text) VALUES(?, ?, ?);"
 				)){
-			statement.setInt(1, plot);
-			statement.setString(2, uuid);
-			statement.setString(3, reviewer);
-			statement.setInt(4, feedback);
-			statement.setInt(5, size);
-			statement.setInt(6, accuracy);
-			statement.setInt(7, quality);
-			statement.setInt(8, points);
-			statement.setLong(9, Time.currentTime());
+			statement.setString(1, name);
+			statement.setInt(2, line);
+			statement.setString(3, text);
 			statement.executeUpdate();
 
 			return true;
@@ -48,19 +40,22 @@ public class HologramText {
 
 	}
 
-	public boolean hasEntry(String uuid) {
+	public int lines(String name) {
 
 		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
-				"SELECT plot FROM accept_data WHERE uuid = ?;"
+				"SELECT COUNT(id) FROM hologram_text WHERE name = ?;"
 				)){
-			statement.setString(1, uuid);
+			statement.setString(1, name);
 			ResultSet results = statement.executeQuery();
-
-			return (results.next());
+			if (results.next()) {
+				return (results.getInt(1));
+			} else {
+				return 0;
+			}
 
 		} catch (SQLException sql) {
 			sql.printStackTrace();
-			return false;
+			return 0;
 		}
 	}
 

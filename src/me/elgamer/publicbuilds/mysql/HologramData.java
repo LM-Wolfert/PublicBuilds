@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
-import me.elgamer.publicbuilds.utils.Time;
+import org.bukkit.Location;
 
 public class HologramData {
 	
@@ -23,20 +23,16 @@ public class HologramData {
 		return dataSource.getConnection();
 	}
 
-	public boolean insert(int plot, String uuid, String reviewer, int feedback, int size, int accuracy, int quality, int points) {
+	public boolean create(String name, Location l, boolean visible) {
 
 		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
-				"INSERT INTO accept_data(plot, uuid, reviewer, feedback, size, accuracy, quality, points, time) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?);"
+				"INSERT INTO hologram_data(name, x, y, z, visible) VALUES(?, ?, ?, ?, ?);"
 				)){
-			statement.setInt(1, plot);
-			statement.setString(2, uuid);
-			statement.setString(3, reviewer);
-			statement.setInt(4, feedback);
-			statement.setInt(5, size);
-			statement.setInt(6, accuracy);
-			statement.setInt(7, quality);
-			statement.setInt(8, points);
-			statement.setLong(9, Time.currentTime());
+			statement.setString(1, name);
+			statement.setDouble(2, l.getX());
+			statement.setDouble(3, l.getY());
+			statement.setDouble(4, l.getZ());
+			statement.setBoolean(5, visible);
 			statement.executeUpdate();
 
 			return true;
@@ -48,12 +44,60 @@ public class HologramData {
 
 	}
 
-	public boolean hasEntry(String uuid) {
+	public boolean nameExists(String name) {
 
 		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
-				"SELECT plot FROM accept_data WHERE uuid = ?;"
+				"SELECT name FROM hologram_data WHERE name = ?;"
 				)){
-			statement.setString(1, uuid);
+			statement.setString(1, name);
+			ResultSet results = statement.executeQuery();
+
+			return (results.next());
+
+		} catch (SQLException sql) {
+			sql.printStackTrace();
+			return false;
+		}
+	}
+	
+	public void delete(String name) {
+		
+		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
+				"DELETE FROM hologram_data where name = ?;"
+				)){
+			statement.setString(1, name);
+			statement.executeUpdate();
+		} catch (SQLException sql) {
+			sql.printStackTrace();
+		}
+		
+	}
+	
+	public boolean move(String name, Location l) {
+
+		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
+				"UPDATE hologram_data SET x = ?, y = ?, z = ? WHERE name = ?;"
+				)){
+			statement.setDouble(1, l.getX());
+			statement.setDouble(2, l.getY());
+			statement.setDouble(3, l.getZ());
+			statement.setString(4, name);
+			ResultSet results = statement.executeQuery();
+
+			return (results.next());
+
+		} catch (SQLException sql) {
+			sql.printStackTrace();
+			return false;
+		}
+	}
+	
+	public boolean toggleVisibility(String name) {
+
+		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
+				"UPDATE hologram_data SET visibility = 1 - visibility WHERE name = ?;"
+				)){
+			statement.setString(1, name);
 			ResultSet results = statement.executeQuery();
 
 			return (results.next());

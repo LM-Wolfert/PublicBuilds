@@ -34,19 +34,101 @@ public class CustomHolo implements CommandExecutor {
 		if (args.length == 1) {
 			if (args[0].equalsIgnoreCase("reload")) {
 				
+				//Reload all holograms created by this plugin.
+				
+				
+				
 				return true;
 			} else {
-				p.sendMessage(help());
+				help(p);
 				return true;
 			}
 		}
 		
 		if (args.length < 2) {
-			p.sendMessage(help());
+			help(p);
 			return true;
 		}
 		
 		if (args[0].equalsIgnoreCase("create")) {
+			
+			//If a hologram with this name already exists, stop.
+			if (hologramData.nameExists(args[1])) {
+				p.sendMessage(ChatColor.RED + "A hologram with this name already exists!");
+				return true;
+			}
+			
+			Boolean visible = true;
+			
+			if (args.length >= 3) {
+				if (args[2].equalsIgnoreCase("false")) {
+					visible = false;
+				}
+			}
+			
+			//Add the hologram to the database, if it fails notify the player.
+			if (hologramData.create(args[1], p.getLocation(), visible)) {
+				p.sendMessage(ChatColor.GREEN + "Hologram " + args[1] + " successfully created at your position.");
+				return true;
+			} else {
+				p.sendMessage(ChatColor.RED + "An error occured, please contact a server admin!");
+				return true;
+			}
+			
+		} else if (args[0].equalsIgnoreCase("delete")) {
+			
+			//If a hologram with this name exists, delete it.
+			if (hologramData.nameExists(args[1])) {
+				hologramData.delete(args[1]);
+				p.sendMessage(ChatColor.GREEN + "Hologram " + args[1] + " deleted!");
+				return true; 
+			} else {
+				p.sendMessage(ChatColor.RED + "No hologram with this name exists!");
+			}
+			
+		} else if (args[0].equalsIgnoreCase("movehere")) {
+			
+			//If a hologram with this name exists, move it to the player.
+			if (hologramData.nameExists(args[1])) {
+				hologramData.move(args[1], p.getLocation());
+			}
+			
+		} else if (args[0].equalsIgnoreCase("togglevisibilty")) {
+			
+			//If a hologram with this name exists, toggle the visibility.
+			if (hologramData.nameExists(args[1])) {
+				hologramData.toggleVisibility(args[1]);
+			}
+		} else if (args[0].equalsIgnoreCase("setline")) {
+			
+			if (args.length < 4) {
+				p.sendMessage(ChatColor.RED + "/customholo setline <name> <line> <text>");
+				return true;
+			}
+			
+			if (!hologramData.nameExists(args[1])) {
+				p.sendMessage(ChatColor.RED + "There is no hologram with this name.");
+				return true;
+			}
+			
+			int line;
+			try {
+			   line = Integer.parseInt(args[2]);
+			}
+			catch (NumberFormatException e) {
+			   p.sendMessage(ChatColor.RED + "/customholo setline <name> <line> <text>");
+			   return true;
+			}
+			
+			if (hologramText.lines(args[1]) + 1 < line) {
+				p.sendMessage(ChatColor.RED + "Can't add line " + line + ", the hologram only has " + hologramText.lines(args[1]));
+				return true;
+			}
+			
+			if (hologramText.addLine(args[1], line, args[3])) {
+				p.sendMessage(ChatColor.GREEN + "Line " + line + " added successfully to hologram " + args[1]);
+				return true;
+			}
 			
 		}
 		
@@ -56,7 +138,9 @@ public class CustomHolo implements CommandExecutor {
 	}
 
 	
-	private String help() {
-		return null;
+	private void help(Player p) {
+		p.sendMessage(ChatColor.GREEN + "/customholo help");
+		p.sendMessage(ChatColor.GREEN + "/customholo create <name> [true|false]");
+		p.sendMessage(ChatColor.GREEN + "/customholo reload");
 	}
 }
