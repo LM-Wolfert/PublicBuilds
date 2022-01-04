@@ -102,6 +102,7 @@ CREATE TABLE IF NOT EXISTS points_data
 CREATE TABLE IF NOT EXISTS hologram_data
 (
 	name			VARCHAR(16)			NOT NULL,
+	world			VARCHAR(32)			NOT NULL,
 	x			DOUBLE				NOT NULL,
 	y			DOUBLE				NOT NULL,
 	z			DOUBLE				NOT NULL,

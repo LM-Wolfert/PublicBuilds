@@ -9,7 +9,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.logging.Level;
@@ -28,8 +27,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.earth2me.essentials.Essentials;
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource;
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 import com.sk89q.worldedit.math.BlockVector2;
@@ -83,6 +80,7 @@ import me.elgamer.publicbuilds.tutorial.TutorialConstants;
 import me.elgamer.publicbuilds.tutorial.TutorialGui;
 import me.elgamer.publicbuilds.tutorial.TutorialStage;
 import me.elgamer.publicbuilds.tutorial.TutorialTabCompleter;
+import me.elgamer.publicbuilds.utils.Holograms;
 import me.elgamer.publicbuilds.utils.Particles;
 import me.elgamer.publicbuilds.utils.Ranks;
 import me.elgamer.publicbuilds.utils.User;
@@ -141,8 +139,8 @@ public class Main extends JavaPlugin {
 	public static Location cranham;
 	public static Location monkspath;
 
-	//Building Poins Hologram
-	Hologram hologram;
+	//Holograms
+	Holograms holograms;
 
 	//Essentials
 	public static Essentials ess;
@@ -279,10 +277,7 @@ public class Main extends JavaPlugin {
 		new TutorialConstants(config);
 
 		//Holograms
-		hologram = HologramsAPI.createHologram(this, new Location(Bukkit.getWorld("Lobby"),
-				config.getDouble("location.hologram.x"),
-				config.getDouble("location.hologram.y"),
-				config.getDouble("location.hologram.z")));
+		holograms = new Holograms(hologramData, hologramText, playerData);
 
 		//1 second timer.
 		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
@@ -478,7 +473,7 @@ public class Main extends JavaPlugin {
 		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
 			public void run() {
 
-				updateHologram();
+				holograms.reload("scoreboard");
 				try {
 					testDataSource(dataSource);
 				} catch (SQLException e) {
@@ -650,27 +645,6 @@ public class Main extends JavaPlugin {
 			}
 
 		}
-
-	}
-
-	public void updateHologram() {
-
-		hologram.clearLines();
-
-		LinkedHashMap<String, Integer> lead = playerData.pointsTop();
-
-		if (lead == null || lead.size() == 0) {
-			return;
-		}
-
-		hologram.appendTextLine(ChatColor.AQUA + "" + ChatColor.BOLD + "Building Points Leaderboard");
-
-		for (Entry<String, Integer> e : lead.entrySet()) {
-
-			hologram.appendTextLine(e.getKey() + ": " + e.getValue());
-
-		}
-
 
 	}
 }

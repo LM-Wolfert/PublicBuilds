@@ -130,9 +130,23 @@ public class CustomHolo implements CommandExecutor {
 				return true;
 			}
 			
+		} else if (args[0].equalsIgnoreCase("removeline")) {
+			
+			if (!hologramData.nameExists(args[1])) {
+				p.sendMessage(ChatColor.RED + "There is no hologram with this name.");
+				return true;
+			}
+			
+			if (hologramText.hasLine(args[1])) {
+				hologramText.removeLine(args[1]);
+				return true;
+			} else {
+				p.sendMessage(ChatColor.RED + "This hologram has no lines");
+				return true;
+			}
+			
 		}
-		
-		
+				
 		return true;
 		
 	}

@@ -4,10 +4,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.sql.DataSource;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+
+import me.elgamer.publicbuilds.utils.CustomHologram;
 
 public class HologramData {
 	
@@ -26,13 +30,14 @@ public class HologramData {
 	public boolean create(String name, Location l, boolean visible) {
 
 		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
-				"INSERT INTO hologram_data(name, x, y, z, visible) VALUES(?, ?, ?, ?, ?);"
+				"INSERT INTO hologram_data(name, world, x, y, z, visible) VALUES(?, ?, ?, ?, ?, ?);"
 				)){
 			statement.setString(1, name);
-			statement.setDouble(2, l.getX());
-			statement.setDouble(3, l.getY());
-			statement.setDouble(4, l.getZ());
-			statement.setBoolean(5, visible);
+			statement.setString(2, l.getWorld().getName());
+			statement.setDouble(3, l.getX());
+			statement.setDouble(4, l.getY());
+			statement.setDouble(5, l.getZ());
+			statement.setBoolean(6, visible);
 			statement.executeUpdate();
 
 			return true;
@@ -106,6 +111,34 @@ public class HologramData {
 			sql.printStackTrace();
 			return false;
 		}
+	}
+	
+	public ArrayList<CustomHologram> getHolos() {
+		
+		ArrayList<CustomHologram> holos = new ArrayList<CustomHologram>();
+		CustomHologram holo;
+			
+		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
+				"SELECT * FROM hologram_data;"
+				)){
+			
+			ResultSet results = statement.executeQuery();
+
+			while (results.next()) {
+				holo = new CustomHologram(results.getString("name"), new Location(
+						Bukkit.getWorld(results.getString("world")), 
+						results.getDouble("x"), results.getDouble("y"), results.getDouble("z")),
+						results.getBoolean("visible"));
+				holos.add(holo);
+			}
+			
+			return holos;
+
+		} catch (SQLException sql) {
+			sql.printStackTrace();
+			return null;
+		}
+		
 	}
 
 }

@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.sql.DataSource;
 
@@ -57,6 +58,78 @@ public class HologramText {
 			sql.printStackTrace();
 			return 0;
 		}
+	}
+	
+	public boolean hasLine(String name) {
+		
+		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
+				"SELECT name FROM hologram_text WHERE name = ?;"
+				)){
+			statement.setString(1, name);
+			ResultSet results = statement.executeQuery();
+			return (results.next());
+			
+		} catch (SQLException sql) {
+			sql.printStackTrace();
+			return false;
+		}
+		
+	}
+	
+	public void removeLine(String name) {
+		
+		int line = lastLine(name);
+		
+		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
+				"DELETE FROM hologram_text WHERE name = ?, line = ?;"
+				)){
+			statement.setString(1, name);
+			statement.setInt(2, line);
+			statement.executeUpdate();
+			
+		} catch (SQLException sql) {
+			sql.printStackTrace();
+		}
+	}
+	
+	public int lastLine(String name) {
+		
+		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
+				"SELECT line FROM hologram_text WHERE name = ? ORDER BY line DESC;"
+				)){
+			statement.setString(1, name);
+			ResultSet results = statement.executeQuery();
+			results.next();
+			
+			return (results.getInt("line"));
+			
+		} catch (SQLException sql) {
+			sql.printStackTrace();
+			return 1;			
+		}
+	}
+	
+	public ArrayList<String> getLines(String name) {
+		
+		ArrayList<String> lines = new ArrayList<String>();
+		
+		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
+				"SELECT text FROM hologram_text WHERE name = ? ORDER BY line ASC;"
+				)){
+			statement.setString(1, name);
+			ResultSet results = statement.executeQuery();
+			
+			while (results.next()) {
+				lines.add(results.getString("text"));
+			}
+			
+			return lines;
+			
+		} catch (SQLException sql) {
+			sql.printStackTrace();
+			return null;			
+		}
+		
 	}
 
 }
