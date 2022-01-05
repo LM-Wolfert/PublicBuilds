@@ -210,13 +210,17 @@ public class Main extends JavaPlugin {
 		meta3.setDisplayName(ChatColor.AQUA + "" + ChatColor.BOLD + "Tutorial Menu");
 		tutorialGui.setItemMeta(meta3);
 
+		//Holograms
+		holograms = new Holograms(hologramData, hologramText, playerData);
+		holograms.create();
+
 		//Listeners
 		new JoinServer(this);
 		new QuitServer(this, tutorialData, playerData, plotData);
 		new InventoryClicked(this);
 		new ClaimEnter(this, plotData, playerData);
 		new PlayerInteract(this, selectionTool);
-		
+
 		new ItemSpawn(this);
 
 		//Tutorial listeners
@@ -235,8 +239,8 @@ public class Main extends JavaPlugin {
 		//getCommand("apply").setExecutor(new Apply());
 		//getCommand("converttutorial").setExecutor(new ConvertTutorial());
 		getCommand("tutorialhelp").setExecutor(new TutorialHelp());
-		
-		getCommand("customholo").setExecutor(new CustomHolo(hologramData, hologramText));
+
+		getCommand("customholo").setExecutor(new CustomHolo(hologramData, hologramText, holograms));
 
 		//Tab Completer
 		getCommand("tutorial").setTabCompleter(new TutorialTabCompleter());
@@ -275,9 +279,6 @@ public class Main extends JavaPlugin {
 
 		//Setup Tutorial Constants
 		new TutorialConstants(config);
-
-		//Holograms
-		holograms = new Holograms(hologramData, hologramText, playerData);
 
 		//1 second timer.
 		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
@@ -399,7 +400,7 @@ public class Main extends JavaPlugin {
 						u.tutorial.tutorial_stage = 0;
 						u.tutorial.tutorial_type = 10;
 					} else if (!(u.world.getName().equals(config.getString("worlds.tutorial"))) && u.tutorial.first_time == true) {
-						Bukkit.getScheduler().runTaskLater (instance, () -> u.tutorial.continueTutorial(u), 60);
+						Bukkit.getScheduler().runTaskLater (instance, () -> u.tutorial.continueTutorial(), 60);
 					}
 
 					//Send deny or accept message if a plot has been accepted or denied that they own.
@@ -463,6 +464,10 @@ public class Main extends JavaPlugin {
 						} else {
 							u.player.getInventory().setItem(8, tutorialGui);
 						}
+					}
+					
+					if (u.tutorial.tutorial_type == 10) {
+						u.tutorial.removeHologramVisibility();
 					}
 				}
 
@@ -646,5 +651,9 @@ public class Main extends JavaPlugin {
 
 		}
 
+	}
+	
+	public Holograms getHolograms() {
+		return holograms;
 	}
 }

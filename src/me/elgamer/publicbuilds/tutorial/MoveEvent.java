@@ -36,11 +36,11 @@ public class MoveEvent implements Listener {
 			if (nearYes(e.getTo())) {
 				u.tutorial.tutorial_type = 9;
 				u.tutorial.tutorial_stage = 1;
-				u.tutorial.continueTutorial(u);
+				u.tutorial.continueTutorial();
 			} else if (nearNo(e.getTo())) {
 				u.tutorial.tutorial_type = 2;
 				u.tutorial.tutorial_stage = 1;
-				u.tutorial.continueTutorial(u);
+				u.tutorial.continueTutorial();
 			}
 
 		} else if (u.tutorial.tutorial_type == 3) {
@@ -76,7 +76,7 @@ public class MoveEvent implements Listener {
 				u.player.teleport(TutorialConstants.TUTORIAL_9_START);
 				u.tutorial.tutorial_type = 9;
 				u.tutorial.tutorial_stage = 1;
-				u.tutorial.continueTutorial(u);
+				u.tutorial.continueTutorial();
 			}
 
 		} else if (u.tutorial.tutorial_type == 2) {

@@ -62,7 +62,7 @@ public class User {
 		//Continue the tutorial from where they last were.
 		if (!(tutorialData.tutorialComplete(uuid))) {
 			tutorial = new Tutorial(this);
-			Bukkit.getScheduler().runTaskLater (Main.getInstance(), () -> tutorial.continueTutorial(this), 20);
+			Bukkit.getScheduler().runTaskLater (Main.getInstance(), () -> tutorial.continueTutorial(), 20);
 		} else {
 			tutorial = new Tutorial(this, true);
 			Ranks.applicant(this);

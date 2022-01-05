@@ -165,7 +165,7 @@ public class MainGui {
 					return;
 				}
 
-				if (u.tutorial.stage9Corners(u)) {
+				if (u.tutorial.stage9Corners()) {
 
 					Utils.spawnFireWork(u.player);
 					u.player.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Tutorial Complete", "Good luck building!", 10, 100, 50);

@@ -10,6 +10,7 @@ import com.sk89q.worldguard.protection.regions.ProtectedPolygonalRegion;
 
 import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.mysql.TutorialData;
+import me.elgamer.publicbuilds.utils.Holograms;
 import me.elgamer.publicbuilds.utils.Plots;
 import me.elgamer.publicbuilds.utils.User;
 
@@ -26,9 +27,15 @@ public class Tutorial {
 	public boolean corner_3;
 	public boolean corner_4;
 	public int corner_sum;
+	
+	private User u;
+	private Holograms holograms;
 
 	public Tutorial(User u) {
 
+		this.u = u;
+		holograms = Main.getInstance().getHolograms();
+		
 		TutorialData tutorialData = Main.getInstance().tutorialData;
 
 		tutorial_type = tutorialData.getType(u.uuid);
@@ -41,6 +48,9 @@ public class Tutorial {
 
 	public Tutorial(User u, boolean complete) {
 
+		this.u = u;
+		holograms = Main.getInstance().getHolograms();
+		
 		tutorial_type = 10;
 		tutorial_stage = 0;
 
@@ -48,18 +58,18 @@ public class Tutorial {
 		this.complete = complete;
 	}
 
-	public void continueTutorial(User u) {
+	public void continueTutorial() {
 
 		if (u.tutorial.tutorial_type == 1) {
 			u.player.teleport(TutorialConstants.TUTORIAL_1_TELEPORT);
 		} else if (u.tutorial.tutorial_type == 2) {
 
 			if (u.tutorial.tutorial_stage == 1) {						
-				startStage2_1(u);
+				startStage2_1();
 			} else if (u.tutorial.tutorial_stage == 2) {
-				startStage2_2(u);
+				startStage2_2();
 			} else if (u.tutorial.tutorial_stage == 3) {
-				startStage2_3(u);
+				startStage2_3();
 			}
 			
 		} else if (u.tutorial.tutorial_type == 3) {
@@ -76,18 +86,18 @@ public class Tutorial {
 
 		} else if (u.tutorial.tutorial_type == 9) {
 			u.player.teleport(TutorialConstants.TUTORIAL_9_START);
-			startStage9(u);
+			startStage9();
 		} 
 
 
 	}
 
-	public void skipStage(User u) {
+	public void skipStage() {
 		if (u.tutorial.tutorial_type == 1) {
 		} else if (u.tutorial.tutorial_type == 2) {
 			u.tutorial.tutorial_type = 3;
 			u.tutorial.tutorial_stage = 1;
-			u.tutorial.continueTutorial(u);
+			u.tutorial.continueTutorial();
 		} else if (u.tutorial.tutorial_type == 3) {
 		} else if (u.tutorial.tutorial_type == 4) {
 
@@ -108,6 +118,27 @@ public class Tutorial {
 			u.plots = new Plots();
 		} 
 	}
+	
+	public void setHologramVisibility() {
+		
+		if (u.tutorial.tutorial_type == 2) {
+			
+			if (u.tutorial.tutorial_stage == 1) {
+				holograms.showHologram(u.player, "tutorial2_1");
+			} else if (u.tutorial.tutorial_stage == 2) {
+				holograms.hideHologram(u.player, "tutorial2_1");
+				holograms.showHologram(u.player, "tutorial2_2");
+			} else if (u.tutorial.tutorial_stage == 3) {
+				holograms.hideHologram(u.player, "tutorial2_2");
+			}
+						
+		}		
+	}
+	
+	public void removeHologramVisibility() {
+		holograms.hideHologram(u.player, "tutorial2_1");
+		holograms.hideHologram(u.player, "tutorial2_2");
+	}
 
 	/*
 	public static void stage1(User u) {
@@ -124,15 +155,17 @@ public class Tutorial {
 
 	}
 	 */
-	public void startStage2_1(User u) {
+	public void startStage2_1() {
 		
+		setHologramVisibility();
 		u.player.teleport(TutorialConstants.TUTORIAL_2_START);
 		u.player.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Tpll Tutorial", "Good luck, this tutorial has 3 steps.", 10, 75, 10);	
 
 	}
 	
-	public void startStage2_2(User u) {
+	public void startStage2_2() {
 		
+		setHologramVisibility();
 		u.player.teleport(TutorialConstants.TUTORIAL_2_START);
 		corner_1 = false;
 		corner_2 = false;
@@ -144,13 +177,14 @@ public class Tutorial {
 		
 	}
 
-	public void startStage2_3(User u) {
+	public void startStage2_3() {
 
+		setHologramVisibility();
 		u.player.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Outlines", "Time to create building outlines.", 10, 75, 10);
 
 	}
 
-	public void startStage9(User u) {
+	public void startStage9() {
 
 		u.player.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Plot Tutorial", "Before you can build, you need to create plot", 10, 75, 10);
 	}
@@ -198,7 +232,7 @@ public class Tutorial {
 
 	}
 
-	public boolean stage9Corners(User u) {
+	public boolean stage9Corners() {
 		//Checks whether the corners the player has set include all 4 corners of the minimum plot size.
 		FileConfiguration config = Main.getInstance().getConfig();
 		ProtectedPolygonalRegion region = new ProtectedPolygonalRegion("testregion", u.plots.vector, 1, 256);
@@ -265,7 +299,7 @@ public class Tutorial {
 	}
 	 */
 
-	public static boolean containsCorners(User u) {
+	public boolean containsCorners() {
 
 		//Checks whether the corners the player has set include all 4 corners of the minimum plot size.
 		FileConfiguration config = Main.getInstance().getConfig();
@@ -283,7 +317,7 @@ public class Tutorial {
 		}
 	}
 
-	public static boolean nearCorners(double[] coords) {
+	public boolean nearCorners(double[] coords) {
 
 		//Checks whether the player has teleported near the 4 corners of the building using /tpll
 		FileConfiguration config = Main.getInstance().getConfig();
@@ -301,7 +335,7 @@ public class Tutorial {
 		}
 	}
 
-	public static boolean getHeight(Double h) {
+	public boolean getHeight(Double h) {
 
 		//Checks whether the player has given the correct height of the building.
 		FileConfiguration config = Main.getInstance().getConfig();

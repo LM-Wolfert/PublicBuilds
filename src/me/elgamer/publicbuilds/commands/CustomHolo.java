@@ -8,15 +8,18 @@ import org.bukkit.entity.Player;
 
 import me.elgamer.publicbuilds.mysql.HologramData;
 import me.elgamer.publicbuilds.mysql.HologramText;
+import me.elgamer.publicbuilds.utils.Holograms;
 
 public class CustomHolo implements CommandExecutor {
 	
 	HologramData hologramData;
 	HologramText hologramText;
+	Holograms holograms;
 	
-	public CustomHolo(HologramData hologramData, HologramText hologramText) {
+	public CustomHolo(HologramData hologramData, HologramText hologramText, Holograms holograms) {
 		this.hologramData = hologramData;
 		this.hologramText = hologramText;
+		this.holograms = holograms;
 	}
 
 	@Override
@@ -35,8 +38,7 @@ public class CustomHolo implements CommandExecutor {
 			if (args[0].equalsIgnoreCase("reload")) {
 				
 				//Reload all holograms created by this plugin.
-				
-				
+				holograms.reloadAll();
 				
 				return true;
 			} else {

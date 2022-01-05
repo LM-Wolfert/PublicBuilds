@@ -32,22 +32,22 @@ public class TutorialCommand implements CommandExecutor {
 			u.tutorial.complete = false;
 			u.tutorial.tutorial_type = 2;
 			u.tutorial.tutorial_stage = 1;
-			u.tutorial.continueTutorial(u);
+			u.tutorial.continueTutorial();
 		} else if (args[0].equalsIgnoreCase("plot")) {
 			u.tutorial.complete = false;
 			u.tutorial.tutorial_type = 9;
 			u.tutorial.tutorial_stage = 1;
-			u.tutorial.continueTutorial(u);
+			u.tutorial.continueTutorial();
 		} else if (args[0].equalsIgnoreCase("start")) {
 			u.tutorial.complete = false;
 			u.tutorial.tutorial_type = 1;
 			u.tutorial.tutorial_stage = 1;
-			u.tutorial.continueTutorial(u);
+			u.tutorial.continueTutorial();
 		} else if (args[0].equalsIgnoreCase("optional")) {
 			u.tutorial.complete = false;
 			u.tutorial.tutorial_type = 3;
 			u.tutorial.tutorial_stage = 1;
-			u.tutorial.continueTutorial(u);
+			u.tutorial.continueTutorial();
 		} else {
 			p.sendMessage(error());
 		}

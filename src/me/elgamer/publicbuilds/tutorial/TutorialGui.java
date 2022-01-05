@@ -95,14 +95,14 @@ public class TutorialGui {
 
 			u.tutorial.tutorial_stage -= 1;
 			
-			u.tutorial.continueTutorial(u);
+			u.tutorial.continueTutorial();
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Previous Tutorial")) {
 			p.closeInventory();
 
 			u.tutorial.tutorial_type -= 1;
 			u.tutorial.tutorial_stage = 1;
 			
-			u.tutorial.continueTutorial(u);
+			u.tutorial.continueTutorial();
 		}
 	}
 }
