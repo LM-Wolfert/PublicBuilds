@@ -1,15 +1,12 @@
 package me.elgamer.publicbuilds.tutorial;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import me.elgamer.publicbuilds.gui.MainGui;
 import me.elgamer.publicbuilds.gui.SwitchServerGUI;
 import me.elgamer.publicbuilds.utils.User;
-import me.elgamer.publicbuilds.utils.Utils;
 import net.md_5.bungee.api.ChatColor;
 
 public class TutorialVideoGui {

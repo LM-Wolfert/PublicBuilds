@@ -147,6 +147,7 @@ points_base: 5
 #Points multiplier
 #Calculated by building points multiplied by points_multiplier
 #Example the user received 15 building points and the points_multiplier is 3 then they will get 15*3=45 points.
+points_enabled: true
 points_multiplier: 5
 
 #Number of days a player can be inactive before their plots get cancelled

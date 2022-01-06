@@ -348,7 +348,10 @@ public class AcceptGui {
 
 			//Add building points and normal points
 			playerData.addPoints(plotData.getOwner(u.review.plot), buildingPoints);
-			me.elgamer.btepoints.utils.Points.addPoints(plotData.getOwner(u.review.plot), buildingPoints*config.getInt("points_multiplier"));
+			//If points are enabled
+			if (config.getBoolean("points_enabled")) {
+				me.elgamer.btepoints.utils.Points.addPoints(plotData.getOwner(u.review.plot), buildingPoints*config.getInt("points_multiplier"));
+			}
 
 			//Remove reviewing status
 			plotData.setStatus(u.review.plot, "completed");

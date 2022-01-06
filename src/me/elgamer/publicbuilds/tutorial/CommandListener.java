@@ -5,6 +5,17 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
+import com.sk89q.worldedit.IncompleteRegionException;
+import com.sk89q.worldedit.LocalSession;
+import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.entity.Player;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.regions.Region;
+import com.sk89q.worldedit.session.SessionManager;
+import com.sk89q.worldedit.util.formatting.text.TextComponent;
+import com.sk89q.worldedit.world.World;
+
 import me.elgamer.UKnetUtilities.projections.ModifiedAirocean;
 import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.utils.User;
@@ -99,6 +110,36 @@ public class CommandListener implements Listener {
 				
 			} else if (e.getMessage().startsWith("/ll")) {
 				return;
+			} else if (u.tutorial.tutorial_stage == 3 && e.getMessage().startsWith("//line")) {
+				String[] command = e.getMessage().split(" ");
+				e.setCancelled(true);
+				
+				if (command[1].equalsIgnoreCase("stone")) {
+					
+					Player actor = BukkitAdapter.adapt(u.player);
+					SessionManager manager = WorldEdit.getInstance().getSessionManager();
+					LocalSession localSession = manager.get(actor);
+					Region region;
+					
+					World selectionWorld = localSession.getSelectionWorld();
+					try {
+						if (selectionWorld == null) throw new IncompleteRegionException();
+						region = localSession.getSelection(selectionWorld);
+					} catch (IncompleteRegionException ex) {
+						actor.printError(TextComponent.of("Please make a region selection first."));
+						return;
+					}
+					
+					BlockVector3 p1 = region.getMinimumPoint();
+					BlockVector3 p2 = region.getMaximumPoint();
+					
+					/*
+					 * continue checking here
+					 */
+					
+				} else {
+					u.player.sendMessage(ChatColor.RED + "For this tutorial please use //line stone");
+				}
 			}
 		}
 		
