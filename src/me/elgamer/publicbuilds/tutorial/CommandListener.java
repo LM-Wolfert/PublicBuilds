@@ -100,7 +100,7 @@ public class CommandListener implements Listener {
 				if (u.tutorial.corner_sum == 4) {
 					e.setCancelled(true);
 					u.tutorial.tutorial_stage = 3;
-					u.player.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Step 2 Complete", "Well Done, just one more.", 10, 75, 10);
+					u.player.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Step 2 Complete", "Well Done, just one more step.", 10, 75, 10);
 					u.tutorial.corner_sum = 0;
 					u.tutorial.continueTutorial();
 					return;
@@ -131,11 +131,16 @@ public class CommandListener implements Listener {
 					}
 					
 					BlockVector3 p1 = region.getMinimumPoint();
-					BlockVector3 p2 = region.getMaximumPoint();
+					BlockVector3 p2 = region.getMaximumPoint();	
 					
-					/*
-					 * continue checking here
-					 */
+					u.player.sendMessage(u.tutorial.stage2Line(p1, p2));
+					if (u.tutorial.line_sum == 4) {
+						u.tutorial.tutorial_stage = 1;
+						u.tutorial.tutorial_type = 3;
+						u.player.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Outline Tutorial Complete", "You will be teleported shortly.", 10, 75, 10);
+						u.tutorial.line_sum = 0;
+						Bukkit.getScheduler().runTaskLater (Main.getInstance(), () -> u.tutorial.continueTutorial() , 20); //20 ticks equal 1 second
+					}
 					
 				} else {
 					u.player.sendMessage(ChatColor.RED + "For this tutorial please use //line stone");

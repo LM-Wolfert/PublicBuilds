@@ -6,6 +6,7 @@ import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import com.sk89q.worldedit.math.BlockVector2;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldguard.protection.regions.ProtectedPolygonalRegion;
 
 import me.elgamer.publicbuilds.Main;
@@ -22,11 +23,9 @@ public class Tutorial {
 	public boolean first_time;
 	public boolean complete;
 
-	public boolean corner_1;
-	public boolean corner_2;
-	public boolean corner_3;
-	public boolean corner_4;
-	public int corner_sum;
+	public boolean corner_1, corner_2, corner_3, corner_4;
+	public boolean line_1, line_2, line_3, line_4;
+	public int corner_sum, line_sum;
 	
 	private User u;
 	private Holograms holograms;
@@ -181,6 +180,11 @@ public class Tutorial {
 
 		setHologramVisibility();
 		u.player.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Outlines", "Time to create building outlines.", 10, 75, 10);
+		line_1 = false;
+		line_2 = false;
+		line_3 = false;
+		line_4 = false;
+		line_sum = 0;
 
 	}
 
@@ -229,8 +233,49 @@ public class Tutorial {
 
 		return (ChatColor.RED + "This is not close enough to the corner of the building.");
 
-
 	}
+	
+	public String stage2Line(BlockVector3 p1, BlockVector3 p2) {
+		
+		if (TutorialConstants.TUTORIAL_2_LINE1.equals(p1, p2)) {
+			if (line_1) {
+				return (ChatColor.RED + "You have already teleported to this corner, you have " + (4-line_sum) + " line(s) left.");
+			} else {
+				line_1 = true;
+				line_sum += 1;
+				return (ChatColor.GREEN + "Correct, you now have " + (4-line_sum) + " line(s) left.");
+			}
+		} else if (TutorialConstants.TUTORIAL_2_LINE2.equals(p1, p2)) {
+			if (line_2) {
+				return (ChatColor.RED + "You have already teleported to this corner, you have " + (4-line_sum) + " line(s) left.");
+			} else {
+				line_2 = true;
+				line_sum += 1;
+				return (ChatColor.GREEN + "Correct, you now have " + (4-line_sum) + " line(s) left.");
+			}
+		} else if (TutorialConstants.TUTORIAL_2_LINE3.equals(p1, p2)) {
+			if (line_3) {
+				return (ChatColor.RED + "You have already teleported to this corner, you have " + (4-line_sum) + " line(s) left.");
+			} else {
+				line_3 = true;
+				line_sum += 1;
+				return (ChatColor.GREEN + "Correct, you now have " + (4-line_sum) + " line(s) left.");
+			}
+		} else if (TutorialConstants.TUTORIAL_2_LINE4.equals(p1, p2)) {
+			if (line_4) {
+				return (ChatColor.RED + "You have already teleported to this corner, you have " + (4-line_sum) + " line(s) left.");
+			} else {
+				line_4 = true;
+				line_sum += 1;
+				return (ChatColor.GREEN + "Correct, you now have " + (4-line_sum) + " line(s) left.");
+			}
+		}
+
+		return (ChatColor.RED + "Click on 2 corners of the building and run //line stone");
+		
+	}
+	
+	
 
 	public boolean stage9Corners() {
 		//Checks whether the corners the player has set include all 4 corners of the minimum plot size.

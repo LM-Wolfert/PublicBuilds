@@ -20,6 +20,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -121,6 +122,9 @@ public class Main extends JavaPlugin {
 	List<BlockVector2> pt;
 	Location lo;
 	ArrayList<Integer> pls;
+	
+	ArrayList<Location> blocks;
+	public static BlockData stone;
 
 	int hasMessage;
 
@@ -213,6 +217,8 @@ public class Main extends JavaPlugin {
 		//Holograms
 		holograms = new Holograms(hologramData, hologramText, playerData);
 		holograms.create();
+		
+		stone = Bukkit.createBlockData(Material.STONE);
 
 		//Listeners
 		new JoinServer(this);
@@ -286,12 +292,37 @@ public class Main extends JavaPlugin {
 
 				for (User u : users) {
 
-					/*
-					if (u.tutorialStage == 6) {
-						Utils.spawnFireWork(u.player);
-						Bukkit.getScheduler().runTaskLater (instance, () -> Tutorial.continueTutorial(u), 60); //20 ticks equal 1 second
+					//If the player has a correct line set in tutorial 2.3 set fake blocks every second as indicator.
+					if (u.tutorial.tutorial_type == 2 && u.tutorial.tutorial_stage == 3) {
+						
+						if (u.tutorial.line_1) {
+							blocks = TutorialConstants.TUTORIAL_2_LINE1.vectorBlocks();
+							for (Location l : blocks) {
+								u.player.sendBlockChange(l, stone);
+							}
+						}
+						
+						if (u.tutorial.line_2) {
+							blocks = TutorialConstants.TUTORIAL_2_LINE2.vectorBlocks();
+							for (Location l : blocks) {
+								u.player.sendBlockChange(l, stone);
+							}
+						}
+						
+						if (u.tutorial.line_3) {
+							blocks = TutorialConstants.TUTORIAL_2_LINE3.vectorBlocks();
+							for (Location l : blocks) {
+								u.player.sendBlockChange(l, stone);
+							}
+						}
+						
+						if (u.tutorial.line_4) {
+							blocks = TutorialConstants.TUTORIAL_2_LINE4.vectorBlocks();
+							for (Location l : blocks) {
+								u.player.sendBlockChange(l, stone);
+							}
+						}		
 					}
-					 */
 
 					//Increase buildingTime for each second the player is in a buildable claim and is not AFK
 					if (!(u.plotOwner == null)) {

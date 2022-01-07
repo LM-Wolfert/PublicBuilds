@@ -4,11 +4,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import com.sk89q.worldedit.math.BlockVector3;
+
+import me.elgamer.publicbuilds.utils.Vector;
+
 public class TutorialConstants {
 
 	//Tutorial
 	public static Location TUTORIAL_1_TELEPORT, TUTORIAL_1_TELEPORT2, TUTORIAL_1_START, TUTORIAL_1_YES, TUTORIAL_1_NO;	
-	public static Location TUTORIAL_2_START, TUTORIAL_2_CORNER_1, TUTORIAL_2_CORNER_2, TUTORIAL_2_CORNER_3, TUTORIAL_2_CORNER_4;
+	public static Location TUTORIAL_2_START, TUTORIAL_2_CORNER_1, TUTORIAL_2_CORNER_2, TUTORIAL_2_CORNER_3, TUTORIAL_2_CORNER_4, TUTORIAL_2_STEP3_START;
 	public static Location TUTORIAL_3_START, TUTORIAL_3_CONTINUE, TUTORIAL_3_WORLDEDIT, TUTORIAL_3_GEP, TUTORIAL_3_ROOFS, TUTORIAL_3_DETAILS, TUTORIAL_3_TEXTURE;
 	public static Location TUTORIAL_4_START;
 	public static Location TUTORIAL_5_START;
@@ -16,6 +20,9 @@ public class TutorialConstants {
 	public static Location TUTORIAL_7_START;
 	public static Location TUTORIAL_8_START;
 	public static Location TUTORIAL_9_START;	
+	
+	public static Vector TUTORIAL_2_LINE1, TUTORIAL_2_LINE2, TUTORIAL_2_LINE3, TUTORIAL_2_LINE4;
+	
 
 	public TutorialConstants(FileConfiguration config) {
 
@@ -67,7 +74,13 @@ public class TutorialConstants {
 				config.getDouble("tutorial_2.corner_4.x"),
 				config.getDouble("tutorial_2.corner_4.y"),
 				config.getDouble("tutorial_2.corner_4.z"));
-
+		
+		//Values are being hardcoded for the time being, the whole coordinate storing system will be moved to a database in the next major release.
+		TUTORIAL_2_LINE1 = new Vector(BlockVector3.at(2870619, 144, -5430318), BlockVector3.at(2870600, 144, -5430303));
+		TUTORIAL_2_LINE2 = new Vector(BlockVector3.at(2870600, 144, -5430303), BlockVector3.at(2870584, 144, -5430323));
+		TUTORIAL_2_LINE3 = new Vector(BlockVector3.at(2870584, 144, -5430323), BlockVector3.at(2870603, 144, -5430338));
+		TUTORIAL_2_LINE4 = new Vector(BlockVector3.at(2870603, 144, -5430338), BlockVector3.at(2870619, 144, -5430318));
+		
 		TUTORIAL_3_START = new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), 
 				config.getDouble("tutorial_3.start.x"),
 				config.getDouble("tutorial_3.start.y"),
