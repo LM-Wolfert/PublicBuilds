@@ -1,8 +1,7 @@
 package me.elgamer.publicbuilds.utils;
 
-import static java.lang.Math.abs;
 import static java.lang.Math.max;
-import static java.lang.Math.min;
+import static java.lang.Math.abs;
 
 import java.util.ArrayList;
 
@@ -37,12 +36,12 @@ public class Vector {
 	
 	public ArrayList<Location> vectorBlocks() {
 
-		int diffX = abs(p1.getX()-p2.getX());
-		int diffZ = abs(p1.getZ()-p2.getZ());
+		int diffX = p2.getX()-p1.getX();
+		int diffZ = p2.getZ()-p1.getZ();
 		
-		double divider = max(diffX, diffZ);
-		int minX = min(p1.getX(), p2.getX());
-		int minZ = min(p2.getX(), p2.getZ());
+		double divider = max(abs(diffX), abs(diffZ));
+		double minX = p1.getX()+0.5;
+		double minZ = p1.getZ()+0.5;
 		
 		ArrayList<Location> line = new ArrayList<Location>();
 		Location l;

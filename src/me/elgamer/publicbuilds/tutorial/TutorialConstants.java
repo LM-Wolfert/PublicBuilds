@@ -28,17 +28,9 @@ public class TutorialConstants {
 
 		//Tutorial Locations
 		TUTORIAL_1_TELEPORT = new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), 
-				config.getDouble("tutorial_1.teleport.x"),
-				config.getDouble("tutorial_1.teleport.y"),
-				config.getDouble("tutorial_1.teleport.z"),
-				(float) config.getDouble("tutorial_1.teleport.yaw"),
-				(float) config.getDouble("tutorial_1.teleport.pitch"));
-		TUTORIAL_1_TELEPORT2 = new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), 
-				config.getDouble("tutorial_1.teleport2.x"),
-				config.getDouble("tutorial_1.teleport2.y"),
-				config.getDouble("tutorial_1.teleport2.z"),
-				(float) config.getDouble("tutorial_1.teleport2.yaw"),
-				(float) config.getDouble("tutorial_1.teleport2.pitch"));
+				0.5, 64, -19.5, 0, 0);
+		TUTORIAL_1_TELEPORT2 = new Location(Bukkit.getWorld(config.getString("worlds.tutorial")),
+				0.5, 64, 0.5, 0, 0);
 		TUTORIAL_1_START = new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), 
 				config.getDouble("tutorial_1.start.x"),
 				config.getDouble("tutorial_1.start.y"),
@@ -74,12 +66,14 @@ public class TutorialConstants {
 				config.getDouble("tutorial_2.corner_4.x"),
 				config.getDouble("tutorial_2.corner_4.y"),
 				config.getDouble("tutorial_2.corner_4.z"));
+		TUTORIAL_2_STEP3_START = new Location(Bukkit.getWorld(config.getString("worlds.tutorial")),
+				1014.5, 143, 943.5);
 		
 		//Values are being hardcoded for the time being, the whole coordinate storing system will be moved to a database in the next major release.
-		TUTORIAL_2_LINE1 = new Vector(BlockVector3.at(2870619, 144, -5430318), BlockVector3.at(2870600, 144, -5430303));
-		TUTORIAL_2_LINE2 = new Vector(BlockVector3.at(2870600, 144, -5430303), BlockVector3.at(2870584, 144, -5430323));
-		TUTORIAL_2_LINE3 = new Vector(BlockVector3.at(2870584, 144, -5430323), BlockVector3.at(2870603, 144, -5430338));
-		TUTORIAL_2_LINE4 = new Vector(BlockVector3.at(2870603, 144, -5430338), BlockVector3.at(2870619, 144, -5430318));
+		TUTORIAL_2_LINE1 = new Vector(BlockVector3.at(1019, 143, 931), BlockVector3.at(1003, 143, 911));
+		TUTORIAL_2_LINE2 = new Vector(BlockVector3.at(1003, 143, 911), BlockVector3.at(984, 143, 926));
+		TUTORIAL_2_LINE3 = new Vector(BlockVector3.at(984, 143, 926), BlockVector3.at(1000, 143, 946));
+		TUTORIAL_2_LINE4 = new Vector(BlockVector3.at(1000, 143, 946), BlockVector3.at(1019, 143, 931));
 		
 		TUTORIAL_3_START = new Location(Bukkit.getWorld(config.getString("worlds.tutorial")), 
 				config.getDouble("tutorial_3.start.x"),

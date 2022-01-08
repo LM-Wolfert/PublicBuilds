@@ -57,7 +57,9 @@ public class User {
 		updatePlayerData();
 		
 		//Get building time
-		buildingTime = me.elgamer.btepoints.utils.PlayerData.getBuildTime(uuid);
+		if (Main.POINTS_ENABLED) {
+			buildingTime = me.elgamer.btepoints.utils.PlayerData.getBuildTime(uuid);
+		}
 			
 		//Continue the tutorial from where they last were.
 		if (!(tutorialData.tutorialComplete(uuid))) {

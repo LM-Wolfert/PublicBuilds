@@ -27,9 +27,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.mysql.cj.jdbc.MysqlConnectionPoolDataSource;
+import com.mysql.cj.jdbc.MysqlDataSource;
 import com.earth2me.essentials.Essentials;
-import com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource;
-import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 import com.sk89q.worldedit.math.BlockVector2;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.flags.Flag;
@@ -127,6 +127,8 @@ public class Main extends JavaPlugin {
 	public static BlockData stone;
 
 	int hasMessage;
+	
+	public static Boolean POINTS_ENABLED;
 
 	public static StateFlag CREATE_PLOT_GUEST;
 	public static StateFlag CREATE_PLOT_APPRENTICE;
@@ -164,6 +166,8 @@ public class Main extends JavaPlugin {
 		Main.config = this.getConfig();
 
 		saveDefaultConfig();
+		
+		POINTS_ENABLED = config.getBoolean("points_enabled");
 
 		interval = 10*60;
 
@@ -325,7 +329,7 @@ public class Main extends JavaPlugin {
 					}
 
 					//Increase buildingTime for each second the player is in a buildable claim and is not AFK
-					if (!(u.plotOwner == null)) {
+					if (!(u.plotOwner == null) && POINTS_ENABLED) {
 						if (ess.getUser(u.player).isAfk() == false && u.plotOwner.equals(u.uuid)) {
 
 							u.buildingTime += 1;

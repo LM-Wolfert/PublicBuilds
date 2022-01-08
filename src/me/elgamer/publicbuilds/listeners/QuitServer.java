@@ -44,7 +44,9 @@ public class QuitServer implements Listener {
 		}
 		
 		//Set building time
-		me.elgamer.btepoints.utils.PlayerData.setBuildTime(u.uuid, u.buildingTime);
+		if (Main.POINTS_ENABLED) {
+			me.elgamer.btepoints.utils.PlayerData.setBuildTime(u.uuid, u.buildingTime);
+		}
 
 		//Get player instance.
 		Player p = e.getPlayer();

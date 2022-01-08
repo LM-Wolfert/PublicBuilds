@@ -79,11 +79,21 @@ public class MoveEvent implements Listener {
 				u.tutorial.continueTutorial();
 			}
 
-		} else if (u.tutorial.tutorial_type == 2) {
+		} else if (u.tutorial.tutorial_type == 2 && (u.tutorial.tutorial_stage == 1 || u.tutorial.tutorial_stage == 2)) {
 			if (!(u.world.equals(Bukkit.getWorld(Main.getInstance().getConfig().getString("worlds.tutorial"))))) {
 				return;
 			}
 			if (e.getTo().distance(TutorialConstants.TUTORIAL_2_START) >= 75) {
+				e.setCancelled(true);
+				u.player.sendMessage(ChatColor.RED + "You may not leave this area!");
+				return;
+			}
+
+		} else if (u.tutorial.tutorial_type == 2 && u.tutorial.tutorial_stage == 3) {
+			if (!(u.world.equals(Bukkit.getWorld(Main.getInstance().getConfig().getString("worlds.tutorial"))))) {
+				return;
+			}
+			if (e.getTo().distance(TutorialConstants.TUTORIAL_2_STEP3_START) >= 75) {
 				e.setCancelled(true);
 				u.player.sendMessage(ChatColor.RED + "You may not leave this area!");
 				return;
@@ -107,7 +117,7 @@ public class MoveEvent implements Listener {
 
 		User u = Main.getInstance().getUser(e.getPlayer());
 
-		if (u.tutorial.tutorial_type == 2) {
+		if (u.tutorial.tutorial_type == 2 && (u.tutorial.tutorial_stage == 1 || u.tutorial.tutorial_stage == 2)) {
 			if (!(u.world.equals(Bukkit.getWorld(Main.getInstance().getConfig().getString("worlds.tutorial"))))) {
 				return;
 			}
@@ -117,6 +127,15 @@ public class MoveEvent implements Listener {
 				return;
 			}
 
+		} else if (u.tutorial.tutorial_type == 2 && u.tutorial.tutorial_stage == 3) {
+			if (!(u.world.equals(Bukkit.getWorld(Main.getInstance().getConfig().getString("worlds.tutorial"))))) {
+				return;
+			}
+			if (e.getTo().distance(TutorialConstants.TUTORIAL_2_STEP3_START) >= 75) {
+				e.setCancelled(true);
+				u.player.sendMessage(ChatColor.RED + "You may not leave this area!");
+				return;
+			}
 		} else if (u.tutorial.tutorial_type == 9) {
 			if (!(u.world.equals(Bukkit.getWorld(Main.getInstance().getConfig().getString("worlds.tutorial"))))) {
 				return;

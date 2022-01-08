@@ -2,7 +2,7 @@ name: PublicBuilds
 version: 1.6.2
 main: me.elgamer.publicbuilds.Main
 description: Claiming System
-depend: [WorldGuard, WorldEdit, UKnetUtilities, BTEPoints, LuckPerms, Essentials, HolographicDisplays]
+depend: [WorldGuard, WorldEdit, LuckPerms, Essentials, HolographicDisplays]
 api-version: 1.16
 
 commands:

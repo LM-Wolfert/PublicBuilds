@@ -11,7 +11,7 @@ import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.entity.Player;
 import com.sk89q.worldedit.math.BlockVector3;
-import com.sk89q.worldedit.regions.Region;
+import com.sk89q.worldedit.regions.RegionSelector;
 import com.sk89q.worldedit.session.SessionManager;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.world.World;
@@ -108,30 +108,50 @@ public class CommandListener implements Listener {
 				}
 				return;
 				
-			} else if (e.getMessage().startsWith("/ll")) {
+			} else if (e.getMessage().startsWith("/ll") && u.tutorial.tutorial_stage == 2) {
 				return;
 			} else if (u.tutorial.tutorial_stage == 3 && e.getMessage().startsWith("//line")) {
 				String[] command = e.getMessage().split(" ");
 				e.setCancelled(true);
+				
+				if (command.length < 2) {
+					u.player.sendMessage(ChatColor.RED + "//line stone");
+					return;
+				}
 				
 				if (command[1].equalsIgnoreCase("stone")) {
 					
 					Player actor = BukkitAdapter.adapt(u.player);
 					SessionManager manager = WorldEdit.getInstance().getSessionManager();
 					LocalSession localSession = manager.get(actor);
-					Region region;
+					RegionSelector rs;
 					
 					World selectionWorld = localSession.getSelectionWorld();
 					try {
 						if (selectionWorld == null) throw new IncompleteRegionException();
-						region = localSession.getSelection(selectionWorld);
+						rs = localSession.getRegionSelector(selectionWorld);
 					} catch (IncompleteRegionException ex) {
 						actor.printError(TextComponent.of("Please make a region selection first."));
 						return;
 					}
 					
-					BlockVector3 p1 = region.getMinimumPoint();
-					BlockVector3 p2 = region.getMaximumPoint();	
+					if (rs.getVertices().size() < 2) {
+						u.player.sendMessage(ChatColor.RED + "You must select 2 points.");
+						return;
+					}
+					
+					if (rs.getVertices().size() > 2) {
+						u.player.sendMessage(ChatColor.RED + "You must use //sel cuboid as your selection.");
+						return;
+					}
+					
+					BlockVector3 p1 = rs.getVertices().get(0);
+					BlockVector3 p2 = rs.getVertices().get(1);
+					
+					if (p1 == null || p2 == null) {
+						u.player.sendMessage(ChatColor.RED + "You must select 2 points.");
+						return;
+					}
 					
 					u.player.sendMessage(u.tutorial.stage2Line(p1, p2));
 					if (u.tutorial.line_sum == 4) {
@@ -142,9 +162,16 @@ public class CommandListener implements Listener {
 						Bukkit.getScheduler().runTaskLater (Main.getInstance(), () -> u.tutorial.continueTutorial() , 20); //20 ticks equal 1 second
 					}
 					
+					return;
+					
 				} else {
 					u.player.sendMessage(ChatColor.RED + "For this tutorial please use //line stone");
+					return;
 				}
+			} else if (u.tutorial.tutorial_stage == 3 && (e.getMessage().startsWith("//wand") || e.getMessage().startsWith("//sel"))) {
+				
+				return;
+				
 			}
 		}
 		

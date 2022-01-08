@@ -22,8 +22,10 @@ import me.elgamer.publicbuilds.utils.User;
 
 public class InventoryClicked implements Listener {
 	
+	Main instance;
 	public InventoryClicked(Main plugin) {
 	
+		instance = plugin;
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}
 	
@@ -33,7 +35,7 @@ public class InventoryClicked implements Listener {
 		if (e.getCurrentItem() == null) {
 			return;
 		}
-		
+		 
 		String title = e.getView().getTitle();
 		
 		User u = Main.getInstance().getUser((Player) e.getWhoClicked());
@@ -139,13 +141,13 @@ public class InventoryClicked implements Listener {
 		else if (e.getCurrentItem().equals(Main.gui)) {
 			e.setCancelled(true);
 			u.player.closeInventory();
-			u.player.openInventory(MainGui.GUI(u));
+			Bukkit.getScheduler().runTaskLater (instance, () -> u.player.openInventory(MainGui.GUI(u)), 1);
 		}
 		else if (e.getCurrentItem().equals(Main.tutorialGui)) {
 			e.setCancelled(true);
 			u.player.closeInventory();
 			u.previousGui = "none";
-			u.player.openInventory(TutorialGui.GUI(u));
+			Bukkit.getScheduler().runTaskLater (instance, () -> u.player.openInventory(TutorialGui.GUI(u)), 1);
 		}
 		else {
 			
