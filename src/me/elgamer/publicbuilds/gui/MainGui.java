@@ -131,11 +131,7 @@ public class MainGui {
 			}
 			p.closeInventory();
 			p.teleport(Main.spawn);
-		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Tutorials")) {
-			if (u.tutorial.tutorial_type <= 9 && u.tutorial.first_time) {
-				u.player.sendMessage(ChatColor.RED + "Please continue the tutorial first!");
-				return;
-			}
+		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Tutorial Menu")) {
 			p.closeInventory();
 			u.previousGui = "main";
 			p.openInventory(TutorialGui.GUI(u));

@@ -45,7 +45,7 @@ import me.elgamer.publicbuilds.commands.CustomHolo;
 import me.elgamer.publicbuilds.commands.OpenGui;
 //import me.elgamer.publicbuilds.commands.SkipTutorial;
 import me.elgamer.publicbuilds.commands.Spawn;
-import me.elgamer.publicbuilds.commands.TutorialHelp;
+//import me.elgamer.publicbuilds.commands.TutorialHelp;
 import me.elgamer.publicbuilds.gui.ConfirmCancel;
 import me.elgamer.publicbuilds.gui.LocationGUI;
 import me.elgamer.publicbuilds.gui.MainGui;
@@ -79,8 +79,10 @@ import me.elgamer.publicbuilds.tutorial.Tutorial;
 import me.elgamer.publicbuilds.tutorial.TutorialCommand;
 import me.elgamer.publicbuilds.tutorial.TutorialConstants;
 import me.elgamer.publicbuilds.tutorial.TutorialGui;
+import me.elgamer.publicbuilds.tutorial.TutorialSelectionGui;
 import me.elgamer.publicbuilds.tutorial.TutorialStage;
 import me.elgamer.publicbuilds.tutorial.TutorialTabCompleter;
+import me.elgamer.publicbuilds.tutorial.TutorialVideoGui;
 import me.elgamer.publicbuilds.utils.Holograms;
 import me.elgamer.publicbuilds.utils.Particles;
 import me.elgamer.publicbuilds.utils.Ranks;
@@ -248,7 +250,7 @@ public class Main extends JavaPlugin {
 		getCommand("tutorialStage").setExecutor(new TutorialStage());
 		//getCommand("apply").setExecutor(new Apply());
 		//getCommand("converttutorial").setExecutor(new ConvertTutorial());
-		getCommand("tutorialhelp").setExecutor(new TutorialHelp());
+		//getCommand("tutorialhelp").setExecutor(new TutorialHelp());
 
 		getCommand("customholo").setExecutor(new CustomHolo(hologramData, hologramText, holograms));
 
@@ -269,6 +271,8 @@ public class Main extends JavaPlugin {
 		ConfirmCancel.initialize();
 		SwitchServerGUI.initialize();
 		TutorialGui.initialize();
+		TutorialVideoGui.initialize();
+		TutorialSelectionGui.initialize();
 		FeedbackGui.initialize();
 
 		//Locations

@@ -1,5 +1,5 @@
 name: PublicBuilds
-version: 1.6.2
+version: 1.6.3
 main: me.elgamer.publicbuilds.Main
 description: Claiming System
 depend: [WorldGuard, WorldEdit, LuckPerms, Essentials, HolographicDisplays]
@@ -24,9 +24,6 @@ commands:
     tutorialstage:
         usage: /<command>
         description: Shows what stage of the tutorial a specific player is on.
-    tutorialhelp:
-        usage: /<command>
-        description: Tutorial Video
     customholo:
         usage: /<command>
         description: Allows admins to create custom holograms that are manipulated by the publicbuilds plugin.    

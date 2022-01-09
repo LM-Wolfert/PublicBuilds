@@ -6,11 +6,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+
 import me.elgamer.publicbuilds.gui.MainGui;
 import me.elgamer.publicbuilds.gui.SwitchServerGUI;
 import me.elgamer.publicbuilds.utils.User;
 import me.elgamer.publicbuilds.utils.Utils;
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 
 public class TutorialGui {
 
@@ -33,25 +36,25 @@ public class TutorialGui {
 
 		if (u.tutorial.tutorial_type == 2 || u.tutorial.tutorial_type == 9) {
 
-			Utils.createItem(inv, Material.WRITABLE_BOOK, 1, 4, ChatColor.AQUA + "" + ChatColor.BOLD + "Tutorial Step Info",
+			Utils.createItem(inv, Material.LECTERN, 1, 4, ChatColor.AQUA + "" + ChatColor.BOLD + "Tutorial Step Info",
 					Utils.chat("&fSends a video link in chat for this tutorial step."));
 
 		}
 
-		Utils.createItem(inv, Material.GOLDEN_HORSE_ARMOR, 25, inv_rows, ChatColor.AQUA + "" + ChatColor.BOLD + "Redo Previous Step",
+		Utils.createItem(inv, Material.GOLDEN_HORSE_ARMOR, 1, 25, ChatColor.AQUA + "" + ChatColor.BOLD + "Redo Previous Step",
 				Utils.chat("&fWill take you back to the previous step of this tutorial."));
 
-		Utils.createItem(inv, Material.DIAMOND_HORSE_ARMOR, 24, inv_rows, ChatColor.AQUA + "" + ChatColor.BOLD + "Previous Tutorial",
+		Utils.createItem(inv, Material.DIAMOND_HORSE_ARMOR, 1, 24,  ChatColor.AQUA + "" + ChatColor.BOLD + "Previous Tutorial",
 				Utils.chat("&fWill take you back to the previous tutorial, this includes lobbies."));
 
-		Utils.createItem(inv, Material.WOODEN_AXE, 21, inv_rows, ChatColor.AQUA + "" + ChatColor.BOLD + "Tutorials",
+		Utils.createItem(inv, Material.WRITABLE_BOOK, 1, 21,  ChatColor.AQUA + "" + ChatColor.BOLD + "Tutorials",
 				Utils.chat("&fTeleport to a tutorial on the server."));
 
-		Utils.createItem(inv, Material.LECTERN, 22, inv_rows, ChatColor.AQUA + "" + ChatColor.BOLD + "Videos",
+		Utils.createItem(inv, Material.BOOK, 1, 22,  ChatColor.AQUA + "" + ChatColor.BOLD + "Videos",
 				Utils.chat("&fWatch a tutorial video to help progress."),
-				Utils.chat("&fIncludes tutorial walkthroughs and building guides."));
+				Utils.chat("&fIncludes tutorial walkthroughs, will be expanded upon in the future."));
 
-		Utils.createItem(inv, Material.ENDER_EYE, 6, inv_rows, ChatColor.AQUA + "" + ChatColor.BOLD + "Switch Server");
+		Utils.createItem(inv, Material.ENDER_EYE, 1, 6,  ChatColor.AQUA + "" + ChatColor.BOLD + "Switch Server");
 
 		if (u.previousGui.equals("main")) {
 			Utils.createItem(inv, Material.SPRUCE_DOOR, 1, 27, ChatColor.AQUA + "" + ChatColor.BOLD + "Return", 
@@ -66,13 +69,42 @@ public class TutorialGui {
 
 		Player p = u.player;
 
-		if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Switch Server")) {
+		if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Tutorial Step Info")) {
+
+			TextComponent message = new TextComponent("Click here for a video tutorial!");
+			message.setColor(ChatColor.GREEN);
+
+			if (u.tutorial.tutorial_type == 2) {
+
+				if (u.tutorial.tutorial_stage == 1) {
+					message.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://insert_link.here"));
+					u.player.spigot().sendMessage(message);
+				} else if (u.tutorial.tutorial_stage == 1) {
+					message.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://insert_link.here"));
+					u.player.spigot().sendMessage(message);
+				} else if (u.tutorial.tutorial_stage == 1) {
+					message.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://insert_link.here"));
+					u.player.spigot().sendMessage(message);
+				}
+
+			} else if (u.tutorial.tutorial_type == 9) {
+				message.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://insert_link.here"));
+				u.player.spigot().sendMessage(message);
+			} else {
+				u.player.sendMessage(ChatColor.RED + "This tutorial stage does not have additional support.");
+			}			
+
+		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Switch Server")) {
 			p.closeInventory();
 			u.previousGui = "tutorial";
 			p.openInventory(SwitchServerGUI.GUI(u));
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Tutorials")) {
-			p.closeInventory();
-			p.openInventory(TutorialSelectionGui.GUI(u));
+			if (u.tutorial.first_time) {
+				u.player.sendMessage(ChatColor.RED + "You must complete the tutorial first!");
+			} else {
+				p.closeInventory();
+				p.openInventory(TutorialSelectionGui.GUI(u));
+			}
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Videos")) {
 			p.closeInventory();
 			p.openInventory(TutorialVideoGui.GUI(u));
@@ -82,16 +114,30 @@ public class TutorialGui {
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Redo Previous Step")) {
 			p.closeInventory();
 
-			u.tutorial.tutorial_stage -= 1;
-
-			u.tutorial.continueTutorial();
+			if (u.tutorial.tutorial_stage == 1) {
+				u.player.sendMessage(ChatColor.RED + "This is already the first step of this tutorial.");
+			} else if (u.tutorial.tutorial_type == 10) {
+				u.player.sendMessage(ChatColor.RED + "You are not in the tutorial.");
+			} else {
+				u.tutorial.tutorial_stage -= 1;
+				u.tutorial.continueTutorial();
+			}
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Previous Tutorial")) {
 			p.closeInventory();
 
-			u.tutorial.tutorial_type -= 1;
-			u.tutorial.tutorial_stage = 1;
-
-			u.tutorial.continueTutorial();
+			if (u.tutorial.tutorial_type == 1) {
+				u.player.sendMessage(ChatColor.RED + "This is already the first tutorial.");
+			} else if (u.tutorial.tutorial_type == 10) {
+				u.player.sendMessage(ChatColor.RED + "You are not in the tutorial.");
+			} else {
+				if (u.tutorial.tutorial_type == 9) {
+					u.tutorial.tutorial_type = 3;
+				} else {
+					u.tutorial.tutorial_type -= 1;
+				}
+				u.tutorial.tutorial_stage = 1;
+				u.tutorial.continueTutorial();
+			}
 		}
 	}
 }

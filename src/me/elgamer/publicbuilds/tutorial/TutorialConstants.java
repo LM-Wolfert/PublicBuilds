@@ -67,7 +67,7 @@ public class TutorialConstants {
 				config.getDouble("tutorial_2.corner_4.y"),
 				config.getDouble("tutorial_2.corner_4.z"));
 		TUTORIAL_2_STEP3_START = new Location(Bukkit.getWorld(config.getString("worlds.tutorial")),
-				1014.5, 143, 943.5);
+				1014.5, 143, 943.5, -90, 0);
 		
 		//Values are being hardcoded for the time being, the whole coordinate storing system will be moved to a database in the next major release.
 		TUTORIAL_2_LINE1 = new Vector(BlockVector3.at(1019, 143, 931), BlockVector3.at(1003, 143, 911));

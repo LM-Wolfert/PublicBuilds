@@ -38,6 +38,9 @@ public class Tutorial {
 		TutorialData tutorialData = Main.getInstance().tutorialData;
 
 		tutorial_type = tutorialData.getType(u.uuid);
+		if (tutorial_type < 1) {
+			tutorial_type = 1;
+		}
 		tutorial_stage = tutorialData.getStage(u.uuid);
 
 		first_time = tutorialData.getTime(u.uuid);
@@ -123,6 +126,7 @@ public class Tutorial {
 		if (u.tutorial.tutorial_type == 2) {
 			
 			if (u.tutorial.tutorial_stage == 1) {
+				holograms.hideHologram(u.player, "tutorial2_2");
 				holograms.showHologram(u.player, "tutorial2_1");
 			} else if (u.tutorial.tutorial_stage == 2) {
 				holograms.hideHologram(u.player, "tutorial2_1");

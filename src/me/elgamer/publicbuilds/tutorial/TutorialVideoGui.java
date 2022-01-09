@@ -1,13 +1,16 @@
 package me.elgamer.publicbuilds.tutorial;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import me.elgamer.publicbuilds.gui.SwitchServerGUI;
 import me.elgamer.publicbuilds.utils.User;
+import me.elgamer.publicbuilds.utils.Utils;
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 
 public class TutorialVideoGui {
 	
@@ -25,11 +28,23 @@ public class TutorialVideoGui {
 	public static Inventory GUI (User u) {
 
 		Inventory toReturn = Bukkit.createInventory(null, inv_rows, inventory_name);
-
+		
 		inv.clear();
 		
-
-
+		Utils.createItem(inv, Material.LIME_CONCRETE, 1, 4, ChatColor.AQUA + "" + ChatColor.BOLD + "Outlines Step 1, /ll",
+				Utils.chat("&fSends a link to a video of the first step of the outlines tutorial."));
+		
+		Utils.createItem(inv, Material.YELLOW_CONCRETE, 1, 13, ChatColor.AQUA + "" + ChatColor.BOLD + "Outlines Step 2, /tpll",
+				Utils.chat("&fSends a link to a video of the second step of the outlines tutorial."));
+		
+		Utils.createItem(inv, Material.RED_CONCRETE, 1, 22, ChatColor.AQUA + "" + ChatColor.BOLD + "Outlines Step 3, //line",
+				Utils.chat("&fSends a link to a video of the third step of the outlines tutorial."));
+		
+		Utils.createItem(inv, Material.LIME_CONCRETE, 1, 6, ChatColor.AQUA + "" + ChatColor.BOLD + "Plot Creation",
+				Utils.chat("&fSends a link to a video of the plot creation tutorial."));
+		
+		Utils.createItem(inv, Material.SPRUCE_DOOR, 1, 27, ChatColor.AQUA + "" + ChatColor.BOLD + "Return",
+				Utils.chat("&fGo back to the tutorial menu."));
 
 		toReturn.setContents(inv.getContents());
 		return toReturn;
@@ -39,16 +54,34 @@ public class TutorialVideoGui {
 
 		Player p = u.player;
 
-		if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Switch Server")) {
-			p.closeInventory();
-			u.previousGui = "tutorial";
-			p.openInventory(SwitchServerGUI.GUI(u));
-		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Tutorials")) {
-			p.closeInventory();
-			p.openInventory(TutorialSelectionGui.GUI(u));
-		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Videos")) {
-			p.closeInventory();
-			p.openInventory(TutorialVideoGui.GUI(u));
+		if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Outlines Step 1, /ll")) {
+			
+			TextComponent message = new TextComponent("Click here for the outlines step 1 video tutorial!");
+			message.setColor(ChatColor.GREEN);
+			message.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://insert_link.here"));
+			u.player.spigot().sendMessage(message);
+		
+		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Outlines Step 2, /tpll")) {
+			
+			TextComponent message = new TextComponent("Click here for the outlines step 2 video tutorial!");
+			message.setColor(ChatColor.GREEN);
+			message.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://insert_link.here"));
+			u.player.spigot().sendMessage(message);
+		
+		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Outlines Step 3, //line")) {
+			
+			TextComponent message = new TextComponent("Click here for the outlines step 3 video tutorial!");
+			message.setColor(ChatColor.GREEN);
+			message.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://insert_link.here"));
+			u.player.spigot().sendMessage(message);
+		
+		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Plot Creation")) {
+			
+			TextComponent message = new TextComponent("Click here for the plot creation video tutorial!");
+			message.setColor(ChatColor.GREEN);
+			message.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://insert_link.here"));
+			u.player.spigot().sendMessage(message);
+			
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Return")) {
 			p.closeInventory();
 			p.openInventory(TutorialGui.GUI(u));
