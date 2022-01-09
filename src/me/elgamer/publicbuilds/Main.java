@@ -213,7 +213,7 @@ public class Main extends JavaPlugin {
 		gui.setItemMeta(meta2);
 
 		//Create tutorial type skip item				
-		tutorialGui = new ItemStack(Material.WRITABLE_BOOK);
+		tutorialGui = new ItemStack(Material.LECTERN);
 		ItemMeta meta3 = gui.getItemMeta();
 		meta3.setDisplayName(ChatColor.AQUA + "" + ChatColor.BOLD + "Tutorial Menu");
 		tutorialGui.setItemMeta(meta3);
@@ -497,7 +497,7 @@ public class Main extends JavaPlugin {
 								u.player.getInventory().setItem(4, tutorialGui);
 							}
 						} else {
-							u.player.getInventory().setItem(8, tutorialGui);
+							u.player.getInventory().setItem(4, tutorialGui);
 						}
 					}
 					

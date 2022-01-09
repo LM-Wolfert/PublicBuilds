@@ -81,15 +81,16 @@ public class HologramData {
 	public boolean move(String name, Location l) {
 
 		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
-				"UPDATE hologram_data SET x = ?, y = ?, z = ? WHERE name = ?;"
+				"UPDATE hologram_data SET world = ?, x = ?, y = ?, z = ? WHERE name = ?;"
 				)){
-			statement.setDouble(1, l.getX());
-			statement.setDouble(2, l.getY());
-			statement.setDouble(3, l.getZ());
-			statement.setString(4, name);
-			ResultSet results = statement.executeQuery();
-
-			return (results.next());
+			statement.setString(1, l.getWorld().getName());
+			statement.setDouble(2, l.getX());
+			statement.setDouble(3, l.getY());
+			statement.setDouble(4, l.getZ());
+			statement.setString(5, name);
+			statement.executeUpdate();
+			
+			return true;
 
 		} catch (SQLException sql) {
 			sql.printStackTrace();
@@ -100,12 +101,12 @@ public class HologramData {
 	public boolean toggleVisibility(String name) {
 
 		try (Connection conn = conn(); PreparedStatement statement = conn.prepareStatement(
-				"UPDATE hologram_data SET visibility = 1 - visibility WHERE name = ?;"
+				"UPDATE hologram_data SET visible = 1 - visible WHERE name = ?;"
 				)){
 			statement.setString(1, name);
-			ResultSet results = statement.executeQuery();
-
-			return (results.next());
+			statement.executeUpdate();
+			
+			return true;
 
 		} catch (SQLException sql) {
 			sql.printStackTrace();

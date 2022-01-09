@@ -72,7 +72,6 @@ public class Tutorial {
 			}
 			
 		} else if (u.tutorial.tutorial_type == 3) {
-			removeHologramVisibility();
 			u.player.teleport(TutorialConstants.TUTORIAL_3_START);
 		} else if (u.tutorial.tutorial_type == 4) {
 
@@ -130,7 +129,6 @@ public class Tutorial {
 				holograms.showHologram(u.player, "tutorial2_2");
 			} else if (u.tutorial.tutorial_stage == 3) {
 				holograms.hideHologram(u.player, "tutorial2_2");
-				holograms.showHologram(u.player, "tutorial2_3");
 			}
 						
 		}		
@@ -139,7 +137,6 @@ public class Tutorial {
 	public void removeHologramVisibility() {
 		holograms.hideHologram(u.player, "tutorial2_1");
 		holograms.hideHologram(u.player, "tutorial2_2");
-		holograms.hideHologram(u.player, "tutorial2_3");
 	}
 
 	/*

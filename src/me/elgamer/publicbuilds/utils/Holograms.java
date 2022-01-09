@@ -61,7 +61,9 @@ public class Holograms {
 
 			} else {
 				hologram.appendTextLine(Utils.chat("&b&lHologram " + holo.name + " has no text assigned, use /customholo setline to add text."));
-			}			
+			}
+			
+			holos.put(holo.name, hologram);
 		}			
 	}
 
@@ -81,6 +83,7 @@ public class Holograms {
 
 		delete();
 		create();
+		reload("scoreboard");
 
 	}
 
@@ -102,6 +105,10 @@ public class Holograms {
 	}
 
 	public void updateScoreboard(Hologram hologram) {
+		
+		if (hologram == null) {
+			return;
+		}
 
 		hologram.clearLines();
 

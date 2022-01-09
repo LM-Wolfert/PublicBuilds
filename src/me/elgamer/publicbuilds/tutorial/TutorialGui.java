@@ -31,38 +31,27 @@ public class TutorialGui {
 
 		inv.clear();
 
-		if (u.tutorial.tutorial_type == 2) {
+		if (u.tutorial.tutorial_type == 2 || u.tutorial.tutorial_type == 9) {
 
-			if (u.tutorial.tutorial_stage == 1) {
-				Utils.createItem(inv, Material.BOOK, 1, inv_rows, ChatColor.AQUA + "" + ChatColor.BOLD + "Tutorial Step Info",
-						Utils.chat("&fTeleport to a tutorial on the server."));
-			} else if (u.tutorial.tutorial_stage == 2) {
-				Utils.createItem(inv, Material.BOOK, 1, inv_rows, ChatColor.AQUA + "" + ChatColor.BOLD + "Tutorial Step Info",
-						Utils.chat("&fTeleport to a tutorial on the server."));
-			} else if (u.tutorial.tutorial_stage == 3) {
-				Utils.createItem(inv, Material.BOOK, 1, inv_rows, ChatColor.AQUA + "" + ChatColor.BOLD + "Tutorial Step Info",
-						Utils.chat("&fTeleport to a tutorial on the server."));
-			}
+			Utils.createItem(inv, Material.WRITABLE_BOOK, 1, 4, ChatColor.AQUA + "" + ChatColor.BOLD + "Tutorial Step Info",
+					Utils.chat("&fSends a video link in chat for this tutorial step."));
 
 		}
 
-		if (u.tutorial.tutorial_stage >= 2) {
-			Utils.createItem(inv, Material.BOOK, 1, inv_rows, ChatColor.AQUA + "" + ChatColor.BOLD + "Redo Previous Step",
-					Utils.chat("&fWill take you back to the previous step of this tutorial."));
-		} 
-		if (u.tutorial.tutorial_type > 1) {
-			Utils.createItem(inv, Material.BOOK, 1, inv_rows, ChatColor.AQUA + "" + ChatColor.BOLD + "Previous Tutorial",
-					Utils.chat("&fWill take you back to the previous tutorial, this includes lobbies."));
-		}
+		Utils.createItem(inv, Material.GOLDEN_HORSE_ARMOR, 25, inv_rows, ChatColor.AQUA + "" + ChatColor.BOLD + "Redo Previous Step",
+				Utils.chat("&fWill take you back to the previous step of this tutorial."));
 
-		Utils.createItem(inv, Material.WOODEN_AXE, 1, inv_rows, ChatColor.AQUA + "" + ChatColor.BOLD + "Tutorials",
+		Utils.createItem(inv, Material.DIAMOND_HORSE_ARMOR, 24, inv_rows, ChatColor.AQUA + "" + ChatColor.BOLD + "Previous Tutorial",
+				Utils.chat("&fWill take you back to the previous tutorial, this includes lobbies."));
+
+		Utils.createItem(inv, Material.WOODEN_AXE, 21, inv_rows, ChatColor.AQUA + "" + ChatColor.BOLD + "Tutorials",
 				Utils.chat("&fTeleport to a tutorial on the server."));
 
-		Utils.createItem(inv, Material.LECTERN, 1, inv_rows, ChatColor.AQUA + "" + ChatColor.BOLD + "Videos",
+		Utils.createItem(inv, Material.LECTERN, 22, inv_rows, ChatColor.AQUA + "" + ChatColor.BOLD + "Videos",
 				Utils.chat("&fWatch a tutorial video to help progress."),
 				Utils.chat("&fIncludes tutorial walkthroughs and building guides."));
 
-		Utils.createItem(inv, Material.ENDER_EYE, 1, inv_rows, ChatColor.AQUA + "" + ChatColor.BOLD + "Switch Server");
+		Utils.createItem(inv, Material.ENDER_EYE, 6, inv_rows, ChatColor.AQUA + "" + ChatColor.BOLD + "Switch Server");
 
 		if (u.previousGui.equals("main")) {
 			Utils.createItem(inv, Material.SPRUCE_DOOR, 1, 27, ChatColor.AQUA + "" + ChatColor.BOLD + "Return", 
@@ -94,14 +83,14 @@ public class TutorialGui {
 			p.closeInventory();
 
 			u.tutorial.tutorial_stage -= 1;
-			
+
 			u.tutorial.continueTutorial();
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Previous Tutorial")) {
 			p.closeInventory();
 
 			u.tutorial.tutorial_type -= 1;
 			u.tutorial.tutorial_stage = 1;
-			
+
 			u.tutorial.continueTutorial();
 		}
 	}

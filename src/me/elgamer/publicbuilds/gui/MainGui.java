@@ -56,7 +56,7 @@ public class MainGui {
 		Utils.createItem(inv, Material.GRASS_BLOCK, 1, 1, ChatColor.AQUA + "" + ChatColor.BOLD + "Spawn",
 				Utils.chat("&fTeleport to spawn."));
 
-		Utils.createItem(inv, Material.WRITABLE_BOOK, 1, 24, ChatColor.AQUA + "" + ChatColor.BOLD + "Tutorials", 
+		Utils.createItem(inv, Material.LECTERN, 1, 24, ChatColor.AQUA + "" + ChatColor.BOLD + "Tutorial Menu", 
 				Utils.chat("&fPick a tutorial you want to do."),
 				Utils.chat("&fYou can leave it at any time."));	
 
@@ -137,6 +137,7 @@ public class MainGui {
 				return;
 			}
 			p.closeInventory();
+			u.previousGui = "main";
 			p.openInventory(TutorialGui.GUI(u));
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Selection Tool")) {
 			Plots.giveSelectionTool(u);

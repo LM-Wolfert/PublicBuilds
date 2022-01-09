@@ -159,7 +159,7 @@ public class CommandListener implements Listener {
 						u.tutorial.tutorial_type = 3;
 						u.player.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Outline Tutorial Complete", "You will be teleported shortly.", 10, 75, 10);
 						u.tutorial.line_sum = 0;
-						Bukkit.getScheduler().runTaskLater (Main.getInstance(), () -> u.tutorial.continueTutorial() , 20); //20 ticks equal 1 second
+						Bukkit.getScheduler().runTaskLater (Main.getInstance(), () -> u.tutorial.continueTutorial() , 60); //20 ticks equal 1 second
 					}
 					
 					return;
