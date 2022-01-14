@@ -438,6 +438,7 @@ public class Main extends JavaPlugin {
 					if (!(u.world.getName().equals(config.getString("worlds.tutorial"))) && u.tutorial.first_time == false) {
 						u.tutorial.tutorial_stage = 0;
 						u.tutorial.tutorial_type = 10;
+						u.tutorial.complete = true;
 					} else if (!(u.world.getName().equals(config.getString("worlds.tutorial"))) && u.tutorial.first_time == true) {
 						Bukkit.getScheduler().runTaskLater (instance, () -> u.tutorial.continueTutorial(), 60);
 					}

@@ -77,18 +77,18 @@ public class TutorialGui {
 			if (u.tutorial.tutorial_type == 2) {
 
 				if (u.tutorial.tutorial_stage == 1) {
-					message.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://insert_link.here"));
+					message.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://youtu.be/mMbfLjPSXis"));
 					u.player.spigot().sendMessage(message);
-				} else if (u.tutorial.tutorial_stage == 1) {
-					message.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://insert_link.here"));
+				} else if (u.tutorial.tutorial_stage == 2) {
+					message.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://youtu.be/GMt4-hQWxBI"));
 					u.player.spigot().sendMessage(message);
-				} else if (u.tutorial.tutorial_stage == 1) {
-					message.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://insert_link.here"));
+				} else if (u.tutorial.tutorial_stage == 3) {
+					message.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://youtu.be/CufiTDe8_80"));
 					u.player.spigot().sendMessage(message);
 				}
 
 			} else if (u.tutorial.tutorial_type == 9) {
-				message.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://insert_link.here"));
+				message.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://youtu.be/gl6G2fLgouk"));
 				u.player.spigot().sendMessage(message);
 			} else {
 				u.player.sendMessage(ChatColor.RED + "This tutorial stage does not have additional support.");

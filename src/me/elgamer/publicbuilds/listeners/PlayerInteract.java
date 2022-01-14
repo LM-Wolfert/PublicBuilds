@@ -4,6 +4,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -104,6 +106,25 @@ public class PlayerInteract implements Listener {
 	public void dropItem(PlayerDropItemEvent e) {
 		
 		if (e.getItemDrop().getItemStack().equals(Main.gui) || e.getItemDrop().getItemStack().equals(Main.tutorialGui)) {
+			e.setCancelled(true);
+		}
+		
+	}
+	
+	@EventHandler
+	public void moveItem(InventoryMoveItemEvent e) {
+		if (e.getItem().equals(Main.gui) || e.getItem().equals(Main.tutorialGui)) {
+			e.setCancelled(true);
+		}
+		
+	}
+	
+	@EventHandler
+	public void moveItem(InventoryDragEvent e) {
+		if (e.getOldCursor().equals(Main.gui) || e.getOldCursor().equals(Main.tutorialGui)) {
+			e.setCancelled(true);
+		}
+		if (e.getCursor().equals(Main.gui) || e.getCursor().equals(Main.tutorialGui)) {
 			e.setCancelled(true);
 		}
 		

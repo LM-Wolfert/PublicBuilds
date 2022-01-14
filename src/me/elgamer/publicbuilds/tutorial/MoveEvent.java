@@ -117,6 +117,12 @@ public class MoveEvent implements Listener {
 
 		User u = Main.getInstance().getUser(e.getPlayer());
 
+		if (!(e.getTo().getWorld().getName().equals(Main.getInstance().getConfig().getString("worlds.tutorial")))) {
+			return;
+		} else if (!(e.getFrom().getWorld().equals(e.getTo().getWorld()))) {
+			return;
+		}
+		
 		if (u.tutorial.tutorial_type == 2 && (u.tutorial.tutorial_stage == 1 || u.tutorial.tutorial_stage == 2)) {
 			if (!(u.world.equals(Bukkit.getWorld(Main.getInstance().getConfig().getString("worlds.tutorial"))))) {
 				return;

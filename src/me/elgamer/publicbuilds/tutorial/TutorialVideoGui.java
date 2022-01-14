@@ -58,28 +58,28 @@ public class TutorialVideoGui {
 			
 			TextComponent message = new TextComponent("Click here for the outlines step 1 video tutorial!");
 			message.setColor(ChatColor.GREEN);
-			message.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://insert_link.here"));
+			message.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://youtu.be/mMbfLjPSXis"));
 			u.player.spigot().sendMessage(message);
 		
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Outlines Step 2, /tpll")) {
 			
 			TextComponent message = new TextComponent("Click here for the outlines step 2 video tutorial!");
 			message.setColor(ChatColor.GREEN);
-			message.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://insert_link.here"));
+			message.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://youtu.be/GMt4-hQWxBI"));
 			u.player.spigot().sendMessage(message);
 		
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Outlines Step 3, //line")) {
 			
 			TextComponent message = new TextComponent("Click here for the outlines step 3 video tutorial!");
 			message.setColor(ChatColor.GREEN);
-			message.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://insert_link.here"));
+			message.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://youtu.be/CufiTDe8_80"));
 			u.player.spigot().sendMessage(message);
 		
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Plot Creation")) {
 			
 			TextComponent message = new TextComponent("Click here for the plot creation video tutorial!");
 			message.setColor(ChatColor.GREEN);
-			message.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://insert_link.here"));
+			message.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://youtu.be/gl6G2fLgouk"));
 			u.player.spigot().sendMessage(message);
 			
 		} else if (clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.AQUA + "" + ChatColor.BOLD + "Return")) {

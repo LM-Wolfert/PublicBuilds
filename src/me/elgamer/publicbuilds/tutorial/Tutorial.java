@@ -12,7 +12,6 @@ import com.sk89q.worldguard.protection.regions.ProtectedPolygonalRegion;
 import me.elgamer.publicbuilds.Main;
 import me.elgamer.publicbuilds.mysql.TutorialData;
 import me.elgamer.publicbuilds.utils.Holograms;
-import me.elgamer.publicbuilds.utils.Plots;
 import me.elgamer.publicbuilds.utils.User;
 
 public class Tutorial {
@@ -93,33 +92,6 @@ public class Tutorial {
 
 
 	}
-
-	public void skipStage() {
-		if (u.tutorial.tutorial_type == 1) {
-		} else if (u.tutorial.tutorial_type == 2) {
-			u.tutorial.tutorial_type = 3;
-			u.tutorial.tutorial_stage = 1;
-			u.tutorial.continueTutorial();
-		} else if (u.tutorial.tutorial_type == 3) {
-		} else if (u.tutorial.tutorial_type == 4) {
-
-		} else if (u.tutorial.tutorial_type == 5) {
-
-		} else if (u.tutorial.tutorial_type == 6) {
-
-		} else if (u.tutorial.tutorial_type == 7) {
-
-		} else if (u.tutorial.tutorial_type == 8) {
-
-		} else if (u.tutorial.tutorial_type == 9) {
-			u.player.teleport(Main.spawn);
-			u.tutorial.tutorial_type = 10;
-			u.tutorial.tutorial_stage = 0;
-			u.tutorial.first_time = false;
-			u.tutorial.complete = true;
-			u.plots = new Plots();
-		} 
-	}
 	
 	public void setHologramVisibility() {
 		
@@ -162,7 +134,7 @@ public class Tutorial {
 		
 		setHologramVisibility();
 		u.player.teleport(TutorialConstants.TUTORIAL_2_START);
-		u.player.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Tpll Tutorial", "Good luck, this tutorial has 3 steps.", 10, 75, 10);	
+		u.player.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "Outlines Tutorial", "Good luck, this tutorial has 3 steps.", 10, 75, 10);	
 
 	}
 	
@@ -174,9 +146,7 @@ public class Tutorial {
 		corner_2 = false;
 		corner_3 = false;
 		corner_4 = false;
-		corner_sum = 0;	
-		
-		
+		corner_sum = 0;		
 		
 	}
 

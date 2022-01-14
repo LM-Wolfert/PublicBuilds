@@ -46,7 +46,7 @@ public class TutorialStage implements CommandExecutor {
 		case 1:
 			return "start";
 		case 2:
-			return "tpll";
+			return "outlines";
 		case 3:
 			return "optional";
 		case 4:
