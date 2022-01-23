@@ -44,6 +44,7 @@ public class CustomHolo implements CommandExecutor {
 				
 				//Reload all holograms created by this plugin.
 				holograms.reloadAll();
+				p.sendMessage(ChatColor.GREEN + "Reloaded holograms!");
 				
 				return true;
 			} else if (args[0].equalsIgnoreCase("help")) {
